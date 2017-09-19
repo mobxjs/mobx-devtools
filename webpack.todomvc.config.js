@@ -13,6 +13,7 @@ module.exports = {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
         alias: {
             "mobx-react-devtools": __dirname + "/src",
+            "mobx-devtools": __dirname + "/src",
             "mobx-react": __dirname + "/mobx-react/src",
             mobx: __dirname + "/mobx/src/mobx.ts"
         }

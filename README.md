@@ -1,4 +1,4 @@
-# mobx-react-devtools
+# mobx-devtools
 
 DevTools for MobX to track the rendering behavior and data dependencies of your app.
 
@@ -10,7 +10,7 @@ DevTools for MobX to track the rendering behavior and data dependencies of your 
 
 or
 
-`<script src="https://unpkg.com/mobx-react-devtools"></script>`
+`<script src="https://unpkg.com/mobx-devtools"></script>`
 
 ## Usage
 
@@ -75,7 +75,7 @@ configureDevtool({
 There are also aliases for turning on/off devtools buttons:
 
 ```js
-import { setLogEnabled, setUpdatesEnabled, setGraphEnabled } from 'mobx-react-devtools';
+import { setLogEnabled, setUpdatesEnabled, setGraphEnabled } from 'mobx-devtools';
 
 setLogEnabled(true); // same as configureDevtool({ logEnabled: true });
 setUpdatesEnabled(false); // same as configureDevtool({ updatesEnabled: false });
@@ -85,7 +85,7 @@ setGraphEnabled(false); // same as configureDevtool({ graphEnabled: false });
 ### Custom panel design
 
 ```js
-import DevTools, { GraphControl, LogControl, UpdatesControl } from 'mobx-react-devtools';
+import DevTools, { GraphControl, LogControl, UpdatesControl } from 'mobx-devtools';
 
 class MyNiceButton extends React.Component {
   render() {

@@ -1,21 +1,22 @@
 {
-    "name": "mobx-react-devtools",
-    "version": "4.2.15",
+    "name": "mobx-devtools",
+    "version": "0.0.8",
     "description": "Dev-tools for MobX and React",
     "main": "index.js",
     "typings": "index",
     "repository": {
         "type": "git",
-        "url": "https://github.com/mobxjs/mobx-react-devtools.git"
+        "url": "https://github.com/andykog/mobx-devtools.git"
     },
     "scripts": {
+        "build": "webpack",
+        "publish": "npm publish",
+        "prepublish": "npm run build",
         "start-todomvc": "cross-env NODE_ENV=development webpack-dev-server --config webpack.todomvc.config.js --hot --inline",
         "start-chrome": "cross-env NODE_ENV=development webpack --watch --config webpack.chrome.config.js",
         "test": "mocha 'src/**/*-test.js' --compilers js:babel-core/register",
         "lint": "eslint 'src/**/*.js' 'src/**/*.jsx' && echo 'JS OK' ; exit 0",
         "prettier": "prettier --write --print-width 100 --tab-width 4 --no-semi \"**/*.js\" \"**/*.ts\"",
-        "build": "webpack",
-        "prepublish": "npm run build",
         "precommit": "lint-staged"
     },
     "author": "Michel Weststrate",

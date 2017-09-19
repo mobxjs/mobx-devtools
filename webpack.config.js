@@ -2,7 +2,6 @@ var webpack = require("webpack")
 
 module.exports = {
     entry: "./src/index.js",
-    hot: false,
     output: {
         libraryTarget: "umd",
         library: "mobxDevtools",
