@@ -12,7 +12,9 @@
         "build": "webpack",
         "publish": "npm publish",
         "prepublish": "npm run build",
-        "start-todomvc": "cross-env NODE_ENV=development webpack-dev-server --config webpack.todomvc.config.js --hot --inline",
+        "start-todomvc": "npm run submodules ; npm run start-todomvc-now",
+        "start-todomvc-now": "cross-env NODE_ENV=development webpack-dev-server --config webpack.todomvc.config.js --hot --inline",
+        "submodules": "git submodule update --init ; git submodule foreach yarn",
         "start-chrome": "cross-env NODE_ENV=development webpack --watch --config webpack.chrome.config.js",
         "test": "mocha 'src/**/*-test.js' --compilers js:babel-core/register",
         "lint": "eslint 'src/**/*.js' 'src/**/*.jsx' && echo 'JS OK' ; exit 0",
@@ -30,7 +32,6 @@
         "mobx-react": "^3.3.0 || ^4.0.0"
     },
     "devDependencies": {
-        "and": "0.0.0",
         "babel": "^6.23.0",
         "babel-core": "^6.25.0",
         "babel-eslint": "^7.2.3",
@@ -41,7 +42,6 @@
         "babel-preset-react": "^6.24.1",
         "babel-preset-stage-1": "^6.24.1",
         "cross-env": "^5.0.1",
-        "director": "^1.2.8",
         "es6-object-assign": "^1.1.0",
         "eslint": "^3.19.0",
         "eslint-config-airbnb": "^15.0.1",
@@ -51,22 +51,19 @@
         "eslint-plugin-react": "^7.1.0",
         "file-loader": "^0.11.2",
         "jsdom": "^11.0.0",
-        "mobx": "^3.1.15",
-        "mobx-react": "file:mobx-react",
+        "mobx": "^3.3.0",
+        "mobx-react": "^4.3.2",
         "prop-types": "^15.5.10",
         "react": "^15.6.1",
         "react-addons-test-utils": "^15.6.0",
         "react-dom": "^15.6.1",
         "react-test-renderer": "^15.6.1",
-        "sinon": "^2.3.4",
-        "todomvc-common": "^1.0.3",
-        "ts-loader": "^2.1.0",
-        "typescript": "^2.3.4",
+        "sinon": "^3.3.0",
         "unexpected": "^10.29.0",
         "unexpected-react": "^4.1.0",
         "unexpected-sinon": "^10.7.1",
         "url-loader": "^0.5.9",
-        "webpack": "^2.6.1"
+        "webpack": "^3.6.0"
     },
     "keywords": [
         "mobx",
@@ -77,13 +74,10 @@
         "reactive",
         "devtools"
     ],
-    "lint-staged": {
-        "*.{ts,tsx,js,jsx}": [
-            "prettier --write --print-width 100 --tab-width 4 --no-semi",
-            "git add"
-        ]
-    },
     "dependencies": {
-        "prettier": "^1.6.1"
+        "prettier": "^1.6.1",
+        "ts-loader": "^2.3.7",
+        "typescript": "^2.5.2",
+        "webpack-dev-server": "^2.8.2"
     }
 }

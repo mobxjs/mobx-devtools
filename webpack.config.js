@@ -9,23 +9,36 @@ module.exports = {
         filename: "index.js"
     },
     resolve: {
-        extensions: ["", ".js", ".jsx"]
+        extensions: [".js", ".jsx"]
     },
     module: {
         loaders: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: "babel"
+                loader: "babel-loader"
             },
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: "eslint"
+                loader: "eslint-loader",
+                options: {
+                    failOnWarning: false,
+                    failOnError: process.env.NODE_ENV !== "development",
+                    fix: true,
+                    cache: false
+                }
             },
             {
                 test: /\.css$/,
-                loader: "style!css/locals?module"
+                loader: "style-loader"
+            },
+            {
+                test: /\.css$/,
+                loader: "css-loader/locals",
+                options: {
+                    modules: true
+                }
             },
             {
                 test: /\.svg$/,
@@ -47,12 +60,6 @@ module.exports = {
             amd: "react"
         },
         mobx: "mobx"
-    },
-    eslint: {
-        failOnWarning: false,
-        failOnError: process.env.NODE_ENV !== "development",
-        fix: process.env.NODE_ENV === "development",
-        cache: false
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({

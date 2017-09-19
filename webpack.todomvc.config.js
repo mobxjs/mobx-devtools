@@ -1,5 +1,7 @@
-var path = require("path")
-var webpack = require("webpack")
+"use strict"
+
+const path = require("path")
+const webpack = require("webpack")
 
 module.exports = {
     devtool: "eval",
@@ -58,5 +60,14 @@ module.exports = {
             __CLIENT__: JSON.stringify(true),
             __SERVER__: JSON.stringify(false)
         })
-    ]
+    ],
+    devServer: {
+        port: 8081,
+        contentBase: ["./mobx-react-todomvc", "./"],
+        stats: {
+            errorDetails: true,
+            assets: false,
+            chunks: false
+        }
+    }
 }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ModalContainer from '../ModalContainer';
 import * as styles from './styles';
 
@@ -31,7 +32,7 @@ export default class Graph extends Component {
         {dependencies &&
           <div style={styles.tree}>
             {dependencies.map((dependency, i) =>
-              this.renderTreeItem(dependency, /* isLast:*/i === dependencies.length - 1))
+              this.renderTreeItem(dependency, /* isLast: */i === dependencies.length - 1))
             }
           </div>
         }
@@ -49,7 +50,7 @@ export default class Graph extends Component {
           <div style={styles.graph}>
             <span style={styles.close} onClick={this.handleClose}>×</span>
             <div style={styles.rootThree}>
-              {this.renderTreeItem(dependencyTree, /* isLast:*/true, /* isRoot:*/true)}
+              {this.renderTreeItem(dependencyTree, /* isLast: */true, /* isRoot: */true)}
             </div>
           </div>
         }
