@@ -6,7 +6,7 @@ DevTools for MobX to track the rendering behavior and data dependencies of your 
 
 ## Installation
 
-`npm install --save-dev mobx-react-devtools`
+`npm install --save-dev mobx-devtools`
 
 or
 
@@ -17,7 +17,7 @@ or
 Somewhere in your application, create a DevTools component:
 
 ```js
-import DevTools from 'mobx-react-devtools';
+import DevTools from 'mobx-devtools';
 
 class MyApp extends React.Component {
   render() {
@@ -57,7 +57,7 @@ Mind that any log statements that are printed during these (re)actions will appe
 ### Configuration
 
 ```js
-import { configureDevtool } from 'mobx-react-devtools';
+import { configureDevtool } from 'mobx-devtools';
 
 // Any configurations are optional
 configureDevtool({
