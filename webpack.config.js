@@ -20,6 +20,11 @@ module.exports = {
                 loader: "babel"
             },
             {
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
+                loader: "eslint"
+            },
+            {
                 test: /\.css$/,
                 loader: "style!css/locals?module"
             },
@@ -43,6 +48,12 @@ module.exports = {
             amd: "react"
         },
         mobx: "mobx"
+    },
+    eslint: {
+        failOnWarning: false,
+        failOnError: process.env.NODE_ENV !== "development",
+        fix: process.env.NODE_ENV === "development",
+        cache: false
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({
