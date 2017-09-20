@@ -1,7 +1,8 @@
 /node_modules
 /index.js
 /npm-debug.log
+~*
 *.iml
 *.ipr
 *.iws
-/src/chrome/build/
+/shells/chrome/build/

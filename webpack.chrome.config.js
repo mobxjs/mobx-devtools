@@ -3,16 +3,16 @@ var webpack = require("webpack")
 module.exports = {
     devtool: false,
     entry: {
-        backend: "./src/chrome/src/backend.js",
-        background: "./src/chrome/src/background.js",
-        injectGlobalHook: "./src/chrome/src/injectGlobalHook.js",
-        contentScript: "./src/chrome/src/contentScript.js",
-        panel: "./src/chrome/src/panel",
-        "panel-loader": "./src/chrome/src/panel-loader.js",
-        window: "./src/chrome/src/window"
+        backend: "./shells/chrome/src/backend.js",
+        background: "./shells/chrome/src/background.js",
+        injectGlobalHook: "./shells/chrome/src/injectGlobalHook.js",
+        contentScript: "./shells/chrome/src/contentScript.js",
+        panel: "./shells/chrome/src/panel",
+        "panel-loader": "./shells/chrome/src/panel-loader.js",
+        window: "./shells/chrome/src/window"
     },
     output: {
-        path: __dirname + "/src/chrome/build",
+        path: __dirname + "/shells/chrome/build",
         filename: "[name].js"
     },
     module: {

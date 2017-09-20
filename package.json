@@ -18,7 +18,7 @@
         "start-chrome": "cross-env NODE_ENV=development webpack --watch --config webpack.chrome.config.js",
         "test": "mocha 'src/**/*-test.js' --compilers js:babel-core/register",
         "lint": "eslint 'src/**/*.js' 'src/**/*.jsx' && echo 'JS OK' ; exit 0",
-        "prettier": "prettier --write --print-width 100 --tab-width 4 --no-semi \"**/*.js\" \"**/*.ts\"",
+        "prettier": "prettier --write --print-width 100 --tab-width 2 --single-quote \"src/**/*.js\" \"shells/**/*.js\"",
         "precommit": "lint-staged"
     },
     "author": "Michel Weststrate",
