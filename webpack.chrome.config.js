@@ -27,17 +27,17 @@ module.exports = {
                     plugins: ["transform-decorators-legacy", "transform-class-properties"]
                 }
             },
-            {
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loader: "eslint-loader",
-                query: {
-                    failOnWarning: false,
-                    failOnError: process.env.NODE_ENV !== "development",
-                    fix: process.env.NODE_ENV === "development",
-                    cache: false
-                }
-            },
+            // {
+            //     test: /\.jsx?$/,
+            //     exclude: /node_modules/,
+            //     loader: "eslint-loader",
+            //     query: {
+            //         failOnWarning: false,
+            //         failOnError: process.env.NODE_ENV !== "development",
+            //         fix: process.env.NODE_ENV === "development",
+            //         cache: false
+            //     }
+            // },
             {
                 test: /\.tsx?$/,
                 loader: "ts-loader"

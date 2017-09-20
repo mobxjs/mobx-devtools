@@ -18,17 +18,17 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: "babel-loader"
             },
-            {
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loader: "eslint-loader",
-                options: {
-                    failOnWarning: false,
-                    failOnError: process.env.NODE_ENV !== "development",
-                    fix: true,
-                    cache: false
-                }
-            },
+            // {
+            //     test: /\.jsx?$/,
+            //     exclude: /node_modules/,
+            //     loader: "eslint-loader",
+            //     options: {
+            //         failOnWarning: false,
+            //         failOnError: process.env.NODE_ENV !== "development",
+            //         fix: true,
+            //         cache: false
+            //     }
+            // },
             {
                 test: /\.css$/,
                 loader: "style-loader"
