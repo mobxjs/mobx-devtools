@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class GraphControl extends Component {
-
   static propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired
   };
 
   componentWillMount() {
@@ -27,8 +26,7 @@ export default class GraphControl extends Component {
     const { children } = this.props;
     return React.cloneElement(children, {
       onToggle: () => store.togglePickingDeptreeComponent(),
-      active: store.state.graphEnabled,
+      active: store.state.graphEnabled
     });
   }
 }
-

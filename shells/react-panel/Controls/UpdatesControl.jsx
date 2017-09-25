@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class UpdatesControl extends Component {
-
   static propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired
   };
 
   componentDidMount() {
@@ -23,7 +22,7 @@ export default class UpdatesControl extends Component {
     const { children } = this.props;
     return React.cloneElement(children, {
       onToggle: () => store.toggleShowingUpdates(),
-      active: store.state.updatesEnabled,
+      active: store.state.updatesEnabled
     });
   }
 }

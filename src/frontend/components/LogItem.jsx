@@ -4,13 +4,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class LogItem extends Component {
-
   static propTypes = {
-    change: PropTypes.object.isRequired,
+    change: PropTypes.object.isRequired
   };
 
   state = {
-    open: false,
+    open: false
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -87,20 +86,23 @@ export default class LogItem extends Component {
         if (change.name) {
           return (
             <span className="mobxdevtool__LogItem__title">
-              <b>Updated</b> ‘{change.objectName}.{change.name}’: {String(change.newValue)} (was {String(change.oldValue)})
+              <b>Updated</b> ‘{change.objectName}.{change.name}’: {String(change.newValue)} (was{' '}
+              {String(change.oldValue)})
             </span>
           );
         }
         return (
           <span className="mobxdevtool__LogItem__title">
-            <b>Updated</b> ‘{change.objectName}’: {String(change.newValue)} (was {String(change.oldValue)})
+            <b>Updated</b> ‘{change.objectName}’: {String(change.newValue)} (was{' '}
+            {String(change.oldValue)})
           </span>
         );
       case 'splice':
         // (array) object, index, added, removed, addedCount, removedCount
         return (
           <span className="mobxdevtool__LogItem__title">
-            <b>Spliced</b> ‘{change.objectName}’: index {change.index}, added {change.addedCount}, removed {change.removedCount}
+            <b>Spliced</b> ‘{change.objectName}’: index {change.index}, added {change.addedCount},
+            removed {change.removedCount}
           </span>
         );
       case 'add':
@@ -137,21 +139,27 @@ export default class LogItem extends Component {
   render() {
     const { change } = this.props;
     return (
-      <div className="mobxdevtool__LogItem" ref={(el) => { this.containerEl = el; }}>
+      <div
+        className="mobxdevtool__LogItem"
+        ref={el => {
+          this.containerEl = el;
+        }}
+      >
         <div
           className={[
             'mobxdevtool__LogItem__body ',
             `mobxdevtool__LogItem__body--type-${change.type} `,
-            (change.children.length ? 'mobxdevtool__LogItem__body--has-children ' : ''),
-            (this.state.open ? 'mobxdevtool__LogItem__body--open ' : 'mobxdevtool__LogItem__body--closed '),
+            change.children.length ? 'mobxdevtool__LogItem__body--has-children ' : '',
+            this.state.open
+              ? 'mobxdevtool__LogItem__body--open '
+              : 'mobxdevtool__LogItem__body--closed '
           ].join(' ')}
           onClick={this.handleClick}
         >
           {this.renderBody()}
         </div>
         {this.state.open &&
-          change.children.map(child => <LogItem change={child} key={Math.random()} />)
-        }
+          change.children.map(child => <LogItem change={child} key={Math.random()} />)}
       </div>
     );
   }

@@ -4,7 +4,8 @@
  * Runs all the time and serves as a central message hub for panels, contentScript, backend
  */
 
-const ports = {};
+const orphansByTabId = {};
+import debugConnection from '../../../src/debugConnection';
 
 function getActiveContentWindow(cb) {
   chrome.tabs.query({ active: true, windowType: 'normal', currentWindow: true }, d => {
@@ -38,9 +39,29 @@ function isNumeric(str) {
   return `${+str}` === str;
 }
 
+function handleInstallError(tabId, error) {
+  if (__DEV__) console.warn(error);
+  const orphanDevtools = orphansByTabId[tabId].find(p => !p.contentScript).map(p => p.devtools);
+  orphanDevtools.forEach(d => d.postMessage('content-script-installation-error'));
+}
+
 function installContentScript(tabId) {
-  // chrome.tabs.get(tabId, info => console.log({ ...info }));
-  chrome.tabs.executeScript(tabId, { file: '/build/contentScript.js' }, () => {});
+  chrome.tabs.get(+tabId, function(tab) {
+    if (chrome.runtime.lastError !== undefined) {
+      handleInstallError(tabId, chrome.runtime.lastError);
+    } else if (tab.status === 'complete') {
+      chrome.tabs.executeScript(tabId, { file: '/build/contentScript.js' }, res => {
+        let err = chrome.runtime.lastError;
+        if (err !== undefined || !res) handleInstallError(tabId, err);
+      });
+    } else {
+      chrome.tabs.onUpdated.addListener(function listener(tid, changeInfo, tabInfo) {
+        if (tid !== tabId || changeInfo.status === 'loading') return;
+        chrome.tabs.onUpdated.removeListener(listener);
+        installContentScript(tabId);
+      });
+    }
+  });
 }
 
 function doublePipe(one, two) {
@@ -52,29 +73,31 @@ function doublePipe(one, two) {
     two.$i = Math.random()
       .toString(32)
       .slice(2);
-  // console.log(`doublePipe ${one.name} <-> ${two.name} [${one.$i} <-> ${two.$i}]`);
+
+  debugConnection(`BACKGORUND: connect ${one.name} <-> ${two.name} [${one.$i} <-> ${two.$i}]`);
+
   function lOne(message) {
-    // console.log('dv -> rep', message);
+    debugConnection(`${one.name} -> BACKGORUND -> ${two.name} [${one.$i}-${two.$i}]`, message);
     try {
       two.postMessage(message);
     } catch (e) {
-      console.error('Unexpected disconnect, error', e); // eslint-disable-line no-console
+      if (__DEV__) console.error('Unexpected disconnect, error', e); // eslint-disable-line no-console
       shutdown(); // eslint-disable-line no-use-before-define
     }
   }
   function lTwo(message) {
-    // console.log('rep -> dv', message);
+    debugConnection(`${two.name} -> BACKGORUND -> ${one.name} [${two.$i}-${one.$i}]`, message);
     try {
       one.postMessage(message);
     } catch (e) {
-      console.error('Unexpected disconnect, error', e); // eslint-disable-line no-console
+      if (__DEV__) console.error('Unexpected disconnect, error', e); // eslint-disable-line no-console
       shutdown(); // eslint-disable-line no-use-before-define
     }
   }
   one.onMessage.addListener(lOne);
   two.onMessage.addListener(lTwo);
   function shutdown() {
-    // console.log(`shutdown ${one.name} <-> ${two.name} [${one.$i} <-> ${two.$i}]`);
+    debugConnection(`SHUTDOWN ${one.name} <-> ${two.name} [${one.$i} <-> ${two.$i}]`);
     one.onMessage.removeListener(lOne);
     two.onMessage.removeListener(lTwo);
     one.disconnect();
@@ -104,7 +127,7 @@ chrome.browserAction.onClicked.addListener(tab => {
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
-    id: '123',
+    id: 'mobx-devtools',
     title: 'Open Mobx DevTools',
     contexts: ['all']
   });
@@ -122,31 +145,34 @@ chrome.runtime.onConnect.addListener(port => {
     name = 'content-script';
   }
 
-  if (!ports[tab]) {
-    ports[tab] = {
-      contentScript: null,
-      pendingDevtools: []
-    };
-  }
-  if (name === 'content-script') {
-    ports[tab].contentScript = port;
-    ports[tab].pendingDevtools.forEach(p => doublePipe(p, port));
-    ports[tab].pendingDevtools = [];
-    port.onDisconnect.addListener(() => {
-      ports[tab].contentScript = null;
-    });
-  } else if (name === 'devtools' && ports[tab].contentScript) {
-    doublePipe(ports[tab].contentScript, port);
-  } else if (name === 'devtools') {
-    ports[tab].pendingDevtools.push(port);
-    port.onDisconnect.addListener(() => {
-      ports[tab].pendingDevtools = ports[tab].pendingDevtools.filter(p => p !== port);
-    });
+  if (!orphansByTabId[tab]) {
+    orphansByTabId[tab] = [];
   }
 
-  if (ports[tab].devtools && ports[tab]['content-script']) {
-    doublePipe(ports[tab].devtools, ports[tab]['content-script']);
-    ports[tab].devtools = null;
-    ports[tab]['content-script'] = null;
+  if (name === 'content-script') {
+    const orphan = orphansByTabId[tab].find(t => t.name === 'devtools');
+    if (orphan) {
+      doublePipe(orphan.port, port);
+      orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== orphan);
+    } else {
+      const orphan = { name, port };
+      orphansByTabId[tab].push(orphan);
+      port.onDisconnect.addListener(() => {
+        if (__DEV__) console.warn('orphan devtools disconnected');
+        orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== orphan);
+      });
+    }
+  } else if (name === 'devtools') {
+    const orphan = orphansByTabId[tab].find(t => t.name === 'content-script');
+    if (orphan) {
+      orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== orphan);
+    } else {
+      const orphan = { name, port };
+      orphansByTabId[tab].push(orphan);
+      port.onDisconnect.addListener(() => {
+        if (__DEV__) console.warn('orphan content-script disconnected');
+        orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== orphan);
+      });
+    }
   }
 });

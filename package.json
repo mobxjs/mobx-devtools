@@ -9,16 +9,18 @@
         "url": "https://github.com/andykog/mobx-devtools.git"
     },
     "scripts": {
-        "build": "webpack",
+        "build": "cross-env NODE_ENV=production webpack",
         "publish": "npm publish",
-        "prepublish": "npm run build",
+        "prepublish": "npm run build ; npm run build-chrome",
         "start-todomvc": "npm run submodules ; npm run start-todomvc-now",
         "start-todomvc-now": "cross-env NODE_ENV=development webpack-dev-server --config webpack.todomvc.config.js --hot --inline",
         "submodules": "git submodule update --init ; git submodule foreach yarn",
         "start-chrome": "cross-env NODE_ENV=development webpack --watch --config webpack.chrome.config.js",
-        "test": "mocha 'src/**/*-test.js' --compilers js:babel-core/register",
+        "start-chrome-debug-connection": "cross-env DEBUG_CONNECTION=true cross-env NODE_ENV=development webpack --watch --config webpack.chrome.config.js",
+        "build-chrome": "cross-env NODE_ENV=production webpack --config webpack.chrome.config.js",
+        "test": "mocha 'src/**/*-test.js' 'shells/**/*-test.js' --compilers js:babel-core/register",
         "lint": "eslint 'src/**/*.js' 'src/**/*.jsx' && echo 'JS OK' ; exit 0",
-        "prettier": "prettier --write --print-width 100 --tab-width 2 --single-quote \"src/**/*.js\" \"shells/**/*.js\"",
+        "prettier": "prettier --write --print-width 100 --tab-width 2 --single-quote \"src/**/*.js\" \"shells/**/*.js\" \"src/**/*.jsx\" \"shells/**/*.jsx\"",
         "precommit": "lint-staged"
     },
     "author": "Michel Weststrate",

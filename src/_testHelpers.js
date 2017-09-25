@@ -1,7 +1,7 @@
-import { jsdom } from 'jsdom';
 import unexpected from 'unexpected';
 import unexpectedReact from 'unexpected-react';
 import unexpectedSinon from 'unexpected-sinon';
+const { jsdom } = require('jsdom/lib/old-api.js');
 
 export const jsdomHelper = html => {
   if (typeof document !== 'undefined') {

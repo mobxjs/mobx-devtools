@@ -60,8 +60,11 @@ module.exports = {
         }
     },
     plugins: [
-        new webpack.DefinePlugin({
-            __TARGET__: JSON.stringify("browser")
-        })
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
+        __DEBUG_CONNECTION__: JSON.stringify(process.env['DEBUG_CONNECTION'] === 'true'),
+        __TARGET__: JSON.stringify("browser")
+      }),
     ]
 }

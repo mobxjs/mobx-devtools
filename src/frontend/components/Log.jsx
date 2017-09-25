@@ -76,9 +76,8 @@ const renderStyle = () => (
 );
 
 export default class Log extends Component {
-
   static contextTypes = {
-    store: PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired
   };
 
   componentDidMount() {
@@ -100,14 +99,20 @@ export default class Log extends Component {
   handleScroll = () => {
     if (this.containerEl) {
       const { scrollTop, offsetHeight, scrollHeight } = this.containerEl;
-      this.scrollEnd = ((scrollTop + offsetHeight) - scrollHeight) > -11; /* padding is 10px */
+      this.scrollEnd = scrollTop + offsetHeight - scrollHeight > -11; /* padding is 10px */
     }
   };
 
   render() {
     const { log } = this.context.store.state;
     return (
-      <div className="mobxdevtool__Log" onScroll={this.handleScroll} ref={(el) => { this.containerEl = el; }}>
+      <div
+        className="mobxdevtool__Log"
+        onScroll={this.handleScroll}
+        ref={el => {
+          this.containerEl = el;
+        }}
+      >
         {renderStyle()}
         {log.map(change => <LogItem change={change} key={change.id} />)}
       </div>

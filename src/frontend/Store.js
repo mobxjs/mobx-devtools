@@ -3,9 +3,8 @@ export default class Store {
     this.debugName = debugName;
     this.bridge = bridge;
 
-    const disposables = [
+    this.disposables = [
       bridge.sub('frontent:append-log', changes => {
-        console.log('changes', changes);
         let log = this.state.log;
         if (log.length > 500) {
           log = log.slice(-480);
@@ -19,10 +18,12 @@ export default class Store {
       bridge.sub('frontend:backend-state', state => {
         Object.assign(this.state, state);
         this.scheduleUpdate();
+      }),
+      bridge.sub('content-script-installation-error', () => {
+        this.state.contentScriptInstallationError = true;
+        this.scheduleUpdate();
       })
     ];
-
-    this.dispose = () => disposables.forEach(fn => fn());
   }
 
   state = {
@@ -31,7 +32,6 @@ export default class Store {
   };
 
   updatedListeners = [];
-  disposables = [];
 
   $setStateKey(key, value) {
     if (this.state[key] !== value) {
@@ -96,7 +96,7 @@ export default class Store {
     this.$setStateKey('logFilter', logFilter);
   }
 
-  disposeBridge = () => {
+  dispose = () => {
     this.disposables.forEach(fn => fn());
     this.disposables.splice(0);
   };

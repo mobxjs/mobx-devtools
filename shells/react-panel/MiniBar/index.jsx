@@ -4,25 +4,24 @@ import MiniBarButton from './MiniBarButton';
 import * as styles from './styles/index';
 
 export default class MiniBar extends Component {
-
   static propTypes = {
     position: PropTypes.shape({
       top: PropTypes.string,
       bottom: PropTypes.string,
       left: PropTypes.string,
-      right: PropTypes.string,
-    }),
+      right: PropTypes.string
+    })
   };
 
   static defaultProps = {
     position: {
       top: '0px',
-      right: '20px',
-    },
+      right: '20px'
+    }
   };
 
   static contextTypes = {
-    store: PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired
   };
 
   componentDidMount() {

@@ -3,13 +3,11 @@ import BrowserAgentDelegate from './BrowserAgentDelegate';
 import ChangesProcessor from './utils/ChangesProcessor';
 import localStorage from './utils/localStorage';
 
-const hook = window.__MOBX_DEVTOOLS_GLOBAL_HOOK__;
-
 const LS$UPDATES$KEY = 'mobx-react-devtool$$updatesEnabled';
 const LS$CONSOLE$LOG$KEY = 'mobx-react-devtool$$clogEnabled';
 const LS$PANEL$LOG$KEY = 'mobx-react-devtool$$pLogEnabled';
 
-export default bridge => {
+export default (bridge, hook) => {
   const disposables = [];
   const connectionDisposables = [];
 

@@ -5,11 +5,9 @@ import Graph from './Graph/index';
 import MiniBarButton from '../../../shells/react-panel/MiniBar/MiniBarButton';
 import Blocked from './Blocked';
 
-
 export default class RichPanel extends React.Component {
-
   static contextTypes = {
-    store: PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired
   };
 
   componentDidMount() {
@@ -22,7 +20,7 @@ export default class RichPanel extends React.Component {
     document.removeEventListener('keydown', this.$handleKeyDown);
   }
 
-  $handleKeyDown = (e) => {
+  $handleKeyDown = e => {
     if (!e.metaKey) return;
     switch (e.keyCode) {
       case 75: // k
@@ -56,31 +54,30 @@ export default class RichPanel extends React.Component {
     const { store } = this.context;
 
     return (
-      <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-        {store.state.graphEnabled &&
+      <div style={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+        {store.state.graphEnabled && (
           <Blocked icon="pick" onClick={this.handleToggleGraph}>
             Pick the component
           </Blocked>
-        }
+        )}
 
         <div style={{ display: 'flex', flex: '0 0 26px', borderBottom: '1px solid #eee' }}>
-
-          {store.state.mobxReactFound &&
+          {store.state.mobxReactFound && (
             <MiniBarButton
               id="buttonUpdates"
               onToggle={this.handleToggleUpdates}
               active={store.state.updatesEnabled}
               hotkey="u"
             />
-          }
-          {store.state.mobxReactFound &&
+          )}
+          {store.state.mobxReactFound && (
             <MiniBarButton
               id="buttonGraph"
               onToggle={this.handleToggleGraph}
               active={store.state.graphEnabled}
               hotkey="p"
             />
-          }
+          )}
           <MiniBarButton
             id="buttonLog"
             active={store.state.logEnabled}
@@ -93,7 +90,7 @@ export default class RichPanel extends React.Component {
             onToggle={this.handleToggleConsoleLogging}
           />
 
-          {store.state.log.length > 0 &&
+          {store.state.log.length > 0 && (
             <MiniBarButton
               style={{ marginLeft: 'auto' }}
               id="buttonClear"
@@ -101,14 +98,12 @@ export default class RichPanel extends React.Component {
               onToggle={this.handleClearLog}
               hotkey="k"
             />
-          }
-
+          )}
         </div>
 
         <Log />
 
         <Graph />
-
       </div>
     );
   }

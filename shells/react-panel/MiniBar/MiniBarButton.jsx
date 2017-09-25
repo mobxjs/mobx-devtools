@@ -5,22 +5,27 @@ import * as styles from './styles/index';
 const metaPrefix = '⌘';
 
 export default class MiniBarButton extends Component {
-
   static propTypes = {
     onToggle: PropTypes.func.isRequired,
     active: PropTypes.bool.isRequired,
-    id: PropTypes.oneOf(['buttonUpdates', 'buttonGraph', 'buttonConsoleLog', 'buttonLog', 'buttonClear']).isRequired,
+    id: PropTypes.oneOf([
+      'buttonUpdates',
+      'buttonGraph',
+      'buttonConsoleLog',
+      'buttonLog',
+      'buttonClear'
+    ]).isRequired,
     style: PropTypes.object,
-    hotkey: PropTypes.string,
+    hotkey: PropTypes.string
   };
 
   static defaultProps = {
     style: undefined,
-    hotkey: undefined,
+    hotkey: undefined
   };
 
   state = {
-    hovered: false,
+    hovered: false
   };
 
   handleMouseOver = () => this.setState({ hovered: true });
@@ -32,12 +37,18 @@ export default class MiniBarButton extends Component {
 
     const additionalStyles = (() => {
       switch (id) {
-        case 'buttonUpdates': return active ? styles.buttonUpdatesActive : styles.buttonUpdates;
-        case 'buttonGraph': return active ? styles.buttonGraphActive : styles.buttonGraph;
-        case 'buttonLog': return active ? styles.buttonLogActive : styles.buttonLog;
-        case 'buttonConsoleLog': return active ? styles.buttonConsoleLogActive : styles.buttonConsoleLog;
-        case 'buttonClear': return styles.buttonClear;
-        default: return undefined;
+        case 'buttonUpdates':
+          return active ? styles.buttonUpdatesActive : styles.buttonUpdates;
+        case 'buttonGraph':
+          return active ? styles.buttonGraphActive : styles.buttonGraph;
+        case 'buttonLog':
+          return active ? styles.buttonLogActive : styles.buttonLog;
+        case 'buttonConsoleLog':
+          return active ? styles.buttonConsoleLogActive : styles.buttonConsoleLog;
+        case 'buttonClear':
+          return styles.buttonClear;
+        default:
+          return undefined;
       }
     })();
 
@@ -45,12 +56,18 @@ export default class MiniBarButton extends Component {
 
     const title = (() => {
       switch (id) {
-        case 'buttonUpdates': return 'Visualize component re-renders';
-        case 'buttonGraph': return 'Select a component and show its dependency tree';
-        case 'buttonLog': return 'Log state changes in panel';
-        case 'buttonConsoleLog': return 'Log state changes to the browser console';
-        case 'buttonClear': return 'Clear log';
-        default: return undefined;
+        case 'buttonUpdates':
+          return 'Visualize component re-renders';
+        case 'buttonGraph':
+          return 'Select a component and show its dependency tree';
+        case 'buttonLog':
+          return 'Log state changes in panel';
+        case 'buttonConsoleLog':
+          return 'Log state changes to the browser console';
+        case 'buttonClear':
+          return 'Clear log';
+        default:
+          return undefined;
       }
     })();
 

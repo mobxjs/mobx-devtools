@@ -4,9 +4,8 @@ import ModalContainer from '../ModalContainer/index';
 import * as styles from './styles';
 
 export default class Graph extends Component {
-
   static contextTypes = {
-    store: PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired
   };
 
   componentDidMount() {
@@ -29,13 +28,13 @@ export default class Graph extends Component {
     return (
       <div style={styles.item} key={name}>
         <span style={Object.assign({}, styles.box, isRoot && styles.box.root)}>{name}</span>
-        {dependencies &&
+        {dependencies && (
           <div style={styles.tree}>
             {dependencies.map((dependency, i) =>
-              this.renderTreeItem(dependency, /* isLast: */i === dependencies.length - 1))
-            }
+              this.renderTreeItem(dependency, /* isLast: */ i === dependencies.length - 1)
+            )}
           </div>
-        }
+        )}
         {!isRoot && <span style={styles.itemHorisontalDash} />}
         {!isRoot && <span style={stickStyle} />}
       </div>
@@ -46,14 +45,16 @@ export default class Graph extends Component {
     const { dependencyTree } = this.context.store.state;
     return (
       <ModalContainer onOverlayClick={this.handleClose}>
-        {dependencyTree &&
+        {dependencyTree && (
           <div style={styles.graph}>
-            <span style={styles.close} onClick={this.handleClose}>×</span>
+            <span style={styles.close} onClick={this.handleClose}>
+              ×
+            </span>
             <div style={styles.rootThree}>
-              {this.renderTreeItem(dependencyTree, /* isLast: */true, /* isRoot: */true)}
+              {this.renderTreeItem(dependencyTree, /* isLast: */ true, /* isRoot: */ true)}
             </div>
           </div>
-        }
+        )}
       </ModalContainer>
     );
   }

@@ -28,6 +28,7 @@ const symbols = {
 };
 
 function serialize(data, path = [], seen = new SimpleMap()) {
+  console.log('serialize');
   if (!data || typeof data !== 'object') {
     if (typeof data === 'string' && data.length > 500) {
       return `${data.slice(0, 500)}...`;
@@ -134,7 +135,15 @@ export default class Bridge {
 
   constructor(wall) {
     this.$wall = wall;
+    this.$serialize = serialize;
+    this.$deserialize = deserialize;
     wall.listen(this.$handleMessage.bind(this));
+  }
+
+  serializationOff() {
+    // When there is no need in serialization, dont waste resources
+    this.$serialize = a => a;
+    this.$deserialize = a => a;
   }
 
   send(eventName, eventData = {}) {
@@ -205,7 +214,7 @@ export default class Bridge {
   flushBufferSlice(bufferSlice) {
     const events = bufferSlice.map(({ eventName, eventData }) => ({
       eventName,
-      eventData: serialize(eventData)
+      eventData: this.$serialize(eventData)
     }));
     events.$test = new SimpleMap();
     events.$test.set(1, 2);
@@ -225,6 +234,13 @@ export default class Bridge {
   }
 
   $handleMessage(payload) {
+    if (typeof payload === 'string') {
+      const handlers = this.$listeners[payload];
+      if (handlers) {
+        handlers.forEach(fn => fn());
+      }
+    }
+
     if (payload.type === 'resume') {
       this.$paused = false;
       this.scheduleFlush();
@@ -239,7 +255,7 @@ export default class Bridge {
 
     if (payload.type === 'event') {
       const handlers = this.$listeners[payload.eventName];
-      const eventData = deserialize(payload.eventData);
+      const eventData = this.$deserialize(payload.eventData);
       if (handlers) {
         handlers.forEach(fn => fn(eventData));
       }
@@ -248,7 +264,7 @@ export default class Bridge {
     if (payload.type === 'many-events') {
       payload.events.forEach(event => {
         const handlers = this.$listeners[event.eventName];
-        const eventData = deserialize(event.eventData);
+        const eventData = this.$deserialize(event.eventData);
         if (handlers) {
           handlers.forEach(fn => fn(eventData));
         }

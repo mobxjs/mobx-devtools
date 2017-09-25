@@ -16,22 +16,27 @@ const hook = window.__MOBX_DEVTOOLS_GLOBAL_HOOK__;
 
 hook.injectMobxReact(require('mobx-react'), require('mobx'));
 
-
 const listenersA = [];
 const listenersB = [];
 
-const bridgeA = new Bridge({
+const bridgeA = new Bridge(
+  {
     listen: fn => listenersA.push(fn),
-    send: data => listenersB.forEach(fn => fn(data)),
-})
+    send: data => listenersB.forEach(fn => fn(data))
+  },
+);
 
-const bridgeB = new Bridge({
+const bridgeB = new Bridge(
+  {
     listen: fn => listenersB.push(fn),
-    send: data => listenersA.forEach(fn => fn(data)),
-})
+    send: data => listenersA.forEach(fn => fn(data))
+  },
+);
 
+bridgeA.serializationOff();
+bridgeB.serializationOff();
 
-const disposeBackend = initBackend(bridgeA)
+const disposeBackend = initBackend(bridgeA, hook);
 
 const store = new Store(bridgeB);
 
@@ -40,7 +45,7 @@ export const configureDevtool = ({
   updatesEnabled,
   graphEnabled,
   logFilter,
-  highlightTimeout,
+  highlightTimeout
 }) => {
   if (logEnabled !== undefined) {
     store.toggleConsoleLogging(Boolean(logEnabled));
@@ -56,24 +61,23 @@ export const configureDevtool = ({
   }
   // TODO
   // if (typeof highlightTimeout === 'number') {
-  //   agent.setHighlightTimeout(highlightTimeout);
+  //   store.setHighlightTimeout(highlightTimeout);
   // }
 };
 
 export default class DevTool extends Component {
-
   static propTypes = {
     noPanel: PropTypes.bool,
     logFilter: PropTypes.func,
     highlightTimeout: PropTypes.number,
-    position: PropTypes.object,
+    position: PropTypes.object
   };
 
   static defaultProps = {
     noPanel: false,
     logFilter: undefined,
     highlightTimeout: undefined,
-    position: undefined,
+    position: undefined
   };
 
   componentWillMount() {
@@ -82,7 +86,7 @@ export default class DevTool extends Component {
   }
 
   componentWillUnmount() {
-      disposeBackend();
+    disposeBackend();
   }
 
   render() {
@@ -90,13 +94,10 @@ export default class DevTool extends Component {
     return (
       <ContextProvider store={store}>
         <div>
-          {!noPanel &&
-            <MiniBar position={position} />
-          }
+          {!noPanel && <MiniBar position={position} />}
           <Graph />
         </div>
       </ContextProvider>
     );
   }
 }
-

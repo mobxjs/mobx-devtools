@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import * as styles from './styles';
 
 export default class ModalContainer extends Component {
-
   static propTypes = {
     children: PropTypes.node,
-    onOverlayClick: PropTypes.func.isRequired,
+    onOverlayClick: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    children: undefined,
+    children: undefined
   };
 
   componentDidUpdate(prevProps) {
@@ -35,15 +34,8 @@ export default class ModalContainer extends Component {
     const { children, onOverlayClick } = this.props;
     if (!children) return null;
     return (
-      <div
-        style={styles.overlay}
-        onClick={onOverlayClick}
-      >
-        <div
-          key="content"
-          style={styles.modal}
-          onClick={this.stopPropagation}
-        >
+      <div style={styles.overlay} onClick={onOverlayClick}>
+        <div key="content" style={styles.modal} onClick={this.stopPropagation}>
           {children}
         </div>
       </div>

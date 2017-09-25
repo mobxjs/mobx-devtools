@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class LogControl extends Component {
-
   static propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired
   };
 
   componentDidMount() {
@@ -23,7 +22,7 @@ export default class LogControl extends Component {
     const { children } = this.props;
     return React.cloneElement(children, {
       active: store.state.consoleLogEnabled,
-      onToggle: () => store.toggleConsoleLogging(),
+      onToggle: () => store.toggleConsoleLogging()
     });
   }
 }
