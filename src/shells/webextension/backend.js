@@ -98,7 +98,7 @@ function waitForPing() {
           debugConnection('[contentScript -> BACKEND]', evt);
           window.removeEventListener('message', helloListener);
           window.removeEventListener('message', failListener);
-          startWaiting();
+          waitForPing();
         }
       }
 

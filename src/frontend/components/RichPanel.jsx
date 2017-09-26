@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Log from './Log';
 import Graph from './Graph/index';
-import MiniBarButton from '../../../shells/react-panel/MiniBar/MiniBarButton';
+import MiniBarButton from '../../shells/react/MiniBar/MiniBarButton';
 import Blocked from './Blocked';
 
 export default class RichPanel extends React.Component {

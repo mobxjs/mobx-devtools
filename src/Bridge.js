@@ -28,7 +28,6 @@ const symbols = {
 };
 
 function serialize(data, path = [], seen = new SimpleMap()) {
-  console.log('serialize');
   if (!data || typeof data !== 'object') {
     if (typeof data === 'string' && data.length > 500) {
       return `${data.slice(0, 500)}...`;

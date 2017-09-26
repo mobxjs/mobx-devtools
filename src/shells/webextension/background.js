@@ -47,12 +47,12 @@ function handleInstallError(tabId, error) {
 
 function installContentScript(tabId) {
   chrome.tabs.get(+tabId, function(tab) {
-    if (chrome.runtime.lastError !== undefined) {
+    if (chrome.runtime.lastError) {
       handleInstallError(tabId, chrome.runtime.lastError);
     } else if (tab.status === 'complete') {
-      chrome.tabs.executeScript(tabId, { file: '/build/contentScript.js' }, res => {
+      chrome.tabs.executeScript(tabId, { file: '/contentScript.js' }, res => {
         let err = chrome.runtime.lastError;
-        if (err !== undefined || !res) handleInstallError(tabId, err);
+        if (err || !res) handleInstallError(tabId, err);
       });
     } else {
       chrome.tabs.onUpdated.addListener(function listener(tid, changeInfo, tabInfo) {

@@ -5,6 +5,12 @@
   "version": "0.0.21",
   "version_name": "alpha-18",
   "minimum_chrome_version": "44",
+  "applications": {
+    "gecko": {
+      "id": "@mobx-devtools",
+      "strict_min_version": "54.0"
+    }
+  },
   "icons": {
     "128": "icons/Icon-128.png",
     "16": "icons/Icon-16.png",
@@ -16,18 +22,17 @@
   "commands": {
     "open-devtools-window": {
       "suggested_key": {
-        "default": "Alt+Shift+M",
-        "mac": "Command+MacCtrl+M"
+        "default": "Alt+Shift+M"
       },
       "description": "DevTools window to left"
     }
   },
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "web_accessible_resources": [ "main.html", "panel.html", "build/backend.js"],
+  "web_accessible_resources": [ "main.html", "panel.html", "backend.js"],
 
   "background": {
-    "scripts": [ "build/background.js" ],
+    "scripts": [ "background.js" ],
     "persistent": false
   },
 
@@ -49,7 +54,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["build/injectGlobalHook.js"],
+      "js": ["injectGlobalHook.js"],
       "run_at": "document_start"
     }
   ]

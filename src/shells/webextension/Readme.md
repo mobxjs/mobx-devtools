@@ -5,4 +5,4 @@
 - run `yarn start-todomvc`
 - run `yarn start-chrome`
 - Go to `chrome://extensions`, check "developer mode", and click "Load
-  unpacked extension", and select this directory
+  unpacked extension", and select directory lib/

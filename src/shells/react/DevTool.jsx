@@ -1,37 +1,33 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import installGlobalHook from '../../src/backend/installGlobalHook';
-import initBackend from '../../src/backend';
-import Bridge from '../../src/Bridge';
-import Store from '../../src/frontend/Store';
-import ContextProvider from '../../src/frontend/ContextProvider';
+import installGlobalHook from '../../backend/installGlobalHook';
+import initBackend from '../../backend';
+import Bridge from '../../Bridge';
+import Store from '../../frontend/Store';
+import ContextProvider from '../../frontend/ContextProvider';
 import MiniBar from './MiniBar/index';
-import Graph from '../../src/frontend/components/Graph/index';
+import Graph from '../../frontend/components/Graph/index';
 
 installGlobalHook(window);
 
 // eslint-disable-next-line no-underscore-dangle
 const hook = window.__MOBX_DEVTOOLS_GLOBAL_HOOK__;
 
-hook.injectMobxReact(require('mobx-react'), require('mobx'));
+hook.injectMobxReact(require('mobx-react/index'), require('mobx'));
 
 const listenersA = [];
 const listenersB = [];
 
-const bridgeA = new Bridge(
-  {
-    listen: fn => listenersA.push(fn),
-    send: data => listenersB.forEach(fn => fn(data))
-  },
-);
+const bridgeA = new Bridge({
+  listen: fn => listenersA.push(fn),
+  send: data => listenersB.forEach(fn => fn(data))
+});
 
-const bridgeB = new Bridge(
-  {
-    listen: fn => listenersB.push(fn),
-    send: data => listenersA.forEach(fn => fn(data))
-  },
-);
+const bridgeB = new Bridge({
+  listen: fn => listenersB.push(fn),
+  send: data => listenersA.forEach(fn => fn(data))
+});
 
 bridgeA.serializationOff();
 bridgeB.serializationOff();

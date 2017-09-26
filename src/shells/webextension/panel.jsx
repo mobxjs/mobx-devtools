@@ -3,8 +3,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Loader from '../../../src/frontend/Loader';
-import RichPanel from '../../../src/frontend/components/RichPanel';
+import Loader from '../../frontend/Loader';
+import RichPanel from '../../frontend/components/RichPanel';
 
 import debugConnection from '../../../src/debugConnection';
 
@@ -41,7 +41,7 @@ loaderConfig = {
         var inject = function() {
           // the prototype stuff is in case document.createElement has been modified
           var script = document.constructor.prototype.createElement.call(document, 'script');
-          script.src = "${chrome.runtime.getURL('build/backend.js')}";
+          script.src = "${chrome.runtime.getURL('backend.js')}";
           document.documentElement.appendChild(script);
           script.parentNode.removeChild(script);
         }

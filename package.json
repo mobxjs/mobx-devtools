@@ -1,6 +1,6 @@
 {
     "name": "mobx-devtools",
-    "version": "0.0.8",
+    "version": "0.0.22",
     "description": "Dev-tools for MobX and React",
     "main": "index.js",
     "typings": "index",
@@ -9,15 +9,20 @@
         "url": "https://github.com/andykog/mobx-devtools.git"
     },
     "scripts": {
-        "build": "cross-env NODE_ENV=production webpack",
-        "publish": "npm publish",
-        "prepublish": "npm run build ; npm run build-chrome",
-        "start-todomvc": "npm run submodules ; npm run start-todomvc-now",
-        "start-todomvc-now": "cross-env NODE_ENV=development webpack-dev-server --config webpack.todomvc.config.js --hot --inline",
+        "publish": "npm publish ; npm run publish:chrome ; npm run publish:firefox",
+        "prepublish": "npm run build",
+        "build": "npm run build:pkg ; npm run build:chrome ; npm run build:firefox",
+        "start:todomvc": "npm run submodules ; npm run start:todomvc-now",
+        "start:todomvc-now": "cross-env NODE_ENV=development webpack-dev-server --config webpack.todomvc.config.js --hot --inline",
         "submodules": "git submodule update --init ; git submodule foreach yarn",
-        "start-chrome": "cross-env NODE_ENV=development webpack --watch --config webpack.chrome.config.js",
-        "start-chrome-debug-connection": "cross-env DEBUG_CONNECTION=true cross-env NODE_ENV=development webpack --watch --config webpack.chrome.config.js",
-        "build-chrome": "cross-env NODE_ENV=production webpack --config webpack.chrome.config.js",
+        "build:pkg": "cross-env NODE_ENV=production webpack",
+        "start:chrome": "cross-env NODE_ENV=development cross-env TARGET_BROWSER=chrome node scripts/webextension/dev-server.js",
+        "start:chrome-debug-connection": "cross-env DEBUG_CONNECTION=true cross-env NODE_ENV=development TARGET_BROWSER=chrome node scripts/webextension/dev-server.js",
+        "build:chrome": "cross-env NODE_ENV=production TARGET_BROWSER=chrome node scripts/webextension/build.js",
+        "publish:chrome": "cross-env NODE_ENV=production TARGET_BROWSER=chrome node scripts/webextension/publish.js",
+        "start:firefox": "cross-env NODE_ENV=development cross-env TARGET_BROWSER=firefox node scripts/webextension/dev-server.js",
+        "build:firefox": "cross-env NODE_ENV=production TARGET_BROWSER=firefox node scripts/webextension/build.js",
+        "publish:firefox": "cross-env NODE_ENV=production TARGET_BROWSER=firefox node scripts/webextension/publish.js",
         "test": "mocha 'src/**/*-test.js' 'shells/**/*-test.js' --compilers js:babel-core/register",
         "lint": "eslint 'src/**/*.js' 'src/**/*.jsx' && echo 'JS OK' ; exit 0",
         "prettier": "prettier --write --print-width 100 --tab-width 2 --single-quote \"src/**/*.js\" \"shells/**/*.js\" \"src/**/*.jsx\" \"shells/**/*.jsx\"",
@@ -34,6 +39,7 @@
         "mobx-react": "^3.3.0 || ^4.0.0"
     },
     "devDependencies": {
+        "archiver": "^2.0.3",
         "babel": "^6.23.0",
         "babel-core": "^6.25.0",
         "babel-eslint": "^7.2.3",
@@ -44,6 +50,7 @@
         "babel-preset-react": "^6.24.1",
         "babel-preset-stage-1": "^6.24.1",
         "cross-env": "^5.0.1",
+        "del": "^3.0.0",
         "es6-object-assign": "^1.1.0",
         "eslint": "^3.19.0",
         "eslint-config-airbnb": "^15.0.1",
@@ -60,6 +67,7 @@
         "react-addons-test-utils": "^15.6.0",
         "react-dom": "^15.6.1",
         "react-test-renderer": "^15.6.1",
+        "request": "^2.82.0",
         "sinon": "^3.3.0",
         "unexpected": "^10.29.0",
         "unexpected-react": "^4.1.0",
@@ -77,9 +85,12 @@
         "devtools"
     ],
     "dependencies": {
+        "html-webpack-plugin": "^2.30.1",
+        "jsonwebtoken": "^8.0.1",
         "prettier": "^1.6.1",
         "ts-loader": "^2.3.7",
         "typescript": "^2.5.2",
-        "webpack-dev-server": "^2.8.2"
+        "webpack-dev-server": "^2.8.2",
+        "write-file-webpack-plugin": "^4.1.0"
     }
 }

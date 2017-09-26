@@ -1,4 +1,4 @@
 /mobx/**
 /mobx-react/**
 /mobx-react-todomvc/**
-/shells/chrome/build/**
+/src/shells/chrome/build/**

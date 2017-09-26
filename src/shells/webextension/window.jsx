@@ -56,7 +56,7 @@ chrome.runtime.getBackgroundPage(({ contentTabId }) => {
         const code = `
           // the prototype stuff is in case document.createElement has been modified
           var script = document.constructor.prototype.createElement.call(document, 'script');
-          script.src = "${chrome.runtime.getURL('build/backend.js')}";
+          script.src = "${chrome.runtime.getURL('backend.js')}";
           document.documentElement.appendChild(script);
           script.parentNode.removeChild(script);
         `;
