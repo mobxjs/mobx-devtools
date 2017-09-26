@@ -43,7 +43,9 @@ function publishFirefox() {
     }
     const r = JSON.parse(body);
     if (r.error) {
-      throw r.error;
+      // throw r.error;
+      console.error(r.error);
+      process.exit(0);
     }
     console.log('Firefox published', r);
   });
@@ -92,8 +94,7 @@ function publishCrhome(target = 'default') {
       if (error) {
         throw error;
       }
-      if (uploadState !== 'SUCCESS') throw {uploadState};
-
+      if (uploadState !== 'SUCCESS') throw new Error(`uploadState: \`${uploadState}\` !== SUCCESS ${body}`);
 
       request({
         url: `https://www.googleapis.com/chromewebstore/v1.1/items/${id}/publish?publishTarget=${target}`,
