@@ -7,7 +7,7 @@ module.exports = {
   output: {
     libraryTarget: 'umd',
     library: 'mobxDevtools',
-    path: __dirname + '/lib/',
+    path: __dirname + '/../../lib/',
     filename: '[name].js'
   },
   resolve: {

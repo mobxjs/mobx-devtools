@@ -3,7 +3,7 @@
 /node_modules/
 /lib
 !/lib/react
-webpack.config.js
+scripts/react/webpack.config.js
 mobx
 mobx-react
 mobx-react-todomvc

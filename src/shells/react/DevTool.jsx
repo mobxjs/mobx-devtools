@@ -55,10 +55,9 @@ export const configureDevtool = ({
   if (logFilter !== undefined) {
     store.setLogFilter(logFilter);
   }
-  // TODO
-  // if (typeof highlightTimeout === 'number') {
-  //   store.setHighlightTimeout(highlightTimeout);
-  // }
+  if (typeof highlightTimeout === 'number') {
+    console.warn('[mobx-devtools]: configureDevtool({ highlightTimeout }) is deprecated');
+  }
 };
 
 export default class DevTool extends Component {

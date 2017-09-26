@@ -17,7 +17,7 @@ or
 Somewhere in your application, create a DevTools component:
 
 ```js
-import DevTools from 'mobx-devtools';
+import DevTools from 'mobx-devtools/lib/chrome';
 
 class MyApp extends React.Component {
   render() {

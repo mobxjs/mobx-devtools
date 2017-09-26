@@ -3,7 +3,7 @@
     "version": "0.0.22",
     "description": "Dev-tools for MobX and React",
     "main": "index.js",
-    "typings": "index",
+    "typings": "lib/react/index",
     "repository": {
         "type": "git",
         "url": "https://github.com/andykog/mobx-devtools.git"
@@ -11,11 +11,11 @@
     "scripts": {
         "publish": "npm publish ; npm run publish:chrome ; npm run publish:firefox",
         "prepublish": "npm run build",
-        "build": "npm run build:pkg ; npm run build:chrome ; npm run build:firefox",
+        "build": "npm run build:react ; npm run build:chrome ; npm run build:firefox",
         "start:todomvc": "npm run submodules ; npm run start:todomvc-now",
         "start:todomvc-now": "cross-env NODE_ENV=development webpack-dev-server --config webpack.todomvc.config.js --hot --inline",
         "submodules": "git submodule update --init ; git submodule foreach yarn",
-        "build:pkg": "cross-env NODE_ENV=production webpack",
+        "build:react": "cross-env NODE_ENV=production node scripts/react/build",
         "start:chrome": "cross-env NODE_ENV=development cross-env TARGET_BROWSER=chrome node scripts/webextension/dev-server.js",
         "start:chrome-debug-connection": "cross-env DEBUG_CONNECTION=true cross-env NODE_ENV=development TARGET_BROWSER=chrome node scripts/webextension/dev-server.js",
         "build:chrome": "cross-env NODE_ENV=production TARGET_BROWSER=chrome node scripts/webextension/build.js",
