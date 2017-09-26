@@ -7,7 +7,7 @@ const metaPrefix = '⌘';
 export default class MiniBarButton extends Component {
   static propTypes = {
     onToggle: PropTypes.func.isRequired,
-    active: PropTypes.bool.isRequired,
+    active: PropTypes.bool,
     id: PropTypes.oneOf([
       'buttonUpdates',
       'buttonGraph',

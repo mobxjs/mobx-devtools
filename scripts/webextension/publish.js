@@ -80,8 +80,6 @@ function publishCrhome(target = 'default') {
     }
     const headers = {Authorization: `${token_type} ${access_token}`, 'x-goog-api-version': '2'};
 
-    console.log({error, access_token, expires_in, token_type});
-
     fs.createReadStream(`./lib/${TARGET_BROWSER}.zip`).pipe(request({
       url: `https://www.googleapis.com/upload/chromewebstore/v1.1/items/${id}`,
       method: 'PUT',

@@ -9,7 +9,7 @@
         "url": "https://github.com/andykog/mobx-devtools.git"
     },
     "scripts": {
-        "publish-all": "npm run build:react && node scripts/bump-version-push-publish && npm run build:chrome && npm run build:firefox && npm run publish:chrome && npm run publish:firefox",
+        "publish-all": "yarn ; npm run build:react && node scripts/bump-version-push-publish && npm run build:chrome && npm run build:firefox && npm run publish:chrome && npm run publish:firefox",
         "build": "npm run build:react ; npm run build:chrome ; npm run build:firefox",
         "start:todomvc": "npm run submodules ; npm run start:todomvc-now",
         "start:todomvc-now": "cross-env NODE_ENV=development webpack-dev-server --config webpack.todomvc.config.js --hot --inline",
@@ -58,9 +58,13 @@
         "eslint-plugin-jsx-a11y": "^5.0.3",
         "eslint-plugin-react": "^7.1.0",
         "file-loader": "^0.11.2",
+        "html-webpack-plugin": "^2.30.1",
         "jsdom": "^11.0.0",
+        "jsonwebtoken": "^8.0.1",
         "mobx": "^3.3.0",
         "mobx-react": "^4.3.2",
+        "prettier": "^1.6.1",
+        "prompt": "^1.0.0",
         "prop-types": "^15.5.10",
         "react": "^15.6.1",
         "react-addons-test-utils": "^15.6.0",
@@ -68,11 +72,15 @@
         "react-test-renderer": "^15.6.1",
         "request": "^2.82.0",
         "sinon": "^3.3.0",
+        "ts-loader": "^2.3.7",
+        "typescript": "^2.5.2",
         "unexpected": "^10.29.0",
         "unexpected-react": "^4.1.0",
         "unexpected-sinon": "^10.7.1",
         "url-loader": "^0.5.9",
-        "webpack": "^3.6.0"
+        "webpack": "^3.6.0",
+        "webpack-dev-server": "^2.8.2",
+        "write-file-webpack-plugin": "^4.1.0"
     },
     "keywords": [
         "mobx",
@@ -83,13 +91,5 @@
         "reactive",
         "devtools"
     ],
-    "dependencies": {
-        "html-webpack-plugin": "^2.30.1",
-        "jsonwebtoken": "^8.0.1",
-        "prettier": "^1.6.1",
-        "ts-loader": "^2.3.7",
-        "typescript": "^2.5.2",
-        "webpack-dev-server": "^2.8.2",
-        "write-file-webpack-plugin": "^4.1.0"
-    }
+    "dependencies": {}
 }
