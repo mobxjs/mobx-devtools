@@ -1,6 +1,6 @@
 {
     "name": "mobx-devtools",
-    "version": "0.0.22",
+    "version": "0.0.23",
     "description": "Dev-tools for MobX and React",
     "main": "index.js",
     "typings": "lib/react/index",
@@ -9,7 +9,7 @@
         "url": "https://github.com/andykog/mobx-devtools.git"
     },
     "scripts": {
-        "publish-all": "npm run build:react ; node scripts/bump-version-push-publish ; npm run build:chrome ; npm run build:firefox ; npm run publish:chrome ; npm run publish:firefox",
+        "publish-all": "npm run build:react && node scripts/bump-version-push-publish && npm run build:chrome && npm run build:firefox && npm run publish:chrome && npm run publish:firefox",
         "build": "npm run build:react ; npm run build:chrome ; npm run build:firefox",
         "start:todomvc": "npm run submodules ; npm run start:todomvc-now",
         "start:todomvc-now": "cross-env NODE_ENV=development webpack-dev-server --config webpack.todomvc.config.js --hot --inline",

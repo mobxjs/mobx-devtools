@@ -25,7 +25,7 @@ prompt.get([
   },
   {
     name: 'remote',
-    description: `Commit message`,
+    description: `GIT remote to push`,
     type: 'string',
     default: 'origin',
     required: true
