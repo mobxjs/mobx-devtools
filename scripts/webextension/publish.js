@@ -33,21 +33,18 @@ function publishFirefox() {
 
   request({
     url: `https://addons.mozilla.org/api/v3/addons/${id}/versions/${version}/`,
-    method: 'POST',
+    method: 'PUT',
     headers: {Authorization: `JWT ${token}`},
     formData: {'upload': fs.createReadStream(`./lib/${TARGET_BROWSER}.zip`)},
-
   }, (error, response, body) => {
     if (error) {
       throw error;
     }
     const r = JSON.parse(body);
     if (r.error) {
-      // throw r.error;
-      console.error(r.error);
-      process.exit(0);
+      throw r.error;
     }
-    console.log('Firefox published', r);
+    console.log('Firefox published', JSON.stringify(r));
   });
 }
 
