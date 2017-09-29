@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-const { jsdomHelper } = require('../../../src/_testHelpers');
+const { jsdomHelper } = require('../../../utils/_testHelpers');
 jsdomHelper();
 
 const unexpected = require('unexpected');
@@ -27,9 +27,9 @@ const {
   setLogEnabled,
   setUpdatesEnabled,
   setGraphEnabled
-} = require('../../../src/index');
-const ContextProvider = require('../../../src/frontend/ContextProvider').default;
-const Graph = require('../../../src/frontend/components/Graph/index').default;
+} = require('../index');
+const ContextProvider = require('../../../utils/ContextProvider').default;
+const Graph = require('../../../frontend/components/Graph/index').default;
 const MiniBar = require('../MiniBar/index').default;
 
 class CustomButton extends React.Component {

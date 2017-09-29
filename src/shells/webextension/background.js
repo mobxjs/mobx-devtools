@@ -5,7 +5,7 @@
  */
 
 const orphansByTabId = {};
-import debugConnection from '../../../src/debugConnection';
+import debugConnection from '../../utils/debugConnection';
 
 function getActiveContentWindow(cb) {
   chrome.tabs.query({ active: true, windowType: 'normal', currentWindow: true }, d => {

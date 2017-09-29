@@ -4,9 +4,9 @@
  * Injected to the app page when panel/window is activated.
  */
 
-import initBackend from '../../../src/backend';
+import initBackend from '../../backend';
 import Bridge from '../../../src/Bridge';
-import debugConnection from '../../../src/debugConnection';
+import debugConnection from '../../utils/debugConnection';
 
 const backendId = Math.random()
   .toString(32)

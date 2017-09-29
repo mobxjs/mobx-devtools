@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Bridge from '../Bridge';
-import Store from './Store';
-import Blocked from './components/Blocked';
-import ContextProvider from './ContextProvider';
+import StoreMobx from './StoreMobx';
+import StoreMobxReact from './StoreMobxReact';
+import Blocker from './components/Blocker/index';
+import ContextProvider from '../utils/ContextProvider';
 
-export default class Loader extends Component {
+export default class App extends Component {
   static propTypes = {
     quiet: PropTypes.bool,
     debugName: PropTypes.string,
@@ -33,30 +34,30 @@ export default class Loader extends Component {
     this.props.inject((wall, teardownWall) => {
       this.$teardownWall = teardownWall;
       const bridge = new Bridge(wall);
-      const store = new Store(bridge, `${this.props.debugName} store`);
 
-      if (!window.stores) {
-        window.stores = [];
-      }
-      if (!window.stores.includes(store)) window.stores.push(store);
+      this.stores = {
+        storeMobx: new StoreMobx(bridge),
+        storeMobxReact: new StoreMobxReact(bridge),
+      };
 
       this.$disposables.push(
-        store.subscibeUpdates(() => {
-          this.setState({
-            connected: true,
-            mobxFound: store.state.mobxFound,
-            contentScriptInstallationError: store.state.contentScriptInstallationError
-          });
+        this.stores.storeMobx.subscibeUpdates(() => {
+          this.setState({ mobxFound: this.stores.storeMobx.state.mobxFound });
+        }),
+        bridge.sub('content-script-installation-error', () => {
+          this.setState({ contentScriptInstallationError: true });
         })
       );
 
-      // Request state until getting response
-      const connectInterval = setInterval(() => bridge.send('backend:request-state'), 500);
-      bridge.once('frontend:backend-state', () => clearInterval(connectInterval));
-      bridge.send('backend:request-state');
+      bridge.send('backend:ping');
+      const connectInterval = setInterval(() => bridge.send('backend:ping'), 500);
+      bridge.once('frontend:pong', () => {
+        clearInterval(connectInterval);
+        this.setState({ connected: true });
+      });
 
       if (!this.$unMounted) {
-        this.setState({ loaded: true, store });
+        this.setState({ loaded: true });
       }
     });
   }
@@ -87,19 +88,19 @@ export default class Loader extends Component {
 
   renderContent() {
     if (this.state.contentScriptInstallationError) {
-      return <Blocked>Error while installing content-script</Blocked>;
+      return <Blocker>Error while installing content-script</Blocker>;
     }
     if (!this.state.loaded) {
-      return !this.props.quiet && <Blocked>Loading...</Blocked>;
+      return !this.props.quiet && <Blocker>Loading...</Blocker>;
     }
     if (!this.state.connected) {
-      return !this.props.quiet && <Blocked>Connecting...</Blocked>;
+      return !this.props.quiet && <Blocker>Connecting...</Blocker>;
     }
     if (this.state.mobxFound !== true) {
-      return !this.props.quiet && <Blocked>Looking for mobx...</Blocked>;
+      return !this.props.quiet && <Blocker>Looking for mobx...</Blocker>;
     }
     return (
-      <ContextProvider store={this.state.store}>
+      <ContextProvider stores={this.stores}>
         {React.Children.only(this.props.children)}
       </ContextProvider>
     );
@@ -113,7 +114,7 @@ export default class Loader extends Component {
           <div style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: 2 }}>
             <button onClick={() => this.reload()}>Reload</button>
             <button onClick={() => this.$teardownWall()}>Disconnect</button>
-            <button onClick={() => this.state.store.bridge.send('backend:test-event')}>
+            <button onClick={() => this.stores.storeMobx.bridge.send('backend:test-event')}>
               Test event
             </button>
           </div>

@@ -1,22 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ModalContainer from '../ModalContainer/index';
+import injectStores from '../../../utils/injectStores';
 import * as styles from './styles';
 
+@injectStores('storeMobxReact')
 export default class Graph extends Component {
-  static contextTypes = {
-    store: PropTypes.object.isRequired
-  };
 
-  componentDidMount() {
-    this.$unsubscribe = this.context.store.subscibeUpdates(() => this.setState({}));
-  }
-
-  componentWillUnmount() {
-    this.$unsubscribe();
-  }
-
-  handleClose = () => this.context.store.clearDeptree();
+  handleClose = () => this.props.storeMobxReact.clearDeptree();
 
   renderTreeItem({ name, dependencies }, isLast, isRoot) {
     const stickStyle = Object.assign(
@@ -42,7 +33,7 @@ export default class Graph extends Component {
   }
 
   render() {
-    const { dependencyTree } = this.context.store.state;
+    const { dependencyTree } = this.props.storeMobxReact.state;
     return (
       <ModalContainer onOverlayClick={this.handleClose}>
         {dependencyTree && (

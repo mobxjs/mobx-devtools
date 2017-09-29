@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export default class Blocked extends Component {
+export default class Blocker extends Component {
   static propTypes = {
     children: PropTypes.node,
     icon: PropTypes.string,

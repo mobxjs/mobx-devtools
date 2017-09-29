@@ -7,7 +7,7 @@
  * backend and the devtools panel.
  */
 
-import debugConnection from '../../../src/debugConnection';
+import debugConnection from '../../utils/debugConnection';
 
 const contentScriptId = Math.random()
   .toString(32)

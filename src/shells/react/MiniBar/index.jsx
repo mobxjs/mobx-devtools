@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MiniBarButton from './MiniBarButton';
 import * as styles from './styles/index';
+import injectStores from '../../../utils/injectStores';
 
+@injectStores('storeMobx', 'storeMobxReact')
 export default class MiniBar extends Component {
   static propTypes = {
     position: PropTypes.shape({
@@ -20,25 +22,13 @@ export default class MiniBar extends Component {
     }
   };
 
-  static contextTypes = {
-    store: PropTypes.object.isRequired
-  };
-
-  componentDidMount() {
-    this.$unsubscribe = this.context.store.subscibeUpdates(() => this.setState({}));
-  }
-
-  componentWillUnmount() {
-    this.$unsubscribe();
-  }
-
-  handleToggleUpdates = () => this.context.store.toggleShowingUpdates();
-  handleToggleGraph = () => this.context.store.togglePickingDeptreeComponent();
-  handleToggleConsoleLogging = () => this.context.store.toggleConsoleLogging();
+  handleToggleUpdates = () => this.props.storeMobxReact.toggleShowingUpdates();
+  handleToggleGraph = () => this.props.storeMobxReact.togglePickingDeptreeComponent();
+  handleToggleConsoleLogging = () => this.props.storeMobx.toggleConsoleLogging();
 
   render() {
     const { position } = this.props;
-    const { store } = this.context;
+    const { storeMobx, storeMobxReact } = this.props;
 
     const additionalMiniPanelStyles = {};
     additionalMiniPanelStyles.top = position.top;
@@ -51,16 +41,16 @@ export default class MiniBar extends Component {
         <MiniBarButton
           id="buttonUpdates"
           onToggle={this.handleToggleUpdates}
-          active={store.state.updatesEnabled}
+          active={storeMobxReact.state.updatesEnabled}
         />
         <MiniBarButton
           id="buttonGraph"
           onToggle={this.handleToggleGraph}
-          active={store.state.graphEnabled}
+          active={storeMobxReact.state.graphEnabled}
         />
         <MiniBarButton
           id="buttonConsoleLog"
-          active={store.state.consoleLogEnabled}
+          active={storeMobx.state.consoleLogEnabled}
           onToggle={this.handleToggleConsoleLogging}
         />
       </div>

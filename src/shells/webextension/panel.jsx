@@ -1,42 +1,11 @@
 /* global chrome */
+import debugConnection from '../../utils/debugConnection';
+import initFrontend from '../../frontend/index';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+let disconnectListener;
 
-import Loader from '../../frontend/Loader';
-import RichPanel from '../../frontend/components/RichPanel';
-
-import debugConnection from '../../../src/debugConnection';
-
-const node = document.getElementById('container');
-
-let onDisconnect;
-let loaderConfig;
-
-function render() {
-  ReactDOM.render(
-    <Loader {...loaderConfig}>
-      <RichPanel />
-    </Loader>,
-    node
-  );
-}
-
-loaderConfig = {
-  debugName: 'Panel UI',
-  reload: () => {
-    ReactDOM.unmountComponentAtNode(node);
-    node.innerHTML = '';
-    render();
-  },
-  reloadSubscribe: reloadFn => {
-    chrome.devtools.network.onNavigated.addListener(reloadFn);
-    return () => {
-      chrome.devtools.network.onNavigated.removeListener(reloadFn);
-    };
-  },
-  inject: done => {
-    const code = `
+const inject = done => {
+  const code = `
       (function() {
         var inject = function() {
           // the prototype stuff is in case document.createElement has been modified
@@ -52,42 +21,53 @@ loaderConfig = {
         }
       }());
     `;
-    chrome.devtools.inspectedWindow.eval(code, (res, err) => {
-      if (err) {
-        if (__DEV__) console.log(err); // eslint-disable-line no-console
-        return;
-      }
+  chrome.devtools.inspectedWindow.eval(code, (res, err) => {
+    if (err) {
+      if (__DEV__) console.log(err); // eslint-disable-line no-console
+      return;
+    }
 
-      let disconnected = false;
+    let disconnected = false;
 
-      const port = chrome.runtime.connect({
-        name: `${chrome.devtools.inspectedWindow.tabId}`
-      });
-
-      port.onDisconnect.addListener(() => {
-        disconnected = true;
-        if (onDisconnect) {
-          onDisconnect();
-        }
-      });
-
-      const wall = {
-        listen(fn) {
-          port.onMessage.addListener(message => {
-            debugConnection('[background -> FRONTEND]', message);
-            fn(message);
-          });
-        },
-        send(data) {
-          if (disconnected) return;
-          debugConnection('[FRONTEND -> background]', data);
-          port.postMessage(data);
-        }
-      };
-
-      done(wall, () => port.disconnect());
+    const port = chrome.runtime.connect({
+      name: `${chrome.devtools.inspectedWindow.tabId}`
     });
-  }
+
+    port.onDisconnect.addListener(() => {
+      disconnected = true;
+      if (disconnectListener) {
+        disconnectListener();
+      }
+    });
+
+    const wall = {
+      listen(fn) {
+        port.onMessage.addListener(message => {
+          debugConnection('[background -> FRONTEND]', message);
+          fn(message);
+        });
+      },
+      send(data) {
+        if (disconnected) return;
+        debugConnection('[FRONTEND -> background]', data);
+        port.postMessage(data);
+      }
+    };
+
+    done(wall, () => port.disconnect());
+  });
 };
 
-render();
+initFrontend({
+  node: document.getElementById('container'),
+  debugName: 'Panel UI',
+  inject,
+  reloadSubscribe: reloadFn => {
+    chrome.devtools.network.onNavigated.addListener(reloadFn);
+    return () => {
+      chrome.devtools.network.onNavigated.removeListener(reloadFn);
+    };
+  },
+});
+
+

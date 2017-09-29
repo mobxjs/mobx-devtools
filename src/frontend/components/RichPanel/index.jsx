@@ -1,22 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import Log from './Log';
-import Graph from './Graph/index';
-import MiniBarButton from '../../shells/react/MiniBar/MiniBarButton';
-import Blocked from './Blocked';
+import Log from '../Log/index';
+import Graph from '../Graph/index';
+import MiniBarButton from '../../../shells/react/MiniBar/MiniBarButton';
+import Blocker from '../Blocker/index';
+import injectStores from '../../../utils/injectStores';
 
+@injectStores('storeMobx', 'storeMobxReact')
 export default class RichPanel extends React.Component {
-  static contextTypes = {
-    store: PropTypes.object.isRequired
-  };
-
   componentDidMount() {
-    this.$unsubscribe = this.context.store.subscibeUpdates(() => this.setState({}));
     document.addEventListener('keydown', this.$handleKeyDown);
   }
 
   componentWillUnmount() {
-    this.$unsubscribe();
     document.removeEventListener('keydown', this.$handleKeyDown);
   }
 
@@ -44,53 +39,62 @@ export default class RichPanel extends React.Component {
     }
   };
 
-  handleToggleUpdates = () => this.context.store.toggleShowingUpdates();
-  handleToggleGraph = () => this.context.store.togglePickingDeptreeComponent();
-  handleToggleConsoleLogging = () => this.context.store.toggleConsoleLogging();
-  handleToggleLogging = () => this.context.store.toggleLogging();
-  handleClearLog = () => this.context.store.clearLog();
+  handleToggleUpdates = () => this.props.storeMobxReact.toggleShowingUpdates();
+  handleToggleGraph = () => this.props.storeMobxReact.togglePickingDeptreeComponent();
+  handleToggleConsoleLogging = () => this.props.storeMobx.toggleConsoleLogging();
+  handleToggleLogging = () => this.props.storeMobx.toggleLogging();
+  handleClearLog = () => this.props.storeMobx.clearLog();
 
   render() {
-    const { store } = this.context;
+    const {
+      logEnabled,
+      consoleLogEnabled,
+      log,
+    } = this.props.storeMobx.state;
+    const {
+      graphEnabled,
+      mobxReactFound,
+      updatesEnabled,
+    } = this.props.storeMobxReact.state;
 
     return (
       <div style={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-        {store.state.graphEnabled && (
-          <Blocked icon="pick" onClick={this.handleToggleGraph}>
+        {graphEnabled && (
+          <Blocker icon="pick" onClick={this.handleToggleGraph}>
             Pick the component
-          </Blocked>
+          </Blocker>
         )}
 
         <div style={{ display: 'flex', flex: '0 0 26px', borderBottom: '1px solid #eee' }}>
-          {store.state.mobxReactFound && (
+          {mobxReactFound && (
             <MiniBarButton
               id="buttonUpdates"
               onToggle={this.handleToggleUpdates}
-              active={store.state.updatesEnabled}
+              active={updatesEnabled}
               hotkey="u"
             />
           )}
-          {store.state.mobxReactFound && (
+          {mobxReactFound && (
             <MiniBarButton
               id="buttonGraph"
               onToggle={this.handleToggleGraph}
-              active={store.state.graphEnabled}
+              active={graphEnabled}
               hotkey="p"
             />
           )}
           <MiniBarButton
             id="buttonLog"
-            active={store.state.logEnabled}
+            active={logEnabled}
             onToggle={this.handleToggleLogging}
             hotkey="l"
           />
           <MiniBarButton
             id="buttonConsoleLog"
-            active={store.state.consoleLogEnabled}
+            active={consoleLogEnabled}
             onToggle={this.handleToggleConsoleLogging}
           />
 
-          {store.state.log.length > 0 && (
+          {log.length > 0 && (
             <MiniBarButton
               style={{ marginLeft: 'auto' }}
               id="buttonClear"

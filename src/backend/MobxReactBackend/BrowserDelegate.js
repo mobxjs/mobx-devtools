@@ -1,23 +1,7 @@
-import consoleLogChange from './consoleLogChange';
 
 const renderingInfosRegistry = typeof WeakMap !== 'undefined' ? new WeakMap() : new Map();
 
 const hoverDeptreeNode = document.createElement('div');
-
-const findComponentByNode = (hook, target) => {
-  let node = target;
-  while (node) {
-    for (let mobxid in hook.instances) {
-      const mobxReact = hook.instances[mobxid].mobxReact;
-      if (mobxReact) {
-        const component = mobxReact.componentByNodeRegistery.get(node);
-        if (component) return { node, component, mobxid };
-      }
-    }
-    node = node.parentNode;
-  }
-  return {};
-};
 
 const showNodeAroundNode = (node, targetNode, outlineColor) => {
   if (!targetNode || !targetNode.offsetParent || !node) return;
@@ -65,10 +49,19 @@ export default class {
 
   highlightTimeout = 1500;
 
-  constructor({ backendState, hook, onPickedDeptreeComponent }) {
+  constructor({ backendState, getComponentForNode, onPickedDeptreeComponent }) {
     this.$backendState = backendState;
-    this.$hook = hook;
     this.$onPickedDeptreeComponent = onPickedDeptreeComponent;
+
+    this.findComponentByNode = (target) => {
+      let node = target;
+      while (node) {
+        const componentInfo = getComponentForNode(node);
+        if (componentInfo) return componentInfo;
+        node = node.parentNode;
+      }
+      return undefined;
+    };
 
     document.addEventListener('mousemove', this.$handleMouseMove, true);
     document.addEventListener('click', this.$handleClick, true);
@@ -77,11 +70,6 @@ export default class {
   dispose() {
     document.removeEventListener('mousemove', this.$handleMouseMove, true);
     document.removeEventListener('click', this.$handleClick, true);
-  }
-
-  consoleLogChange(change, mobx, filter) {
-    // eslint-disable-line class-methods-use-this
-    consoleLogChange(change, mobx, filter);
   }
 
   displayRenderingReport = report => {
@@ -156,20 +144,16 @@ export default class {
 
   $handleMouseMove = e => {
     if (this.$backendState.graphEnabled !== true) return;
-
-    const target = e.target;
-    const { node } = findComponentByNode(this.$hook, target);
+    const componentInfo = this.findComponentByNode(e.target);
     destroyNode(hoverDeptreeNode);
-    if (node) {
-      showNodeAroundNode(hoverDeptreeNode, node, 'lightBlue');
+    if (componentInfo) {
+      showNodeAroundNode(hoverDeptreeNode, componentInfo.node, 'lightBlue');
     }
   };
 
   $handleClick = e => {
     if (this.$backendState.graphEnabled !== true) return;
-
-    const target = e.target;
-    const { component, mobxid } = findComponentByNode(this.$hook, target);
+    const { component, mobxid } = this.findComponentByNode(e.target) || {};
     if (component) {
       e.stopPropagation();
       e.preventDefault();

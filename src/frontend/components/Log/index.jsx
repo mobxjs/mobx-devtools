@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import LogItem from './LogItem';
+import injectStores from '../../../utils/injectStores';
 
 const renderStyle = () => (
   <style>
@@ -75,23 +75,13 @@ const renderStyle = () => (
   </style>
 );
 
+@injectStores('storeMobx')
 export default class Log extends Component {
-  static contextTypes = {
-    store: PropTypes.object.isRequired
-  };
-
-  componentDidMount() {
-    this.$unsubscribe = this.context.store.subscibeUpdates(() => this.setState({}));
-  }
 
   componentDidUpdate() {
     if (this.scrollEnd && this.containerEl) {
       this.containerEl.scrollTop = this.containerEl.scrollHeight;
     }
-  }
-
-  componentWillUnmount() {
-    this.$unsubscribe();
   }
 
   scrollEnd = true;
@@ -104,7 +94,7 @@ export default class Log extends Component {
   };
 
   render() {
-    const { log } = this.context.store.state;
+    const { log } = this.props.storeMobx.state;
     return (
       <div
         className="mobxdevtool__Log"

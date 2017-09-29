@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import installGlobalHook from '../../backend/installGlobalHook';
 import initBackend from '../../backend';
 import Bridge from '../../Bridge';
-import Store from '../../frontend/Store';
-import ContextProvider from '../../frontend/ContextProvider';
+import StoreMobx from '../../frontend/StoreMobx';
+import StoreMobxReact from '../../frontend/StoreMobxReact';
+import ContextProvider from '../../utils/ContextProvider';
 import MiniBar from './MiniBar/index';
 import Graph from '../../frontend/components/Graph/index';
 
@@ -34,7 +35,10 @@ bridgeB.serializationOff();
 
 const disposeBackend = initBackend(bridgeA, hook);
 
-const store = new Store(bridgeB);
+const stores = {
+  storeMobx: new StoreMobx(bridgeB),
+  storeMobxReact: new StoreMobxReact(bridgeB),
+};
 
 export const configureDevtool = ({
   logEnabled,
@@ -44,16 +48,16 @@ export const configureDevtool = ({
   highlightTimeout
 }) => {
   if (logEnabled !== undefined) {
-    store.toggleConsoleLogging(Boolean(logEnabled));
+    stores.storeMobx.toggleConsoleLogging(Boolean(logEnabled));
   }
   if (updatesEnabled !== undefined) {
-    store.toggleShowingUpdates(Boolean(updatesEnabled));
+    stores.storeMobx.toggleShowingUpdates(Boolean(updatesEnabled));
   }
   if (graphEnabled !== undefined) {
-    store.togglePickingDeptreeComponent(Boolean(graphEnabled));
+    stores.storeMobx.togglePickingDeptreeComponent(Boolean(graphEnabled));
   }
   if (logFilter !== undefined) {
-    store.setLogFilter(logFilter);
+    stores.storeMobx.setLogFilter(logFilter);
   }
   if (typeof highlightTimeout === 'number') {
     console.warn('[mobx-devtools]: configureDevtool({ highlightTimeout }) is deprecated');
@@ -87,7 +91,7 @@ export default class DevTool extends Component {
   render() {
     const { noPanel, position } = this.props;
     return (
-      <ContextProvider store={store}>
+      <ContextProvider stores={stores}>
         <div>
           {!noPanel && <MiniBar position={position} />}
           <Graph />

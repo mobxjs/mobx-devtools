@@ -10,93 +10,98 @@ export default function installGlobalHook(window) {
     return;
   }
 
-  function validateMobxInstance(mobx) {
-    return Boolean(mobx && mobx.extras && mobx.spy);
+  function valid(a, name) {
+    if (!a) return false;
+    switch (name) {
+      case 'mobx':
+        return Boolean(a[name] && a[name].extras && a[name].spy);
+      case 'mobxReact':
+        return Boolean(a[name] && a[name].componentByNodeRegistery);
+      default:
+        return Boolean(a[name]);
+    }
   }
 
-  function validateMobxReactInstance(mobxReact) {
-    return Boolean(mobxReact && mobxReact.componentByNodeRegistery);
-  }
-
-  function compareMobxInstances(a, b) {
-    if (!a || !b) return a === b;
-    return a.extras === b.extras;
-  }
-
-  function compareMobxReactInstances(a, b) {
-    if (!a || !b) return a === b;
-    return a.componentByNodeRegistery === b.componentByNodeRegistery;
+  function sameMobxId(a, b) {
+    for (let name in b) if (Object.prototype.hasOwnProperty.call(b, name)) {
+      if (!a || !b) continue;
+      const aa = a[name];
+      const bb = b[name];
+      if (!a[name] || !b[name]) continue;
+      for(let key in aa) {
+        if(
+          Object.prototype.hasOwnProperty.call(aa, key) &&
+          Object.prototype.hasOwnProperty.call(bb, key) &&
+          aa[key] &&
+          aa[key] instanceof Object &&
+          aa[key] === bb[key]
+        ) {
+          return true;
+        }
+      }
+      for(let key in bb) {
+        if(
+          Object.prototype.hasOwnProperty.call(aa, key) &&
+          Object.prototype.hasOwnProperty.call(bb, key) &&
+          bb[key] &&
+          bb[key] instanceof Object &&
+          aa[key] === bb[key]
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   Object.defineProperty(window, '__MOBX_DEVTOOLS_GLOBAL_HOOK__', {
     value: {
-      instances: {},
-      injectMobx: function(mobx) {
-        if (!validateMobxInstance(mobx)) return;
-        var self = this;
-        setTimeout(function() {
-          var mobxid;
-          for (var id in self.instances) {
-            if (compareMobxInstances(self.instances[id] && self.instances[id].mobx, mobx)) {
-              mobxid = id;
-              break;
-            }
+      collections: {},
+      inject(collection) {
+        let mobxid;
+        const injectedProps = [];
+        for (let id in this.collections) if (this.collections.hasOwnProperty(id)) {
+          if (sameMobxId(this.collections[id], collection)) {
+            mobxid = id;
+            break;
           }
-          if (!mobxid) {
-            mobxid = Math.random()
-              .toString(32)
-              .slice(2);
-            self.instances[mobxid] = { mobx };
-            self.emit('mobx', { mobxid, mobx });
+        }
+        if (!mobxid) {
+          mobxid = Math.random()
+            .toString(32)
+            .slice(2);
+          this.collections[mobxid] = {};
+        }
+        for (let prop in collection) if (Object.prototype.hasOwnProperty.call(collection, prop)) {
+          if (!this.collections[mobxid][prop] && valid(collection, prop)) {
+            this.collections[mobxid][prop] = collection[prop];
+            injectedProps.push(prop);
           }
-        }, 0);
+        }
+        if (injectedProps.length > 0) this.emit('instances-injected', mobxid);
       },
-      injectMobxReact: function(mobxReact, mobx) {
-        if (!validateMobxReactInstance(mobxReact)) return;
-        if (!validateMobxInstance(mobx)) return;
-        var self = this;
-        setTimeout(function() {
-          mobxReact.trackComponents();
-          var mobxid;
-          for (var id in self.instances) {
-            if (
-              compareMobxInstances(self.instances[id] && self.instances[id].mobx, mobx) &&
-              (self.instances[id].mobxReact === undefined ||
-                compareMobxReactInstances(self.instances[id].mobxReact, mobxReact))
-            ) {
-              mobxid = id;
-              break;
-            }
-          }
-          if (!mobxid) {
-            mobxid = Math.random()
-              .toString(32)
-              .slice(2);
-            self.instances[mobxid] = { mobx, mobxReact };
-            self.emit('mobx', { mobxid, mobx });
-            self.emit('mobx-react', { mobxid, mobxReact });
-          } else if (!compareMobxReactInstances(self.instances[mobxid].mobxReact, mobxReact)) {
-            self.instances[mobxid].mobxReact = mobxReact;
-            self.emit('mobx-react', { mobxid, mobxReact });
-          }
-        }, 0);
+      injectMobx(mobx) {
+        this.inject({ mobx });
+      },
+      injectMobxReact(mobxReact, mobx) {
+        this.inject({ mobxReact, mobx });
       },
       _listeners: {},
-      sub: function(evt, fn) {
+      sub(evt, fn) {
         this.on(evt, fn);
         return () => this.off(evt, fn);
       },
-      on: function(evt, fn) {
+      on(evt, fn) {
         if (!this._listeners[evt]) {
           this._listeners[evt] = [];
         }
         this._listeners[evt].push(fn);
       },
-      off: function(evt, fn) {
+      off(evt, fn) {
         if (!this._listeners[evt]) {
           return;
         }
-        var ix = this._listeners[evt].indexOf(fn);
+        const ix = this._listeners[evt].indexOf(fn);
         if (ix !== -1) {
           this._listeners[evt].splice(ix, 1);
         }
@@ -104,7 +109,7 @@ export default function installGlobalHook(window) {
           this._listeners[evt] = null;
         }
       },
-      emit: function(evt, data) {
+      emit(evt, data) {
         if (this._listeners[evt]) {
           this._listeners[evt].map(fn => fn(data));
         }

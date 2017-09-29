@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 
 export default class ContextProvider extends Component {
   static propTypes = {
-    store: PropTypes.object.isRequired,
+    stores: PropTypes.object.isRequired,
     children: PropTypes.node.isRequired
   };
 
   static childContextTypes = {
-    store: PropTypes.object.isRequired
+    stores: PropTypes.object.isRequired
   };
 
   getChildContext() {
-    return { store: this.props.store };
+    return { stores: this.props.stores };
   }
 
   render() {
