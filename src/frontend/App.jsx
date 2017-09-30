@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Bridge from '../Bridge';
 import StoreMobx from './StoreMobx';
 import StoreMobxReact from './StoreMobxReact';
+import StoreMST from './StoreMST';
 import Blocker from './components/Blocker/index';
 import ContextProvider from '../utils/ContextProvider';
 
@@ -38,6 +39,7 @@ export default class App extends Component {
       this.stores = {
         storeMobx: new StoreMobx(bridge),
         storeMobxReact: new StoreMobxReact(bridge),
+        storeMST: new StoreMST(bridge),
       };
 
       this.$disposables.push(

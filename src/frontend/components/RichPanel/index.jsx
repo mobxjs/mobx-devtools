@@ -3,6 +3,7 @@ import Log from '../Log/index';
 import Graph from '../Graph/index';
 import MiniBarButton from '../../../shells/react/MiniBar/MiniBarButton';
 import Blocker from '../Blocker/index';
+import MSTPanel from '../MSTPanel';
 import injectStores from '../../../utils/injectStores';
 
 @injectStores('storeMobx', 'storeMobxReact')
@@ -105,9 +106,14 @@ export default class RichPanel extends React.Component {
           )}
         </div>
 
+        {__DEV__ &&
+        <MSTPanel />
+        }
+
         <Log />
 
         <Graph />
+
       </div>
     );
   }

@@ -1,6 +1,5 @@
 const expect = require('unexpected');
 const installGlobalHook = require('./installGlobalHook').default;
-const sameMobxId = require('./installGlobalHook').sameMobxId;
 
 describe('Global Hook', () => {
 

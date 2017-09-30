@@ -20,6 +20,10 @@ export default class Store {
         Object.assign(this.state, state);
         this.sendUpdated();
       }),
+      bridge.sub(Commands.SET_BACKEND_STATE, state => {
+        Object.assign(this.state, state);
+        this.sendUpdated();
+      }),
     ];
 
     bridge.send(BackendCommands.REQUST_STATE);

@@ -25,7 +25,6 @@ export default class MobxBackend {
   constructor(bridge) {
     this.bridge = bridge;
 
-
     this.changesProcessor = new ChangesProcessor(change => {
       if (this.state.logFilter) {
         try {
@@ -44,7 +43,6 @@ export default class MobxBackend {
         consoleLogChange(change);
       }
     });
-
 
     this.disposables.push(
       bridge.sub(Commands.REQUST_STATE, () => this.sendState()),

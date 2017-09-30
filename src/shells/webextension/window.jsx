@@ -22,6 +22,7 @@ const whenTabLoaded = (tabId, cb) => {
 
 const inject = (contentTabId, done) =>
   whenTabLoaded(contentTabId, () => {
+
     const code = `
           // the prototype stuff is in case document.createElement has been modified
           var script = document.constructor.prototype.createElement.call(document, 'script');

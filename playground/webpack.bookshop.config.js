@@ -2,31 +2,35 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const rootPath = path.join(__dirname, '..');
 
 module.exports = {
   devtool: 'eval',
-  entry: ['./mobx-react-todomvc/src/client'],
+  entry: ['babel-polyfill', path.join(__dirname, 'mobx-state-tree/examples/bookshop/src')],
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(rootPath, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/static/'
+    publicPath: '/dist/'
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    modules: [
+      'node_modules',
+      path.join(__dirname, 'mobx-state-tree/node_modules'),
+      path.join(__dirname, 'mobx-state-tree/examples/bookshop/node_modules')
+    ],
     alias: {
-      'mobx-react-devtools': __dirname + '/src/shells/react',
-      'mobx-devtools': __dirname + '/src',
-      'mobx-react': __dirname + '/mobx-react/src',
-      mobx: __dirname + '/mobx/src/mobx.ts'
+      'mobx-state-tree': path.join(__dirname, 'mobx-state-tree/src'),
+      'mobx': path.join(__dirname, 'mobx-state-tree/node_modules/mobx'), // prevent duplication mobx instances
+      'mobx-devtools': path.join(rootPath, 'src/shells'),
     }
   },
-  externals: {
-    'react-native': {
-      root: 'ReactNative',
-      commonjs: 'react-native',
-      commonjs2: 'react-native',
-      amd: 'react-native'
-    }
+  resolveLoader: {
+    modules: [
+      path.join(rootPath, 'node_modules'),
+      path.join(__dirname, 'mobx-state-tree/node_modules'),
+      path.join(__dirname, 'mobx-state-tree/examples/bookshop/node_modules')
+    ]
   },
   module: {
     loaders: [
@@ -62,8 +66,8 @@ module.exports = {
     })
   ],
   devServer: {
-    port: 8081,
-    contentBase: ['./mobx-react-todomvc', './'],
+    port: 8080,
+    contentBase: path.join(__dirname, 'bookshop-public'),
     stats: {
       errorDetails: true,
       assets: false,

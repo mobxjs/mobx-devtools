@@ -6,7 +6,7 @@
  */
 
 export default function installGlobalHook(window) {
-  if (window.__MOBX_DEVTOOLS_GLOBAL_HOOK__) {
+  if (window.__MOBX_DEVTOOLS_GLOBAL_HOOK__ && window.__MOBX_DEVTOOLS_GLOBAL_HOOK__.collections) {
     return;
   }
 
@@ -56,6 +56,7 @@ export default function installGlobalHook(window) {
 
   Object.defineProperty(window, '__MOBX_DEVTOOLS_GLOBAL_HOOK__', {
     value: {
+      hookVersion: 1,
       collections: {},
       inject(collection) {
         let mobxid;

@@ -1,9 +1,12 @@
 [submodule "mobx-react-todomvc"]
-	path = mobx-react-todomvc
+	path = playground/mobx-react-todomvc
 	url = https://github.com/mobxjs/mobx-react-todomvc.git
 [submodule "mobx"]
-	path = mobx
+	path = playground/mobx
 	url = https://github.com/mobxjs/mobx.git
 [submodule "mobx-react"]
-	path = mobx-react
+	path = playground/mobx-react
 	url = https://github.com/mobxjs/mobx-react.git
+[submodule "mobx-state-tree"]
+	path = playground/mobx-state-tree
+	url = https://github.com/andykog/mobx-state-tree.git

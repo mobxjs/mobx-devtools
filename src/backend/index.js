@@ -1,13 +1,15 @@
 import MobxBackend from './MobxBackend'
 import MobxReactBackend from './MobxReactBackend'
+import MSTBackend from './MSTBackend'
 
 export default (bridge, hook) => {
 
   const disposables = [];
 
   const plugins = [
-    new MobxBackend(bridge),
-    new MobxReactBackend(bridge),
+    new MobxBackend(bridge, hook),
+    new MobxReactBackend(bridge, hook),
+    new MSTBackend(bridge, hook),
   ];
 
   plugins.forEach(p => disposables.push(() => p.dispose()));

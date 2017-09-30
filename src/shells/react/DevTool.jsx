@@ -6,6 +6,7 @@ import initBackend from '../../backend';
 import Bridge from '../../Bridge';
 import StoreMobx from '../../frontend/StoreMobx';
 import StoreMobxReact from '../../frontend/StoreMobxReact';
+import StoreMST from '../../frontend/StoreMST';
 import ContextProvider from '../../utils/ContextProvider';
 import MiniBar from './MiniBar/index';
 import Graph from '../../frontend/components/Graph/index';
@@ -38,6 +39,7 @@ const disposeBackend = initBackend(bridgeA, hook);
 const stores = {
   storeMobx: new StoreMobx(bridgeB),
   storeMobxReact: new StoreMobxReact(bridgeB),
+  storeMST: new StoreMST(bridgeB),
 };
 
 export const configureDevtool = ({
