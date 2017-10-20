@@ -1,8 +1,11 @@
+/* eslint-disable camelcase */
 const del = require('del');
 const fs = require('fs');
 const manifest = require('../../src/shells/webextension/manifest.json');
 const path = require('path');
+
 const { TARGET_BROWSER, NODE_ENV, npm_package_version, npm_package_description } = process.env;
+const rootDir = path.join(__dirname, '../../');
 
 if (!TARGET_BROWSER) {
   throw new Error('TARGET_BROWSER is required');
@@ -10,9 +13,9 @@ if (!TARGET_BROWSER) {
 
 // Prepare folder
 
-del.sync([`./lib/${TARGET_BROWSER}.zip`, `./lib/${TARGET_BROWSER}/**`]);
-if (!fs.existsSync('./lib/')) fs.mkdirSync('./lib/');
-if (!fs.existsSync(`./lib/${TARGET_BROWSER}`)) fs.mkdirSync(`./lib/${TARGET_BROWSER}`);
+del.sync([path.join(rootDir, `lib/${TARGET_BROWSER}.zip`), path.join(rootDir, `lib/${TARGET_BROWSER}/**`)]);
+if (!fs.existsSync(path.join(rootDir, 'lib'))) fs.mkdirSync(path.join(rootDir, 'lib'));
+if (!fs.existsSync(path.join(rootDir, `lib/${TARGET_BROWSER}`))) fs.mkdirSync(path.join(rootDir, `lib/${TARGET_BROWSER}`));
 
 // Generate manifest.json
 
@@ -25,6 +28,6 @@ if (TARGET_BROWSER === 'chrome') {
 }
 
 fs.writeFileSync(
-  path.join(__dirname, `../../lib/${TARGET_BROWSER}/manifest.json`),
+  path.join(rootDir, `lib/${TARGET_BROWSER}/manifest.json`),
   JSON.stringify(manifest)
 );

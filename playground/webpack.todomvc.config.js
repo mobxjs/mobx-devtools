@@ -6,7 +6,10 @@ const rootPath = path.join(__dirname, '..');
 
 module.exports = {
   devtool: 'eval',
-  entry: path.join(__dirname, 'mobx-react-todomvc/src/client'),
+  entry: [
+    process.env.PLAIN_DEVTOOL && path.join(rootPath, 'src/shells/plain'),
+    path.join(__dirname, 'mobx-react-todomvc/src/client')
+  ].filter(a => a),
   output: {
     path: path.join(rootPath, 'dist'),
     filename: 'bundle.js',
@@ -15,7 +18,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      'mobx-react-devtools': path.join(rootPath, 'src/shells/react'),
+      'mobx-react-devtools': path.join(rootPath, 'src/shells/react-mini-panel'),
       'mobx-devtools': path.join(rootPath, 'src'),
       'mobx-react': path.join(__dirname, 'mobx-react/src'),
       mobx: path.join(__dirname, 'mobx/src/mobx.ts')
@@ -50,8 +53,12 @@ module.exports = {
         loader: 'url-loader'
       },
       {
+        test: /\.(eot|ttf|woff2?)$/,
+        loader: 'file-loader?name=fonts/[name].[ext]',
+      },
+      {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        loaders: ['style-loader', 'css-loader'],
       }
     ]
   },
@@ -59,14 +66,15 @@ module.exports = {
     new webpack.DefinePlugin({
       __TARGET__: JSON.stringify('browser'),
       __CLIENT__: JSON.stringify(true),
-      __SERVER__: JSON.stringify(false)
+      __SERVER__: JSON.stringify(false),
+      __DEV__: JSON.stringify(true),
     })
   ],
   devServer: {
-    port: 8081,
+    port: 8082,
     contentBase: [
-      path.join(__dirname, 'mobx-react-todomvc'),
-      path.join(__dirname, 'playground/todomvc-public')
+      path.join(__dirname, 'todomvc-public'),
+      path.join(__dirname, 'mobx-react-todomvc')
     ],
     stats: {
       errorDetails: true,

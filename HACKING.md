@@ -7,7 +7,7 @@
 
 ## Start the test project
 
-- run `yarn start:todomvc`
+- run `yarn start:todomvc-plain`
 
 
 ## Chrome extension

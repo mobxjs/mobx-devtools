@@ -1,12 +1,12 @@
 /* global chrome */
 
-import initFrontend from '../../frontend/index';
+import initFrontend from '../../frontend';
 import debugConnection from '../../utils/debugConnection';
 
 let onDisconnect;
 
 const whenTabLoaded = (tabId, cb) => {
-  chrome.tabs.get(tabId, function(tab) {
+  chrome.tabs.get(tabId, (tab) => {
     if (tab.status !== 'loading') {
       cb();
       return;
@@ -22,7 +22,6 @@ const whenTabLoaded = (tabId, cb) => {
 
 const inject = (contentTabId, done) =>
   whenTabLoaded(contentTabId, () => {
-
     const code = `
           // the prototype stuff is in case document.createElement has been modified
           var script = document.constructor.prototype.createElement.call(document, 'script');
@@ -34,7 +33,7 @@ const inject = (contentTabId, done) =>
       let disconnected = false;
 
       const port = chrome.runtime.connect({
-        name: `${contentTabId}`
+        name: `${contentTabId}`,
       });
 
       port.onDisconnect.addListener(() => {
@@ -47,7 +46,7 @@ const inject = (contentTabId, done) =>
 
       const wall = {
         listen(fn) {
-          port.onMessage.addListener(message => {
+          port.onMessage.addListener((message) => {
             debugConnection('[background -> FRONTEND]', message);
             fn(message);
           });
@@ -56,20 +55,22 @@ const inject = (contentTabId, done) =>
           if (disconnected) return;
           debugConnection('[FRONTEND -> background]', data);
           port.postMessage(data);
-        }
+        },
       };
       done(wall, () => port.disconnect());
     });
   });
 
-chrome.runtime.getBackgroundPage(({ contentTabId }) => initFrontend({
-  node: document.getElementById('container'),
-  debugName: 'Window UI',
-  reloadSubscribe: reloadFn => {
-    onDisconnect = () => reloadFn();
-    return () => {
-      onDisconnect = undefined;
-    };
-  },
-  inject: done => inject(contentTabId, done),
-}));
+chrome.runtime.getBackgroundPage(({ contentTabId }) =>
+  initFrontend({
+    node: document.getElementById('container'),
+    debugName: 'Window UI',
+    reloadSubscribe: (reloadFn) => {
+      onDisconnect = () => reloadFn();
+      return () => {
+        onDisconnect = undefined;
+      };
+    },
+    inject: done => inject(contentTabId, done),
+  })
+);

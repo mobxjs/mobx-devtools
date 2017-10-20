@@ -1,31 +1,41 @@
-import MobxBackend from './MobxBackend'
-import MobxReactBackend from './MobxReactBackend'
-import MSTBackend from './MSTBackend'
+import initCapabilitiesBackend from './cababilities';
+import initMSTBackend from './mst';
+import initMobxReactNodesTreeBackend from './mobxReactNodesTree';
+import initMobxReactUpdatesHighlighter from './mobxReactUpdatesHighlighter';
+import initMobxLogBackend from './mobxLog';
 
 export default (bridge, hook) => {
+  if (!hook) {
+    if (__DEV__) {
+      throw new Error('');
+    }
+    return () => {};
+  }
 
   const disposables = [];
 
-  const plugins = [
-    new MobxBackend(bridge, hook),
-    new MobxReactBackend(bridge, hook),
-    new MSTBackend(bridge, hook),
+  const backends = [
+    initCapabilitiesBackend(bridge, hook),
+    initMSTBackend(bridge, hook),
+    initMobxReactNodesTreeBackend(bridge, hook),
+    initMobxReactUpdatesHighlighter(bridge, hook),
+    initMobxLogBackend(bridge, hook),
   ];
 
-  plugins.forEach(p => disposables.push(() => p.dispose()));
+  backends.forEach(({ dispose }) => disposables.push(dispose));
 
-  Object.keys(hook.collections).forEach(mobxid => {
-    plugins.forEach(p => p.setup(mobxid, hook.collections[mobxid]));
+  Object.keys(hook.collections).forEach((mobxid) => {
+    backends.forEach(({ setup }) => setup(mobxid, hook.collections[mobxid]));
   });
 
   disposables.push(
     bridge.sub('backend:ping', () => bridge.send('frontend:pong')),
     hook.sub('instances-injected', ({ mobxid }) => {
-      plugins.forEach(p => p.setup(mobxid, hook.collections[mobxid]));
+      backends.forEach(p => p.setup(mobxid, hook.collections[mobxid]));
     })
   );
 
   return function dispose() {
-    disposables.forEach(fn => fn());
+    disposables.forEach((fn) => { fn(); });
   };
 };

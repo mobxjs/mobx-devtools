@@ -1,31 +1,29 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { css, StyleSheet } from 'aphrodite';
+import 'hack-font/build/webfonts/css/hack.css';
 import Bridge from '../Bridge';
-import StoreMobx from './StoreMobx';
-import StoreMobxReact from './StoreMobxReact';
-import StoreMST from './StoreMST';
-import Blocker from './components/Blocker/index';
+import createStores from './stores';
+import Blocker from './Blocker';
 import ContextProvider from '../utils/ContextProvider';
+import theme from './theme';
 
-export default class App extends Component {
+export default class App extends React.PureComponent {
   static propTypes = {
     quiet: PropTypes.bool,
-    debugName: PropTypes.string,
-    reload: PropTypes.func.isRequired,
     reloadSubscribe: PropTypes.func.isRequired,
     inject: PropTypes.func.isRequired,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
   };
 
   static defaultProps = {
     quiet: false,
-    debugName: ''
   };
 
   state = {
     loaded: false,
     connected: false,
-    mobxFound: false
+    mobxFound: false,
   };
 
   componentWillMount() {
@@ -36,15 +34,9 @@ export default class App extends Component {
       this.$teardownWall = teardownWall;
       const bridge = new Bridge(wall);
 
-      this.stores = {
-        storeMobx: new StoreMobx(bridge),
-        storeMobxReact: new StoreMobxReact(bridge),
-        storeMST: new StoreMST(bridge),
-      };
-
       this.$disposables.push(
-        this.stores.storeMobx.subscibeUpdates(() => {
-          this.setState({ mobxFound: this.stores.storeMobx.state.mobxFound });
+        bridge.sub('capabilities', ({ mobxFound }) => {
+          this.setState({ mobxFound });
         }),
         bridge.sub('content-script-installation-error', () => {
           this.setState({ contentScriptInstallationError: true });
@@ -55,7 +47,14 @@ export default class App extends Component {
       const connectInterval = setInterval(() => bridge.send('backend:ping'), 500);
       bridge.once('frontend:pong', () => {
         clearInterval(connectInterval);
+
+        this.stores = createStores(bridge);
+        if (__DEV__) {
+          window.$$frontendStores$$ = this.stores;
+        }
+
         this.setState({ connected: true });
+        bridge.send('get-capabilities');
       });
 
       if (!this.$unMounted) {
@@ -73,7 +72,7 @@ export default class App extends Component {
   $disposables = [];
 
   reload() {
-    if (!this.$unMounted) this.setState({ loaded: false, store: undefined }, this.props.reload);
+    if (!this.$unMounted) this.setState({ loaded: false, store: undefined });
     this.teardown();
   }
 
@@ -87,6 +86,8 @@ export default class App extends Component {
       this.$teardownWall = undefined;
     }
   }
+
+  handleContextMenu = e => e.preventDefault();
 
   renderContent() {
     if (this.state.contentScriptInstallationError) {
@@ -110,18 +111,20 @@ export default class App extends Component {
 
   render() {
     return (
-      <div style={{ width: '100vw', height: '100vh' }}>
+      <div className={css(styles.app, theme.default)} onContextMenu={this.handleContextMenu}>
         {this.renderContent()}
-        {__DEV__ && (
-          <div style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: 2 }}>
-            <button onClick={() => this.reload()}>Reload</button>
-            <button onClick={() => this.$teardownWall()}>Disconnect</button>
-            <button onClick={() => this.stores.storeMobx.bridge.send('backend:test-event')}>
-              Test event
-            </button>
-          </div>
-        )}
       </div>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  app: {
+    width: '100%',
+    height: '100%',
+    fontSize: 13,
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+    fontWeight: 400,
+  },
+});

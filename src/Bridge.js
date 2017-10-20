@@ -3,31 +3,19 @@ const now =
     ? () => window.performance.now()
     : () => Date.now();
 
-class SimpleMap {
-  keys = [];
-  values = [];
-  has(key) {
-    return this.keys.includes(key);
-  }
-  get(key) {
-    const index = this.keys.indexOf(key);
-    if (index > -1) return this.values[index];
-    return undefined;
-  }
-  set(key, value) {
-    this.keys.push(key);
-    this.values.push(value);
-  }
-}
+export const allowedComplexObjects = new Set();
 
-const symbols = {
-  type: '_type_B2QKDPEE7krkz)',
-  name: '_name_cbVJ7B;NiDcgG6*',
-  reference: '_reference_W74nQjZtTrW#Qe',
-  proto: '_proto_RcA+AJfqvC9ef2'
+export const symbols = {
+  type: '@@type',
+  name: '@@name',
+  reference: '@@reference',
+  proto: '@@proto',
+  inspected: '@@inspected',
+  editable: '@@editable',
+  mobxObject: '@@mobxObject',
 };
 
-function serialize(data, path = [], seen = new SimpleMap()) {
+function serialize(data, path = [], seen = new Map()) {
   if (!data || typeof data !== 'object') {
     if (typeof data === 'string' && data.length > 500) {
       return `${data.slice(0, 500)}...`;
@@ -35,13 +23,13 @@ function serialize(data, path = [], seen = new SimpleMap()) {
     if (typeof data === 'symbol') {
       return {
         [symbols.type]: 'symbol',
-        [symbols.name]: data.toString()
+        [symbols.name]: data.toString(),
       };
     }
     if (typeof data === 'function') {
       return {
         [symbols.type]: 'function',
-        [symbols.name]: data.name
+        [symbols.name]: data.name,
       };
     }
     return data;
@@ -54,7 +42,7 @@ function serialize(data, path = [], seen = new SimpleMap()) {
   const seenPath = seen.get(data);
   if (seenPath) {
     return {
-      [symbols.reference]: seenPath
+      [symbols.reference]: seenPath,
     };
   }
 
@@ -67,13 +55,32 @@ function serialize(data, path = [], seen = new SimpleMap()) {
   const clone = {};
 
   const prototype = Object.getPrototypeOf(data);
+  const inspecting = allowedComplexObjects.has(data);
+
   if (prototype && prototype !== Object.prototype) {
     // This is complex object (dom node or mobx.something)
     // only short signature will be sent to prevent performance loss
-    return {
-      [symbols.type]: 'complexObject',
-      [symbols.name]: data.constructor && data.constructor.name
+    const result = {
+      [symbols.type]: 'object',
+      [symbols.name]: data.constructor && data.constructor.name,
+      [symbols.inspected]: inspecting,
+      [symbols.editable]: inspecting && '$mobx' in data,
+      [symbols.mobxObject]: '$mobx' in data,
+      [symbols.proto]: {
+        [symbols.type]: 'object',
+        [symbols.name]: prototype.constructor && prototype.constructor.name,
+        [symbols.inspected]: false,
+        [symbols.editable]: false,
+      },
     };
+    if (inspecting) {
+      for (const p in data) {
+        if (Object.prototype.hasOwnProperty.call(data, p)) {
+          result[p] = serialize(data[p], path.concat(p), seen);
+        }
+      }
+    }
+    return result;
   }
 
   for (const prop in data) {
@@ -121,7 +128,7 @@ const requestIdleCallback =
         didTimeout: false,
         timeRemaining() {
           return Infinity;
-        }
+        },
       });
       const endTime = now();
       lastRunTimeMS = (endTime - startTime) / 1000;
@@ -175,7 +182,7 @@ export default class Bridge {
     if (!this.$flushHandle && this.$buffer.length) {
       const timeout = this.$paused ? 5000 : 500;
       this.$flushHandle = requestIdleCallback(this.flushBufferWhileIdle.bind(this), {
-        timeout
+        timeout,
       });
     }
   }
@@ -207,16 +214,16 @@ export default class Bridge {
 
     if (this.$buffer.length) {
       this.scheduleFlush();
+    } else {
+      allowedComplexObjects.clear();
     }
   }
 
   flushBufferSlice(bufferSlice) {
     const events = bufferSlice.map(({ eventName, eventData }) => ({
       eventName,
-      eventData: this.$serialize(eventData)
+      eventData: this.$serialize(eventData),
     }));
-    events.$test = new SimpleMap();
-    events.$test.set(1, 2);
     this.$wall.send({ type: 'many-events', events });
   }
 
@@ -261,7 +268,7 @@ export default class Bridge {
     }
 
     if (payload.type === 'many-events') {
-      payload.events.forEach(event => {
+      payload.events.forEach((event) => {
         const handlers = this.$listeners[event.eventName];
         const eventData = this.$deserialize(event.eventData);
         if (handlers) {

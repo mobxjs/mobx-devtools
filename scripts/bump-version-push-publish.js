@@ -4,7 +4,7 @@ const fs = require('fs');
 const pkg = require('../package.json');
 
 const [vMajor, vMinor, vPatch] = pkg.version.split('.');
-var exec = require('child_process').exec;
+const exec = require('child_process').exec;
 
 
 prompt.get([
@@ -12,24 +12,24 @@ prompt.get([
     name: 'newVersion',
     description: `Current version: ${vMajor}.${vMinor}.${vPatch}.  New version`,
     type: 'string',
-    pattern: /^\d+.\d.\d.$/,
+    pattern: /^\d+\.\d+\.\d$/,
     message: 'Must be in semver format',
     default: `${vMajor}.${vMinor}.${+vPatch + 1}`,
   },
   {
     name: 'commitMessage',
-    description: `Commit message`,
+    description: 'Commit message',
     type: 'string',
     default: 'Bumped version',
-    required: true
+    required: true,
   },
   {
     name: 'remote',
-    description: `GIT remote to push`,
+    description: 'GIT remote to push',
     type: 'string',
     default: 'origin',
-    required: true
-  }
+    required: true,
+  },
 ], (err, { newVersion, commitMessage, remote }) => {
   if (err) throw err;
 
@@ -43,8 +43,8 @@ prompt.get([
     `git tag v${newVersion}`,
     `git push ${remote}`,
     `git push ${remote} v${newVersion}`,
-    'npm publish'
-  ].join((' && ')), (error, stdout, stderr) => { });
+    'npm publish',
+  ].join((' && ')));
   stdout.pipe(process.stdout);
   stderr.pipe(process.stderr);
 });

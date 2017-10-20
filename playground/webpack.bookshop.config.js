@@ -62,7 +62,7 @@ module.exports = {
     new webpack.DefinePlugin({
       __TARGET__: JSON.stringify('browser'),
       __CLIENT__: JSON.stringify(true),
-      __SERVER__: JSON.stringify(false)
+      __SERVER__: JSON.stringify(false),
     })
   ],
   devServer: {

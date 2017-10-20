@@ -1,4 +1,4 @@
-import installGlobalHook from '../../backend/installGlobalHook';
+import installGlobalHook from '../../backend/utils/installGlobalHook';
 
 const script = document.createElement('script');
 script.textContent = `;(${installGlobalHook.toString()}(window))`;

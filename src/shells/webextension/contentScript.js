@@ -16,7 +16,7 @@ const contentScriptId = Math.random()
 // proxy from main page to devtools (via the background page)
 const port = chrome.runtime.connect({ name: 'content-script' });
 
-const handshake = backendId => {
+const handshake = (backendId) => {
   function sendMessageToBackend(payload) {
     debugConnection('[backgrond -> CONTENTSCRIPT -> backend]', payload);
     window.postMessage(
@@ -46,7 +46,7 @@ const handshake = backendId => {
     window.removeEventListener('message', handleMessageFromPage);
     sendMessageToBackend({
       type: 'event',
-      eventName: 'disconnect'
+      eventName: 'disconnect',
     });
   }
 
@@ -91,7 +91,7 @@ window.addEventListener('message', function listener(message) {
         source: 'mobx-devtools-content-script',
         payload: connected ? 'backend:connection-failed' : 'backend:hello',
         contentScriptId,
-        backendId
+        backendId,
       },
       '*'
     );

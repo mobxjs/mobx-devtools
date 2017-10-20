@@ -36,6 +36,7 @@
 
   "permissions": [
     "contextMenus",
+    "storage",
     "file:///*",
     "http://*/*",
     "https://*/*"

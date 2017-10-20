@@ -17,7 +17,7 @@ function handshake(hook, contentScriptId) {
 
   const bridge = new Bridge({
     listen(fn) {
-      const listener = evt => {
+      const listener = (evt) => {
         if (
           evt.data.source === 'mobx-devtools-content-script' &&
           evt.data.contentScriptId === contentScriptId &&
@@ -36,7 +36,7 @@ function handshake(hook, contentScriptId) {
         { source: 'mobx-devtools-backend', payload: data, contentScriptId, backendId },
         '*'
       );
-    }
+    },
   });
 
   const disposeBackend = initBackend(bridge, hook);
@@ -50,9 +50,11 @@ function handshake(hook, contentScriptId) {
 }
 
 /*
-  This mechanism ensures that each content-script can be messaging with only one backend and vice versa:
+  This mechanism ensures that each content-script can be messaging with only one backend
+  and vice versa:
   1. Wait for `ping`
-  2. As soon as pinged, stop listening to `ping` send `pong`, start waiting for `hello`/`connection-fail`
+  2. As soon as pinged, stop listening to `ping` send `pong`,
+     start waiting for `hello`/`connection-fail`
   3. If received `hello`, the connection is established,
      if recieved `connection-fail`, then content-script is already busy, return to paragraph 1
 */
@@ -73,34 +75,34 @@ function waitForPing() {
         '*'
       );
 
-      function helloListener(evt) {
+      const helloListener = (e) => {
         if (
-          evt.data.source === 'mobx-devtools-content-script' &&
-          evt.data.payload === 'backend:hello' &&
-          evt.data.contentScriptId === contentScriptId &&
-          evt.data.backendId === backendId
+          e.data.source === 'mobx-devtools-content-script' &&
+          e.data.payload === 'backend:hello' &&
+          e.data.contentScriptId === contentScriptId &&
+          e.data.backendId === backendId
         ) {
-          debugConnection('[contentScript -> BACKEND]', evt);
+          debugConnection('[contentScript -> BACKEND]', e);
           window.removeEventListener('message', helloListener);
           window.removeEventListener('message', failListener);
           // eslint-disable-next-line no-underscore-dangle
           handshake(window.__MOBX_DEVTOOLS_GLOBAL_HOOK__, contentScriptId);
         }
-      }
+      };
 
-      function failListener(evt) {
+      const failListener = (e) => {
         if (
-          evt.data.source === 'mobx-devtools-content-script' &&
-          evt.data.payload === 'backend:connection-failed' &&
-          evt.data.contentScriptId === contentScriptId &&
-          evt.data.backendId === backendId
+          e.data.source === 'mobx-devtools-content-script' &&
+          e.data.payload === 'backend:connection-failed' &&
+          e.data.contentScriptId === contentScriptId &&
+          e.data.backendId === backendId
         ) {
-          debugConnection('[contentScript -> BACKEND]', evt);
+          debugConnection('[contentScript -> BACKEND]', e);
           window.removeEventListener('message', helloListener);
           window.removeEventListener('message', failListener);
           waitForPing();
         }
-      }
+      };
 
       window.addEventListener('message', helloListener);
       window.addEventListener('message', failListener);

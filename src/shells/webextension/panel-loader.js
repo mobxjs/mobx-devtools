@@ -8,18 +8,15 @@ function createPanelIfMobxLoaded() {
     return;
   }
   chrome.devtools.inspectedWindow.eval(
-    `!!(Object.keys(window.__MOBX_DEVTOOLS_GLOBAL_HOOK__.instances).length)`,
-    pageHasMobx => {
+    '!!(Object.keys(window.__MOBX_DEVTOOLS_GLOBAL_HOOK__.collections).length)',
+    (pageHasMobx) => {
       if (!pageHasMobx || panelCreated) {
         return;
       }
 
       clearInterval(loadCheckInterval);
       panelCreated = true;
-      chrome.devtools.panels.create('MobX', '', 'panel.html', (/* panel*/) => {
-        // panel.onShown.addListener((window) => { });
-        // panel.onHidden.addListener(() => { });
-      });
+      chrome.devtools.panels.create('MobX', '', 'panel.html', () => {});
     }
   );
 }

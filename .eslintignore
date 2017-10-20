@@ -1,4 +1,3 @@
-/mobx/**
-/mobx-react/**
-/mobx-react-todomvc/**
-/src/shells/chrome/build/**
+/playground/**
+/node_modules/**
+/lib/**

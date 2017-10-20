@@ -3,8 +3,8 @@
   "extends": "airbnb",
   "rules": {
     "no-param-reassign": ["error", { "props": false }],
-    "react/jsx-no-bind": ["error", { "ignoreRefs": true }],
     "no-confusing-arrow": ["error", { "allowParens": true }],
+    "react/jsx-no-bind": ["error", { "ignoreRefs": true }],
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
       "objects": "always-multiline",
@@ -12,12 +12,19 @@
       "exports": "always-multiline",
       "functions": "never",
     }],
+    "no-use-before-define": "off",
     "import/no-extraneous-dependencies": "off",
     "no-restricted-syntax": "off",
+    "jsx-a11y/label-has-for": "off",
     "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/no-autofocus": "off",
+    "react/require-default-props": "off",
     "react/forbid-prop-types": "off"
   },
   "globals": {
+    "__DEBUG_CONNECTION__": false,
+    "__DEV__": false,
+    "chrome": false,
     "window": false,
     "document": false,
     "self": false,

@@ -3,7 +3,7 @@
 /node_modules/
 /lib
 !/lib/react
-scripts/react/webpack.config.js
+src/shells/react-mini-panel/webpack.config.js
 mobx
 mobx-react
 mobx-react-todomvc
