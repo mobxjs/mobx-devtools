@@ -3,7 +3,4 @@
 /node_modules/
 /lib
 !/lib/react
-src/shells/react-mini-panel/webpack.config.js
-mobx
-mobx-react
-mobx-react-todomvc
+/playground
