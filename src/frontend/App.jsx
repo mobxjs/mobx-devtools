@@ -13,6 +13,7 @@ export default class App extends React.PureComponent {
     quiet: PropTypes.bool,
     reloadSubscribe: PropTypes.func.isRequired,
     inject: PropTypes.func.isRequired,
+    reload: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
   };
 
@@ -72,7 +73,7 @@ export default class App extends React.PureComponent {
   $disposables = [];
 
   reload() {
-    if (!this.$unMounted) this.setState({ loaded: false, store: undefined });
+    if (!this.$unMounted) this.setState({ loaded: false, store: undefined }, this.props.reload);
     this.teardown();
   }
 

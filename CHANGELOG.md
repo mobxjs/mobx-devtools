@@ -1,6 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [0.9.3]
+### Fixed
+- Reloading on navigation.
 
 ## [0.9.2] - 2017-10-20
 ### Fixed

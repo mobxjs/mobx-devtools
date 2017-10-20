@@ -5,8 +5,6 @@ import App from './App';
 import RichPanel from './RichPanel';
 
 export default (config) => {
-  render();
-
   const reload = () => {
     ReactDOM.unmountComponentAtNode(config.node);
     setTimeout(() => {
@@ -16,7 +14,7 @@ export default (config) => {
     }, 0);
   };
 
-  function render() {
+  const render = () => {
     ReactDOM.render(
       <App
         {...config}
@@ -26,5 +24,7 @@ export default (config) => {
       </App>,
       config.node
     );
-  }
+  };
+
+  render();
 };
