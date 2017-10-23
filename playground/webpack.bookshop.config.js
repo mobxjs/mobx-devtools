@@ -6,7 +6,11 @@ const rootPath = path.join(__dirname, '..');
 
 module.exports = {
   devtool: 'eval',
-  entry: ['babel-polyfill', path.join(__dirname, 'mobx-state-tree/examples/bookshop/src')],
+  entry: [
+    'babel-polyfill',
+    process.env.PLAIN_DEVTOOL && path.join(rootPath, 'src/shells/plain'),
+    path.join(__dirname, 'mobx-state-tree/examples/bookshop/src')
+  ],
   output: {
     path: path.join(rootPath, 'dist'),
     filename: 'bundle.js',
@@ -53,8 +57,12 @@ module.exports = {
         loader: 'url-loader'
       },
       {
+        test: /\.(eot|ttf|woff2?)$/,
+        loader: 'file-loader?name=fonts/[name].[ext]',
+      },
+      {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        loaders: ['style-loader', 'css-loader'],
       }
     ]
   },
@@ -63,11 +71,13 @@ module.exports = {
       __TARGET__: JSON.stringify('browser'),
       __CLIENT__: JSON.stringify(true),
       __SERVER__: JSON.stringify(false),
+      __DEV__: JSON.stringify(true),
     })
   ],
   devServer: {
     port: 8080,
     contentBase: path.join(__dirname, 'bookshop-public'),
+    historyApiFallback: true,
     stats: {
       errorDetails: true,
       assets: false,

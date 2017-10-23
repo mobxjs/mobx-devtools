@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Displaying diff details for top-level changes
 
 ## [0.9.4] - 2017-10-23
 ### Fixed

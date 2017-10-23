@@ -34,7 +34,7 @@ export default function ChangeDataViewerPopover({
     value === undefined ||
     otype === 'boolean'
   ) {
-    return <PreviewValue data={value} className={className} />;
+    return <PreviewValue data={value} className={className} path={path} />;
   }
 
   const dataViewer = (
@@ -67,7 +67,7 @@ export default function ChangeDataViewerPopover({
           }
         }}
       >
-        <PreviewValue data={value} displayName={displayName} />
+        <PreviewValue data={value} displayName={displayName} path={path} />
       </span>
     </Popover>
   );

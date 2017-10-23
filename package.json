@@ -16,6 +16,7 @@
         "start:todomvc-plain": "cross-env NODE_ENV=development cross-env PLAIN_DEVTOOL=true webpack-dev-server --config playground/webpack.todomvc.config.js --hot --inline",
         "start:bookshop": "npm run submodules ; cd playground/mobx-state-tree/examples/bookshop ; yarn ; cd - ; npm run start:bookshop-now",
         "start:bookshop-now": "cross-env NODE_ENV=development webpack-dev-server --config playground/webpack.bookshop.config.js --hot --inline",
+        "start:bookshop-plain": "cross-env NODE_ENV=development cross-env PLAIN_DEVTOOL=true webpack-dev-server --config playground/webpack.bookshop.config.js --hot --inline",
         "submodules": "git submodule update --init ; git submodule foreach yarn",
         "build:react-mini-panel": "cross-env NODE_ENV=production node scripts/react-mini-panel/build",
         "start:chrome": "cross-env NODE_ENV=development cross-env TARGET_BROWSER=chrome node scripts/webextension/dev-server.js",

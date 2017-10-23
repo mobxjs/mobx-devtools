@@ -71,17 +71,6 @@ export default class LogItem extends React.Component {
     this.setState({ open });
   };
 
-  toggleDetails = (e) => {
-    e.stopPropagation();
-    const { change } = this.props;
-    const showDetails = !this.state.showDetails;
-    change.showDetails = showDetails;
-    if (showDetails && change.summary) {
-      if (this.props.getDetails) this.props.getDetails();
-    }
-    this.setState({ showDetails });
-  };
-
   recomputeHeight = () =>
     setTimeout(() => {
       // timeout for css applying
@@ -139,6 +128,8 @@ export default class LogItem extends React.Component {
             <Popover
               className={css(styles.headContentMisc)}
               requireClick
+              // eslint-disable-next-line react/jsx-no-bind
+              onShown={() => this.props.getDetails && this.props.getDetails(change.id)}
               content={
                 <LObjDiff
                   change={change}
@@ -151,7 +142,7 @@ export default class LogItem extends React.Component {
               }
             >
               <div>
-                <LObjDiffPreview change={change} onClick={this.toggleDetails} />
+                <LObjDiffPreview change={change} />
               </div>
             </Popover>
           </div>
@@ -243,14 +234,6 @@ export default class LogItem extends React.Component {
     }
   }
 
-  renderDetails() {
-    const { change } = this.props;
-    switch (change.type) {
-      default:
-        return null;
-    }
-  }
-
   render() {
     const change = this.props.change;
     const open = this.state.open;
@@ -275,7 +258,6 @@ export default class LogItem extends React.Component {
           )}
           {this.renderChange()}
         </div>
-        {this.state.showDetails && this.renderDetails()}
         {open && (
           <div className={css(styles.body)}>
             {change.children &&
