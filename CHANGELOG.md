@@ -2,11 +2,11 @@
 
 ## [Unreleased]
 
-## [0.9.4]
+## [0.9.4] - 2017-10-23
 ### Fixed
 Fail gracefully if using unsupported mobx versions.
 
-## [0.9.3]
+## [0.9.3] - 2017-10-21
 ### Fixed
 - Reloading on navigation.
 
