@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+## [0.9.4]
+### Fixed
+Fail gracefully if using unsupported mobx versions.
+
 ## [0.9.3]
 ### Fixed
 - Reloading on navigation.
