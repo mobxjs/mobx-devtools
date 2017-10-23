@@ -88,8 +88,10 @@ export default function installGlobalHook(window) {
         this.inject({ mobx });
       },
       injectMobxReact(mobxReact, mobx) {
-        mobxReact.trackComponents();
-        this.inject({ mobxReact, mobx });
+        if (valid({ mobxReact }, 'mobxReact')) {
+          mobxReact.trackComponents();
+          this.inject({ mobxReact, mobx });
+        }
       },
       _listeners: {},
       sub(evt, fn) {

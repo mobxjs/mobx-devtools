@@ -12,6 +12,12 @@ This repository is home for:
 * Track changes in MobX observables
 * MST support coming soon.
 
+# Requirements
+* [mobx](https://www.npmjs.com/package/mobx) 3.1.15 or higher;
+* (optional) [mobx-react](https://www.npmjs.com/package/mobx-react) 4.2.2 or higher;
+
+Should fail gracefully if using unsupported versions.
+
 
 # Hacking
 

@@ -41,8 +41,8 @@ prompt.get([
     'git add .',
     `git commit -m '${commitMessage}'`,
     `git tag v${newVersion}`,
-    `git push ${remote}`,
-    `git push ${remote} v${newVersion}`,
+    // `git push ${remote}`,
+    // `git push ${remote} v${newVersion}`,
     'npm publish',
   ].join((' && ')));
   stdout.pipe(process.stdout);
