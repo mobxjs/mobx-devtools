@@ -40,7 +40,7 @@ prompt.get([
   const CHANGELOG = String(fs.readFileSync('./CHANGELOG.md'));
   const d = new Date();
   const dateString = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-  if (/## \[Unreleased\]\n\w+/.test(CHANGELOG)) {
+  if (/## \[Unreleased\]\n.+/.test(CHANGELOG)) {
     fs.writeFileSync('./CHANGELOG.md', CHANGELOG.replace(/## \[Unreleased\]/, `## [Unreleased]\n\n## [${newVersion}] - ${dateString}`));
     console.log('Updated CHANGELOG'); // eslint-disable-line no-console
   } else {
