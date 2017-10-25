@@ -237,7 +237,7 @@ export default class LogItem extends React.Component {
   render() {
     const change = this.props.change;
     const open = this.state.open;
-    const openable = this.props.change.hasChildren;
+    const openable = this.props.change.hasChildren || (this.props.change.children || []).length > 0;
     return (
       <div
         ref={(el) => {

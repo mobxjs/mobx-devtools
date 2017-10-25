@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+Displaying deep log items
 
 ## [0.9.5] - 2017-10-23
 ### Fixed
