@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Graph from '../../frontend/Graph';
-import injectStores from '../../utils/injectStores';
-import ModalContainer from '../../frontend/ModalContainer';
+import Graph from '../../../src/frontend/Graph';
+import injectStores from '../../../src/utils/injectStores';
+import ModalContainer from '../../../src/frontend/ModalContainer';
 
 @injectStores({
   subscribe: {

@@ -17,7 +17,7 @@ function getActiveContentWindow(cb) {
 }
 
 function openWindow(contentTabId) {
-  const devtoolWidth = window.screen.availWidth > 1366 ? 400 : 350;
+  const devtoolWidth = window.screen.availWidth > 1366 ? 450 : 420;
   // Resize main window
   chrome.windows.getCurrent((wind) => {
     if (wind.left + wind.width > window.screen.availWidth - devtoolWidth) {

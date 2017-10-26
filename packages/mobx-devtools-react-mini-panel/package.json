@@ -1,0 +1,28 @@
+{
+  "name": "mobx-devtools-react-mini-panel",
+  "version": "0.0.0",
+  "main": "lib/index.js",
+  "typings": "./index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andykog/mobx-devtools.git"
+  },
+  "author": "Andy Kogut",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mobxjs/mobx/issues"
+  },
+  "homepage": "https://mobxjs.github.io/mobx",
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack"
+  },
+  "keywords": [
+    "mobx",
+    "react",
+    "devtools"
+  ],
+  "peerDependencies": {
+    "mobx": "^2.2.0 || ^3.0.0",
+    "mobx-react": "^3.3.0 || ^4.0.0"
+  }
+}

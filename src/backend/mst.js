@@ -1,52 +1,122 @@
-export default (bridge, hook) => {
-  const snapshotsTrackingEnabled = true;
-  const actionsTrackingEnabled = true;
-  const patchesTrackingEnabled = true;
-  const collections = {};
-  const roots = {};
+import getId from '../utils/getId';
 
-  const addRoot = ({ root, mobxid }) => {
+const summary = (logItem) => {
+  const sum = Object.create(null);
+  const patch = logItem.patch;
+  sum.patch = patch && {
+    op: patch.op,
+    path: patch.path,
+    value: (patch.value && typeof patch.value === 'object') ? {} : patch.value,
+  };
+  sum.id = logItem.id;
+  sum.rootId = logItem.rootId;
+  sum.timestamp = logItem.timestamp;
+  return sum;
+};
+
+export default (bridge, hook) => {
+  const collections = {};
+  const rootDataById = {};
+
+  let trackingEnabled = false;
+  let insideUntracked = false;
+
+  const addLogItem = (rootId, { patch }) => {
+    const rootData = rootDataById[rootId];
+    if (!rootData) return;
+    const snapshot = rootData.mst.getSnapshot(rootData.root);
+    const logItemId = getId();
+    const logItem = {
+      patch,
+      snapshot,
+      id: logItemId,
+      rootId,
+      timestamp: new Date().getTime(),
+    };
+    rootData.logItemsById[logItemId] = logItem;
+    rootData.activeLogItemId = logItemId;
+    bridge.send('frontend:append-mst-log-items', summary(logItem));
+    bridge.send('frontend:activeLogItemId', { rootId, logItemId });
+  };
+
+  const addRoot = ({ root, mobxid, name }) => {
     const { mst } = collections[mobxid] || {};
     if (mst) {
-      if (!roots[mobxid]) {
-        roots[mobxid] = [];
-      }
-      if (roots[mobxid].indexOf(root) !== -1) return;
-      roots[mobxid].push(root);
-      mst.addDisposer(root, () => removeRoot({ root, mobxid }));
-      disposables.push(
-        mst.onPatch(root, (patch, reversePatch) => {
-          if (patchesTrackingEnabled) {
-            bridge.send('frontend:append_patches', { ...patch, reversePatch });
-          }
-        }),
-        mst.onAction(root, (action) => {
-          if (actionsTrackingEnabled) {
-            bridge.send('frontend:append_actions', action);
-          }
-        }),
-        mst.onSnapshot(root, (snapshot) => {
-          if (snapshotsTrackingEnabled) {
-            bridge.send('frontend:append-snapshots', snapshot);
-          }
-        })
-      );
+      const rootId = getId(root);
+      if (rootDataById[rootId]) return;
+
+      const dispose = mst.onPatch(root, (patch) => {
+        if (trackingEnabled && !insideUntracked) {
+          addLogItem(rootId, { patch });
+        }
+      });
+
+      mst.addDisposer(root, () => removeRoot(rootId));
+
+      rootDataById[rootId] = {
+        logItemsById: {},
+        activeLogItemId: undefined,
+        root,
+        mobxid,
+        dispose,
+        rootId,
+        mst,
+        name: name || (root.toString && root.toString()),
+      };
     }
   };
 
-  const removeRoot = ({ root, mobxid }) => {
-    if (roots[mobxid]) {
-      const idx = roots[mobxid].indexOf(root);
-      if (idx !== -1) roots[mobxid].splice(idx, 1);
+  const removeRoot = (rootId) => {
+    const rootData = rootDataById[rootId];
+    if (rootData) {
+      rootData.dispose();
+      delete rootData[rootId];
     }
+    bridge.send('frontend:remove-mst-root', rootId);
   };
 
   const disposables = [
+    () => Object.keys(rootDataById).forEach(rootId => removeRoot(rootId)),
     hook.sub('mst-root', addRoot),
     hook.sub('mst-root-dispose', removeRoot),
-    bridge.sub('backend-mst:set-snapshots-tracking-enabled', () => {}),
-    bridge.sub('backend-mst:set-actions-tracking-enabled', () => {}),
-    bridge.sub('backend-mst:set-patches-tracking-enabled', () => {}),
+    bridge.sub('backend-mst:set-tracking-enabled', (val) => {
+      if (val === trackingEnabled) return;
+      trackingEnabled = val;
+      if (val) {
+        bridge.send('frontend:mst-roots', Object.keys(rootDataById).map(id => ({
+          id,
+          name: rootDataById[id].name,
+        })));
+        Object.keys(rootDataById).forEach((rootId) => {
+          const rootData = rootDataById[rootId];
+          if (Object.keys(rootData.logItemsById).length === 0) {
+            addLogItem(rootId, { isInitial: true });
+          }
+        });
+      }
+    }),
+    bridge.sub('backend-mst:activate-log-item-id', ({ rootId, logItemId }) => {
+      const rootData = rootDataById[rootId];
+      if (!rootData) return;
+      const logItem = rootData.logItemsById[logItemId];
+      if (!logItem) return;
+      rootData.activeLogItemId = logItemId;
+      insideUntracked = true;
+      rootData.mst.applySnapshot(rootData.root, logItem.snapshot);
+      insideUntracked = false;
+    }),
+    bridge.sub('backend-mst:forget-mst-items', ({ rootId, itemsIds }) => {
+      const rootDatum = rootDataById[rootId];
+      if (!rootDatum) return;
+      itemsIds.forEach((id) => {
+        delete rootDatum.logItemsById[id];
+      });
+    }),
+    bridge.sub('get-mst-log-item-details', ({ rootId, logItemId }) => {
+      const rootDatum = rootDataById[rootId];
+      if (!rootDatum) return;
+      bridge.send('mst-log-item-details', rootDatum.logItemsById[logItemId]);
+    }),
   ];
 
   return {

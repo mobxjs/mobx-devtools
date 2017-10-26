@@ -1,7 +1,6 @@
 import React from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 import Draggable from './Draggable';
 
 function shouldUseVerticalLayout(el) {
@@ -84,8 +83,7 @@ export default class SplitPane extends React.Component {
   handleDraggableStart = () => this.setState({ moving: true });
 
   handleDraggableMove = (x, y) => {
-    // eslint-disable-next-line react/no-find-dom-node
-    const rect = ReactDOM.findDOMNode(this).getBoundingClientRect();
+    const rect = this.el.getBoundingClientRect();
 
     this.setState(prevState => ({
       width: this.state.isVertical ? prevState.width : Math.floor(rect.left + (rect.width - x)),

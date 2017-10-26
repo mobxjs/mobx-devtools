@@ -15,7 +15,7 @@ export default class DataItem extends React.Component {
     getValueByPath: PropTypes.func.isRequired,
     change: PropTypes.func,
     inspect: PropTypes.func,
-    stopInspecting: PropTypes.func.isRequired,
+    stopInspecting: PropTypes.func,
     showMenu: PropTypes.func,
     ChildDataView: PropTypes.func.isRequired,
     ChildDataItem: PropTypes.func.isRequired,

@@ -13,83 +13,94 @@ export const symbols = {
   inspected: '@@inspected',
   editable: '@@editable',
   mobxObject: '@@mobxObject',
+  serializationException: '@@serializationException',
 };
 
-function serialize(data, path = [], seen = new Map()) {
-  if (!data || typeof data !== 'object') {
-    if (typeof data === 'string' && data.length > 500) {
-      return `${data.slice(0, 500)}...`;
+function serialize(data, path = [], seen = new Map(), propToExtract) {
+  try {
+    if (propToExtract !== undefined) {
+      data = data[propToExtract]; // eslint-disable-line no-param-reassign
     }
-    if (typeof data === 'symbol') {
+    if (!data || typeof data !== 'object') {
+      if (typeof data === 'string' && data.length > 500) {
+        return `${data.slice(0, 500)}...`;
+      }
+      if (typeof data === 'symbol') {
+        return {
+          [symbols.type]: 'symbol',
+          [symbols.name]: data.toString(),
+        };
+      }
+      if (typeof data === 'function') {
+        return {
+          [symbols.type]: 'function',
+          [symbols.name]: data.name,
+        };
+      }
+      return data;
+    }
+
+    if (data instanceof RegExp || data instanceof Date) {
+      return data;
+    }
+
+    const seenPath = seen.get(data);
+    if (seenPath) {
       return {
-        [symbols.type]: 'symbol',
-        [symbols.name]: data.toString(),
+        [symbols.reference]: seenPath,
       };
     }
-    if (typeof data === 'function') {
-      return {
-        [symbols.type]: 'function',
-        [symbols.name]: data.name,
-      };
+
+    seen.set(data, path);
+
+    if (data instanceof Array) {
+      return data.map((o, i) => serialize(o, path.concat(i), seen));
     }
-    return data;
-  }
 
-  if (data instanceof RegExp || data instanceof Date) {
-    return data;
-  }
+    const clone = {};
 
-  const seenPath = seen.get(data);
-  if (seenPath) {
-    return {
-      [symbols.reference]: seenPath,
-    };
-  }
+    const prototype = Object.getPrototypeOf(data);
+    const inspecting = allowedComplexObjects.has(data);
 
-  seen.set(data, path);
-
-  if (data instanceof Array) {
-    return data.map((o, i) => serialize(o, path.concat(i), seen));
-  }
-
-  const clone = {};
-
-  const prototype = Object.getPrototypeOf(data);
-  const inspecting = allowedComplexObjects.has(data);
-
-  if (prototype && prototype !== Object.prototype) {
-    // This is complex object (dom node or mobx.something)
-    // only short signature will be sent to prevent performance loss
-    const result = {
-      [symbols.type]: 'object',
-      [symbols.name]: data.constructor && data.constructor.name,
-      [symbols.inspected]: inspecting,
-      [symbols.editable]: inspecting && '$mobx' in data,
-      [symbols.mobxObject]: '$mobx' in data,
-      [symbols.proto]: {
+    if (prototype && prototype !== Object.prototype) {
+      // This is complex object (dom node or mobx.something)
+      // only short signature will be sent to prevent performance loss
+      const result = {
         [symbols.type]: 'object',
-        [symbols.name]: prototype.constructor && prototype.constructor.name,
-        [symbols.inspected]: false,
-        [symbols.editable]: false,
-      },
-    };
-    if (inspecting) {
-      for (const p in data) {
-        if (Object.prototype.hasOwnProperty.call(data, p)) {
-          result[p] = serialize(data[p], path.concat(p), seen);
+        [symbols.name]: data.constructor && data.constructor.name,
+        [symbols.inspected]: inspecting,
+        [symbols.editable]: inspecting && '$mobx' in data,
+        [symbols.mobxObject]: '$mobx' in data,
+        [symbols.proto]: {
+          [symbols.type]: 'object',
+          [symbols.name]: prototype.constructor && prototype.constructor.name,
+          [symbols.inspected]: false,
+          [symbols.editable]: false,
+        },
+      };
+      if (inspecting) {
+        for (const p in data) {
+          if (Object.prototype.hasOwnProperty.call(data, p)) {
+            result[p] = serialize(data, path.concat(p), seen, p);
+          }
         }
       }
+      return result;
     }
-    return result;
-  }
 
-  for (const prop in data) {
-    if (Object.prototype.hasOwnProperty.call(data, prop)) {
-      clone[prop] = serialize(data[prop], path.concat(prop), seen);
+    for (const prop in data) {
+      if (Object.prototype.hasOwnProperty.call(data, prop)) {
+        clone[prop] = serialize(data, path.concat(prop), seen, prop);
+      }
     }
-  }
 
-  return clone;
+    return clone;
+  } catch (error) {
+    return {
+      [symbols.type]: 'serializationError',
+      message: error && error.message,
+    };
+  }
 }
 
 const deserialize = (data, root) => {

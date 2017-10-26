@@ -4,6 +4,7 @@ import AbstractStore from './AbstractStore';
 
 export default class TreeExplorerStore extends AbstractStore {
   roots = [];
+  loaded = false;
   selectedNodeId = undefined;
   hoveredNodeId = undefined;
   isBottomTagSelected = undefined;
@@ -24,6 +25,8 @@ export default class TreeExplorerStore extends AbstractStore {
           this.select(this.prevSelectedNodeId);
           this.uncollapseParents(this.prevSelectedNodeId);
         }
+        this.loaded = true;
+        this.emit('loaded');
       })
     );
 

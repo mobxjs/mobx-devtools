@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as styles from './styles';
+import * as styles from './styles/index';
 
 const metaPrefix = '⌘';
 

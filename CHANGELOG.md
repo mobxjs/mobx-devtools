@@ -1,10 +1,16 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- mobx-react observervers tree viewer.
+
+### Fixed
+- Displaying deep log items
+- Handling serializing exceptions
 
 ## [0.9.6] - 2017-10-25
 ### Fixed
-Displaying deep log items
+- Displaying deep log items
 
 ## [0.9.5] - 2017-10-23
 ### Fixed

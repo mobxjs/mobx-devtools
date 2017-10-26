@@ -9,7 +9,7 @@ module.exports = {
   entry: [
     'babel-polyfill',
     process.env.PLAIN_DEVTOOL && path.join(rootPath, 'src/shells/plain'),
-    path.join(__dirname, 'mobx-state-tree/examples/bookshop/src')
+    path.join(__dirname, 'mobx-state-tree/packages/mst-example-bookshop/src')
   ],
   output: {
     path: path.join(rootPath, 'dist'),
@@ -21,12 +21,12 @@ module.exports = {
     modules: [
       'node_modules',
       path.join(__dirname, 'mobx-state-tree/node_modules'),
-      path.join(__dirname, 'mobx-state-tree/examples/bookshop/node_modules')
     ],
     alias: {
-      'mobx-state-tree': path.join(__dirname, 'mobx-state-tree/src'),
-      'mobx': path.join(__dirname, 'mobx-state-tree/node_modules/mobx'), // prevent duplication mobx instances
-      'mobx-devtools': path.join(rootPath, 'src/shells'),
+      'mobx-state-tree': path.join(__dirname, 'mobx-state-tree/packages/mobx-state-tree/src'),
+      'mobx': path.join(__dirname, 'mobx-state-tree/packages/mobx-state-tree/node_modules/mobx'), // prevent duplication mobx instances
+      'mobx-devtools-mst': path.join(rootPath, 'packages/mobx-devtools-mst/src'),
+      aphrodite: 'aphrodite/no-important',
     }
   },
   resolveLoader: {
@@ -51,6 +51,18 @@ module.exports = {
       {
         test: /\.tsx?$/,
         loader: 'ts-loader'
+      },
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+        query: {
+          emitWarning: process.env.NODE_ENV === 'development',
+          failOnWarning: false,
+          failOnError: process.env.NODE_ENV !== 'development',
+          fix: process.env.NODE_ENV === 'development',
+          cache: false,
+        },
       },
       {
         test: /\.svg$/,

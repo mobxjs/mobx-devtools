@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import installGlobalHook from '../../backend/utils/installGlobalHook';
-import initBackend from '../../backend';
-import Bridge from '../../Bridge';
-import createStores from '../../frontend/stores';
-import ContextProvider from '../../utils/ContextProvider';
-import MiniBar from './MiniBar';
+import installGlobalHook from '../../../src/backend/utils/installGlobalHook';
+import initBackend from '../../../src/backend';
+import Bridge from '../../../src/Bridge';
+import createStores from '../../../src/frontend/stores';
+import ContextProvider from '../../../src/utils/ContextProvider';
+import MiniBar from './MiniBar/index';
 import ModalGraph from './ModalGraph';
 
 installGlobalHook(window);

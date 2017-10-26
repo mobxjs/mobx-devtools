@@ -1,13 +1,14 @@
 const webpack = require('webpack');
 const path = require('path');
 
-const rootDir = path.join(__dirname, '../../../');
 
 module.exports = {
   devtool: false,
-  entry: path.join(__dirname, 'index.js'),
+  entry: path.join(__dirname, 'src'),
   output: {
-    path: `${rootDir}/lib/mobx-state-tree`,
+    libraryTarget: 'umd',
+    library: 'mobxDevtoolsMST',
+    path: path.join(__dirname, '/lib'),
     filename: 'index.js',
   },
   module: {
@@ -16,20 +17,16 @@ module.exports = {
         test: /\.jsx?$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-        query: {
-          cacheDirectory: true,
-          presets: ['es2015', 'stage-1'],
-          plugins: ['transform-decorators-legacy', 'transform-class-properties'],
-        },
+        query: { cacheDirectory: true },
       },
     ],
   },
   externals: {
-    'mobx-react': {
-      root: 'mobxReact',
-      commonjs: 'mobx-react',
-      commonjs2: 'mobx-react',
-      amd: 'mobx-react',
+    'mobx-state-tree': {
+      root: 'mobxStateTree',
+      commonjs: 'mobx-state-tree',
+      commonjs2: 'mobx-state-tree',
+      amd: 'mobx-state-tree',
     },
     mobx: 'mobx',
   },
@@ -40,5 +37,6 @@ module.exports = {
       __DEBUG_CONNECTION__: JSON.stringify(process.env.DEBUG_CONNECTION === 'true'),
       __TARGET__: JSON.stringify('browser'),
     }),
+    // new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
   ],
 };

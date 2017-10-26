@@ -10,12 +10,13 @@ const MAX_SEARCH_ROOTS = 200;
 
 @injectStores({
   subscribe: {
-    treeExplorerStore: ['roots', 'searchRoots'],
+    treeExplorerStore: ['roots', 'searchRoots', 'loaded'],
   },
   injectProps: ({ treeExplorerStore }) => ({
     roots: treeExplorerStore.searchRoots || treeExplorerStore.roots,
     searchText: treeExplorerStore.searchText,
     searching: treeExplorerStore.searchText !== '',
+    loaded: treeExplorerStore.loaded,
     getComponents: () => treeExplorerStore.getComponents(),
     reset: () => treeExplorerStore.reset(),
     selectInDirection(direction) {
@@ -84,6 +85,7 @@ export default class TreeView extends React.Component {
     getComponents: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
     selectInDirection: PropTypes.func.isRequired,
+    loaded: PropTypes.bool.isRequired,
   };
 
   componentDidMount() {
@@ -163,11 +165,11 @@ export default class TreeView extends React.Component {
       }
       return (
         <div className={css(styles.container)}>
-          <div ref={(n) => { this.node = n; }} className={css(styles.scroll)}>
-            <div className={css(styles.scrollContents)}>
-              <Spinner />
-            </div>
-          </div>
+          {this.props.loaded ? (
+            <span className={css(styles.noSearchResults)}>No observers</span>
+          ) : (
+            <Spinner />
+          )}
         </div>
       );
     }

@@ -1,3 +1,4 @@
 /playground/**
 /node_modules/**
 /lib/**
+/packages/**/lib/**

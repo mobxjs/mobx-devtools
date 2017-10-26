@@ -1,9 +1,9 @@
 
 const prompt = require('prompt');
 const fs = require('fs');
-const pkg = require('../package.json');
+const lernaJson = require('../lerna.json');
 
-const [vMajor, vMinor, vPatch] = pkg.version.split('.');
+const [vMajor, vMinor, vPatch] = lernaJson.version.split('.');
 const exec = require('child_process').exec;
 
 
@@ -33,9 +33,9 @@ prompt.get([
 ], (err, { newVersion, commitMessage, remote }) => {
   if (err) throw err;
 
-  pkg.version = newVersion;
+  lernaJson.version = newVersion;
 
-  fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 4), 'utf8');
+  fs.writeFileSync('./lerna.json', JSON.stringify(lernaJson, null, 4), 'utf8');
 
   const CHANGELOG = String(fs.readFileSync('./CHANGELOG.md'));
   const d = new Date();
@@ -48,15 +48,15 @@ prompt.get([
   }
 
   const child = exec([
+    './node_modules/.bin/lerna build',
+    `./node_modules/.bin/lerna publish --skip-git --repo-version ${newVersion} --yes`,
     'git add .',
     `git commit -m '${commitMessage}'`,
     `git tag v${newVersion}`,
     `git push ${remote}`,
     `git push ${remote} v${newVersion}`,
-    'npm publish',
   ].join((' && ')));
   child.stdout.pipe(process.stdout);
   child.stderr.pipe(process.stderr);
   child.on('close', process.exit);
 });
-

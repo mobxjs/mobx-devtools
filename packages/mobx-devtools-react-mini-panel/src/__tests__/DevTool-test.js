@@ -27,7 +27,7 @@ const {
   setLogEnabled,
   setUpdatesEnabled,
   setGraphEnabled
-} = require('..');
+} = require('../../lib/index');
 const ContextProvider = require('../../../utils/ContextProvider').default;
 const Graph = require('../../../frontend/Graph').default;
 const MiniBar = require('../MiniBar').default;

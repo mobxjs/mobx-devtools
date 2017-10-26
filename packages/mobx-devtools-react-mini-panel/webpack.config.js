@@ -1,15 +1,13 @@
 const webpack = require('webpack');
 const path = require('path');
 
-const rootDir = path.join(__dirname, '../../../');
-
 module.exports = {
-  entry: __dirname,
+  entry: path.join(__dirname, 'src'),
   output: {
     libraryTarget: 'umd',
-    library: 'mobxDevtools',
-    path: path.join(rootDir, 'lib'),
-    filename: 'react-mini-panel/index.js',
+    library: 'mobxDevtoolsReactMinipanel',
+    path: path.join(__dirname, 'lib'),
+    filename: 'index.js',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
@@ -54,11 +52,6 @@ module.exports = {
     mobx: 'mobx',
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      screw_ie8: true,
-      compress: {
-        warnings: false,
-      },
-    }),
+    new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
   ],
 };

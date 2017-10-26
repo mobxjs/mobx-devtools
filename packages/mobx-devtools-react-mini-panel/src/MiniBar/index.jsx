@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MiniBarButton from './MiniBarButton';
-import * as styles from './styles';
-import injectStores from '../../../utils/injectStores';
+import * as styles from './styles/index';
+import injectStores from '../../../../src/utils/injectStores';
 
 @injectStores({
   subscribe: {

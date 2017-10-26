@@ -1,23 +1,73 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { css, StyleSheet } from 'aphrodite';
+import Draggable from '../Draggable';
 
-export default function Tab() {
-  return (
-    <div className={css(styles.player)}>
-      <span className={css(styles.lrButton)}>
-        <IconLeft />
-      </span>
-      <span className={css(styles.progress)}>2135 / 93522</span>
-      <span className={css(styles.lrButton)}>
-        <IconRight />
-      </span>
-      <span className={css(styles.seekBar)}>
-        <span className={css(styles.filledBar)} />
-        <span className={css(styles.handle)} />
-      </span>
-    </div>
-  );
+export default class Player extends React.Component {
+  static propTypes = {
+    length: PropTypes.number.isRequired,
+    currentIndex: PropTypes.number.isRequired,
+    onIndexChange: PropTypes.func.isRequired,
+  };
+
+  handlePrev = () => {
+    this.props.onIndexChange(this.props.currentIndex - 1);
+  };
+
+  handleNext = () => {
+    this.props.onIndexChange(this.props.currentIndex + 1);
+  };
+
+  handleDraggableStart = () => {};
+
+  handleDraggableMove = (x) => {
+    const rect = this.seekBar.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+    const targetIndex = Math.round((this.props.length - 1) * percent);
+    if (targetIndex !== this.props.currentIndex) {
+      this.props.onIndexChange(targetIndex);
+    }
+  };
+
+  handleDraggableStop = () => {};
+
+  render() {
+    const { currentIndex, length } = this.props;
+    const percent = length < 2 ? 100 : (currentIndex / (length - 1)) * 100;
+    const prevDisabled = currentIndex === 0 || length < 2;
+    const nextDisabled = currentIndex === length - 1;
+    const disabled = prevDisabled && nextDisabled;
+    return (
+      <div className={css(styles.player)}>
+        <span
+          className={css(styles.lrButton, prevDisabled && styles.lrButtonDisabled)}
+          onClick={this.handlePrev}
+        >
+          <IconLeft />
+        </span>
+        <span className={css(styles.progress)}>{currentIndex + 1} / {length}</span>
+        <span
+          className={css(styles.lrButton, nextDisabled && styles.lrButtonDisabled)}
+          onClick={this.handleNext}
+        >
+          <IconRight />
+        </span>
+        <span
+          ref={(el) => { this.seekBar = el; }}
+          className={css(styles.seekBar, disabled && styles.seekBarDisabled)}
+        >
+          <span className={css(styles.filledBar)} style={{ width: `${percent}%` }} />
+          <Draggable
+            onStart={this.handleDraggableStart}
+            onMove={this.handleDraggableMove}
+            onStop={this.handleDraggableStop}
+          >
+            <span className={css(styles.handle)} style={{ left: `${percent}%` }} />
+          </Draggable>
+        </span>
+      </div>
+    );
+  }
 }
 
 const IconLeft = () => (
@@ -60,9 +110,13 @@ const IconRight = () => (
 
 const styles = StyleSheet.create({
   player: {
+    flex: '0 0 auto',
     display: 'flex',
     alignItems: 'center',
     padding: '5px 15px',
+    backgroundImage: 'linear-gradient(to top, transparent, rgba(0, 0, 0, 0.05))',
+    userSelect: 'none',
+    cursor: 'default',
   },
   lrButton: {
     display: 'inline-flex',
@@ -71,6 +125,11 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: 10,
+  },
+  lrButtonDisabled: {
+    pointerEvents: 'none',
+    filter: 'grayscale(1)',
+    opacity: 0.7,
   },
   progress: {
     flex: '0 0 auto',
@@ -84,22 +143,45 @@ const styles = StyleSheet.create({
     backgroundColor: '#969696',
     position: 'relative',
   },
+  seekBarDisabled: {
+    pointerEvents: 'none',
+    filter: 'grayscale(1)',
+    opacity: 0.7,
+  },
   filledBar: {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: '10%',
     height: 2,
     backgroundColor: 'var(--primary-color)',
   },
   handle: {
-    width: 10,
-    height: 10,
-    margin: -5,
+    width: 20,
+    height: 20,
+    margin: -10,
     position: 'absolute',
     top: 1,
-    left: '10%',
-    backgroundColor: 'var(--primary-color)',
-    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    ':after': {
+      content: '""',
+      width: 12,
+      height: 12,
+      backgroundColor: 'var(--primary-color)',
+      borderRadius: '50%',
+    },
+    ':hover': {
+      ':after': {
+        width: 14,
+        height: 14,
+      },
+    },
+    ':active': {
+      ':after': {
+        width: 14,
+        height: 14,
+      },
+    },
   },
 });

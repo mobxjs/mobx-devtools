@@ -1,8 +1,11 @@
 /node_modules
 /src/index.js
 /npm-debug.log
+/lerna-debug.log
 ~*
 *.iml
 *.ipr
 *.iws
 /lib
+/packages/**/lib
+/packages/**/node_modules

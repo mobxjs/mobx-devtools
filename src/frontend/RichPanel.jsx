@@ -14,45 +14,66 @@ import preferences from '../preferences';
     updatesHighlighterStore: ['updatesEnabled'],
     actionsLoggerStore: ['logEnabled'],
     capabilitiesStore: ['mstFound', 'mobxReactFound'],
+    mstLoggerStore: ['mstLogEnabled'],
   },
   injectProps: ({
     actionsLoggerStore,
     updatesHighlighterStore,
     capabilitiesStore,
+    mstLoggerStore,
   }) => ({
     mobxReactFound: capabilitiesStore.mobxReactFound,
     mstFound: capabilitiesStore.mstFound,
     recordingActions: actionsLoggerStore.logEnabled,
     showingUpdates: updatesHighlighterStore.updatesEnabled,
+    mstLogEnabled: mstLoggerStore.mstLogEnabled,
   }),
 })
 export default class RichPanel extends React.Component {
   static propTypes = {
-    mobxReactFound: PropTypes.bool,
-    mstFound: PropTypes.bool,
+    mobxReactFound: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
+    mstFound: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
     recordingActions: PropTypes.bool,
     showingUpdates: PropTypes.bool,
+    mstLogEnabled: PropTypes.bool,
   };
 
   componentWillMount() {
     this.setState({ activeTab: this.getAvailableTabs()[0] });
-    preferences.get('activeTab').then(({ activeTab }) => {
-      if (activeTab) this.setState({ activeTab });
+    preferences.get('lastTab').then(({ lastTab = 'components' }) => {
+      if (lastTab) {
+        if (this.getAvailableTabs().includes(lastTab)) {
+          this.setState({ activeTab: lastTab });
+        } else {
+          this.setState({ preferredTab: lastTab });
+        }
+      }
     });
   }
 
-  getAvailableTabs() {
+  componentWillUpdate(nextProps) {
+    if (
+      this.state.preferredTab &&
+      this.state.activeTab !== this.state.preferredTab &&
+      this.getAvailableTabs(nextProps).includes(this.state.preferredTab)
+    ) {
+      // eslint-disable-next-line react/no-will-update-set-state
+      this.setState({ activeTab: this.state.preferredTab });
+    }
+  }
+
+  getAvailableTabs(props = this.props) {
     return [
-      this.props.mobxReactFound && 'components',
-      this.props.mstFound && __DEV__ && 'mst',
+      props.mobxReactFound && 'components',
+      props.mstFound && 'mst',
       'changes',
-      this.props.mobxReactFound && 'performance',
+      props.mobxReactFound && 'performance',
     ].filter(t => t);
   }
 
-  handleTabChage = (activeTab) => {
-    this.setState({ activeTab });
-    preferences.set({ activeTab });
+  handleTabChage = (tab) => {
+    this.setState({ activeTab: tab, preferredTab: tab });
+    preferences.set({ lastTab: tab });
   };
 
   renderContent() {
@@ -82,6 +103,7 @@ export default class RichPanel extends React.Component {
           processingTabs={[
             this.props.recordingActions && 'changes',
             this.props.showingUpdates && 'performance',
+            this.props.mstLogEnabled && 'mst',
           ]}
         />
 

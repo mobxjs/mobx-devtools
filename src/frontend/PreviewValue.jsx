@@ -166,6 +166,9 @@ class PreviewComplexValue extends React.PureComponent { // eslint-disable-line r
       );
     }
     switch (data[symbols.type]) {
+      case 'serializationError':
+        return <span className={css(styles.previewError)}>SerializerError</span>;
+
       case 'deptreeNode':
         return <span className={css(styles.previewDeptreeNode)}>{data[symbols.name]}</span>;
 
@@ -278,5 +281,12 @@ const styles = StyleSheet.create({
   },
   previewDeptreeNode: {
     color: 'var(--primary-color)',
+  },
+  previewError: {
+    backgroundColor: '#ef383b',
+    color: '#fff',
+    paddingLeft: 3,
+    paddingRight: 3,
+    borderRadius: 2,
   },
 });

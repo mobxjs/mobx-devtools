@@ -10,9 +10,6 @@ export default class CapabilitiesStore extends AbstractStore {
       bridge.sub('capabilities', (capabilities) => {
         this.capabilities = capabilities;
         Object.keys(capabilities).forEach((key) => {
-          if (__DEV__) {
-            capabilities.mstFound = true;
-          }
           if (this[key] !== capabilities[key]) {
             this[key] = capabilities[key];
             this.emit(key);
@@ -23,5 +20,4 @@ export default class CapabilitiesStore extends AbstractStore {
 
     bridge.send('get-capabilities');
   }
-
 }

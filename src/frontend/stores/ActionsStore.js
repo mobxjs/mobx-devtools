@@ -42,7 +42,7 @@ export default class ActionsStore extends AbstractStore {
     );
 
     preferences.get('logEnabled').then(({ logEnabled }) => {
-      this.toggleLogging(logEnabled);
+      if (logEnabled) this.toggleLogging(true);
     });
   }
 

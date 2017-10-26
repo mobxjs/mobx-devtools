@@ -73,6 +73,7 @@ module.exports = {
     alias: {
       'mobx-react': `${rootDir}/mobx-react/src`,
       mobx: `${rootDir}/mobx/src/mobx.ts`,
+      aphrodite: 'aphrodite/no-important',
     },
   },
   plugins: [
