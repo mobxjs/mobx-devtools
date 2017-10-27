@@ -4,7 +4,7 @@
 
 ## [0.9.7] - 2017-10-27
 ### Added
-- mobx-react observervers tree viewer.
+- mobx-state-tree support.
 
 ### Fixed
 - Displaying deep log items
