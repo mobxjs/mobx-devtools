@@ -1,0 +1,122 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/ak/.nvm/versions/node/v6.0.0/bin/node',
+1 verbose cli   '/Users/ak/.nvm/versions/node/v6.0.0/bin/npm',
+1 verbose cli   'publish',
+1 verbose cli   '--tag',
+1 verbose cli   'latest' ]
+2 info using npm@3.8.6
+3 info using node@v6.0.0
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/ak/apps/mobx-devtools/packages/mobx-devtools',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/ak/.npm/mobx-devtools-mst/0.9.7/package.tgz not in flight; packing
+9 verbose correctMkdir /Users/ak/.npm correctMkdir not in flight; initializing
+10 info lifecycle mobx-devtools-mst@0.9.7~prepublish: mobx-devtools-mst@0.9.7
+11 silly lifecycle mobx-devtools-mst@0.9.7~prepublish: no script for prepublish, continuing
+12 verbose tar pack [ '/Users/ak/.npm/mobx-devtools-mst/0.9.7/package.tgz',
+12 verbose tar pack   '/Users/ak/apps/mobx-devtools/packages/mobx-devtools' ]
+13 verbose tarball /Users/ak/.npm/mobx-devtools-mst/0.9.7/package.tgz
+14 verbose folder /Users/ak/apps/mobx-devtools/packages/mobx-devtools
+15 verbose addLocalTarball adding from inside cache /Users/ak/.npm/mobx-devtools-mst/0.9.7/package.tgz
+16 verbose correctMkdir /Users/ak/.npm correctMkdir not in flight; initializing
+17 silly cache afterAdd mobx-devtools-mst@0.9.7
+18 verbose afterAdd /Users/ak/.npm/mobx-devtools-mst/0.9.7/package/package.json not in flight; writing
+19 verbose correctMkdir /Users/ak/.npm correctMkdir not in flight; initializing
+20 verbose afterAdd /Users/ak/.npm/mobx-devtools-mst/0.9.7/package/package.json written
+21 silly publish { name: 'mobx-devtools-mst',
+21 silly publish   version: '0.9.7',
+21 silly publish   repository:
+21 silly publish    { type: 'git',
+21 silly publish      url: 'git+https://github.com/andykog/mobx-devtools.git' },
+21 silly publish   author: { name: 'Andy Kogut' },
+21 silly publish   license: 'MIT',
+21 silly publish   scripts: { build: 'cross-env NODE_ENV=production echo \'mobx-devtools pkg: notheing to build\'' },
+21 silly publish   bugs: { url: 'https://github.com/mobxjs/mobx/issues' },
+21 silly publish   homepage: 'https://mobxjs.github.io/mobx',
+21 silly publish   readme: '# 404\n\n**Page not found**\n',
+21 silly publish   readmeFilename: 'README.md',
+21 silly publish   description: '**Page not found**',
+21 silly publish   _id: 'mobx-devtools-mst@0.9.7',
+21 silly publish   _shasum: '063f9ce345181036c4ecdbcf095d51db81cb0a0d',
+21 silly publish   _from: '.' }
+22 verbose getPublishConfig undefined
+23 silly mapToRegistry name mobx-devtools-mst
+24 silly mapToRegistry using default registry
+25 silly mapToRegistry registry https://registry.npmjs.org/
+26 silly mapToRegistry data Result {
+26 silly mapToRegistry   raw: 'mobx-devtools-mst',
+26 silly mapToRegistry   scope: null,
+26 silly mapToRegistry   name: 'mobx-devtools-mst',
+26 silly mapToRegistry   rawSpec: '',
+26 silly mapToRegistry   spec: 'latest',
+26 silly mapToRegistry   type: 'tag' }
+27 silly mapToRegistry uri https://registry.npmjs.org/mobx-devtools-mst
+28 verbose publish registryBase https://registry.npmjs.org/
+29 silly publish uploading /Users/ak/.npm/mobx-devtools-mst/0.9.7/package.tgz
+30 verbose request uri https://registry.npmjs.org/mobx-devtools-mst
+31 verbose request sending authorization for write operation
+32 info attempt registry request try #1 at 1:58:19 PM
+33 verbose request using bearer token for auth
+34 verbose request id 2dccfd0eb9f7ed43
+35 http request PUT https://registry.npmjs.org/mobx-devtools-mst
+36 http 500 https://registry.npmjs.org/mobx-devtools-mst
+37 verbose headers { 'content-type': 'application/json',
+37 verbose headers   'cache-control': 'max-age=0',
+37 verbose headers   'content-length': '58',
+37 verbose headers   'accept-ranges': 'bytes',
+37 verbose headers   date: 'Fri, 27 Oct 2017 10:58:16 GMT',
+37 verbose headers   via: '1.1 varnish',
+37 verbose headers   connection: 'keep-alive',
+37 verbose headers   'x-served-by': 'cache-hhn1539-HHN',
+37 verbose headers   'x-cache': 'MISS',
+37 verbose headers   'x-cache-hits': '0',
+37 verbose headers   'x-timer': 'S1509101895.121413,VS0,VE1839' }
+38 info retry will retry, error on last attempt: Error: mobx-devtools-mst status = 403 : mobx-devtools-mst
+39 info attempt registry request try #2 at 1:58:32 PM
+40 verbose request using bearer token for auth
+41 http request PUT https://registry.npmjs.org/mobx-devtools-mst
+42 http 403 https://registry.npmjs.org/mobx-devtools-mst
+43 verbose headers { 'content-type': 'application/json',
+43 verbose headers   'cache-control': 'max-age=300',
+43 verbose headers   'content-length': '91',
+43 verbose headers   'accept-ranges': 'bytes',
+43 verbose headers   date: 'Fri, 27 Oct 2017 10:58:27 GMT',
+43 verbose headers   via: '1.1 varnish',
+43 verbose headers   connection: 'keep-alive',
+43 verbose headers   'x-served-by': 'cache-hhn1539-HHN',
+43 verbose headers   'x-cache': 'MISS',
+43 verbose headers   'x-cache-hits': '0',
+43 verbose headers   'x-timer': 'S1509101907.109810,VS0,VE861',
+43 verbose headers   vary: 'Accept-Encoding, Accept' }
+44 verbose request invalidating /Users/ak/.npm/registry.npmjs.org/mobx-devtools-mst on PUT
+45 error publish Failed PUT 403
+46 verbose stack Error: You cannot publish over the previously published version 0.9.7. : mobx-devtools-mst
+46 verbose stack     at makeError (/Users/ak/.nvm/versions/node/v6.0.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+46 verbose stack     at CachingRegistryClient.<anonymous> (/Users/ak/.nvm/versions/node/v6.0.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+46 verbose stack     at Request._callback (/Users/ak/.nvm/versions/node/v6.0.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+46 verbose stack     at Request.self.callback (/Users/ak/.nvm/versions/node/v6.0.0/lib/node_modules/npm/node_modules/request/request.js:199:22)
+46 verbose stack     at emitTwo (events.js:106:13)
+46 verbose stack     at Request.emit (events.js:191:7)
+46 verbose stack     at Request.<anonymous> (/Users/ak/.nvm/versions/node/v6.0.0/lib/node_modules/npm/node_modules/request/request.js:1036:10)
+46 verbose stack     at emitOne (events.js:101:20)
+46 verbose stack     at Request.emit (events.js:188:7)
+46 verbose stack     at IncomingMessage.<anonymous> (/Users/ak/.nvm/versions/node/v6.0.0/lib/node_modules/npm/node_modules/request/request.js:963:12)
+47 verbose statusCode 403
+48 verbose pkgid mobx-devtools-mst
+49 verbose cwd /Users/ak/apps/mobx-devtools/packages/mobx-devtools
+50 error Darwin 16.7.0
+51 error argv "/Users/ak/.nvm/versions/node/v6.0.0/bin/node" "/Users/ak/.nvm/versions/node/v6.0.0/bin/npm" "publish" "--tag" "latest"
+52 error node v6.0.0
+53 error npm  v3.8.6
+54 error code E403
+55 error You cannot publish over the previously published version 0.9.7. : mobx-devtools-mst
+56 error If you need help, you may report this error at:
+56 error     <https://github.com/npm/npm/issues>
+57 verbose exit [ 1, true ]
