@@ -1,6 +1,6 @@
 {
   "name": "mobx-devtools-react-mini-panel",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "main": "lib/index.js",
   "typings": "./index",
   "repository": {

@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.9.8] - 2017-10-30
 - Fixed mobx-devtools-mst error in node.js environment (#8)
 
 ## [0.9.7] - 2017-10-27
