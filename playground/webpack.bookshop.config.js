@@ -10,7 +10,7 @@ module.exports = {
     'babel-polyfill',
     process.env.PLAIN_DEVTOOL && path.join(rootPath, 'src/shells/plain'),
     path.join(__dirname, 'mobx-state-tree/packages/mst-example-bookshop/src')
-  ],
+  ].filter(a => a),
   output: {
     path: path.join(rootPath, 'dist'),
     filename: 'bundle.js',

@@ -2,7 +2,7 @@ import * as mobx from 'mobx'; // eslint-disable-line
 import * as libmst from 'mobx-state-tree'; // eslint-disable-line
 
 const track = (root) => {
-  const hook = window.__MOBX_DEVTOOLS_GLOBAL_HOOK__; // eslint-disable-line no-underscore-dangle
+  const hook = global.__MOBX_DEVTOOLS_GLOBAL_HOOK__; // eslint-disable-line no-underscore-dangle
   if (hook && hook.inject) hook.inject({ mobx, mst: libmst });
 
   if (!hook) return;

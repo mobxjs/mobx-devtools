@@ -9,10 +9,10 @@ import ContextProvider from '../../../src/utils/ContextProvider';
 import MiniBar from './MiniBar/index';
 import ModalGraph from './ModalGraph';
 
-installGlobalHook(window);
+installGlobalHook(global);
 
 // eslint-disable-next-line no-underscore-dangle
-const hook = window.__MOBX_DEVTOOLS_GLOBAL_HOOK__;
+const hook = global.__MOBX_DEVTOOLS_GLOBAL_HOOK__;
 
 hook.injectMobxReact(require('mobx-react'), require('mobx'));
 

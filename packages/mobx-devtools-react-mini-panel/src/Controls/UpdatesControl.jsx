@@ -8,7 +8,7 @@ export default class UpdatesControl extends React.PureComponent {
 
   componentDidMount() {
     // eslint-disable-next-line no-underscore-dangle
-    const { store } = window.__MOBX_DEVTOOLS_GLOBAL_HOOK__.agent;
+    const { store } = global.__MOBX_DEVTOOLS_GLOBAL_HOOK__.agent;
     this.$unsubscribe = store.subscribeUpdates(() => this.setState({}));
   }
 
@@ -18,7 +18,7 @@ export default class UpdatesControl extends React.PureComponent {
 
   render() {
     // eslint-disable-next-line no-underscore-dangle
-    const { store } = window.__MOBX_DEVTOOLS_GLOBAL_HOOK__.agent;
+    const { store } = global.__MOBX_DEVTOOLS_GLOBAL_HOOK__.agent;
     const { children } = this.props;
     return React.cloneElement(children, {
       onToggle: () => store.toggleShowingUpdates(),
