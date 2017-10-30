@@ -9,3 +9,4 @@
 /lib
 /packages/**/lib
 /packages/**/node_modules
+/packages/**/npm-debug.log
