@@ -27,4 +27,6 @@ export default (config) => {
   };
 
   render();
+
+  return () => ReactDOM.unmountComponentAtNode(config.node);
 };

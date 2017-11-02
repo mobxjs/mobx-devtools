@@ -10,8 +10,15 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production echo 'mobx-devtools pkg: notheing to build'"
   },
+  "bin": {
+    "mobx-devtools": "./bin.js"
+  },
   "bugs": {
     "url": "https://github.com/mobxjs/mobx/issues"
   },
-  "homepage": "https://mobxjs.github.io/mobx"
+  "homepage": "https://mobxjs.github.io/mobx",
+  "dependencies": {
+    "electron": "^1.7.9",
+    "ws": "^3.2.0"
+  }
 }

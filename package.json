@@ -76,5 +76,6 @@
         "webpack": "^3.6.0",
         "webpack-dev-server": "^2.8.2",
         "write-file-webpack-plugin": "^4.1.0"
-    }
+    },
+    "dependencies": {}
 }
