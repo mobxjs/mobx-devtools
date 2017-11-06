@@ -53,7 +53,7 @@ export default class LObjDiff extends React.PureComponent {
     return (
       <div className={css(styles.container)}>
         <div className={css(styles.innerContainer)}>
-          {removed.map(({ name, value, path }, i) => (
+          {removed.map(({ name, path }, i) => (
             <div className={css(styles.diffRow, styles.removed)} key={i}>
               <div className={css(styles.propName, styles.propNameRemoved)}>{name}</div>
               <div className={css(styles.propValue, styles.propValueRemoved)}>
@@ -67,7 +67,7 @@ export default class LObjDiff extends React.PureComponent {
               </div>
             </div>
           ))}
-          {added.map(({ name, value, path }, i) => (
+          {added.map(({ name, path }, i) => (
             <div className={css(styles.diffRow, styles.added)} key={i}>
               <div className={css(styles.propName, styles.propNameAdded)}>{name}</div>
               <div className={css(styles.propValue, styles.propValueAdded)}>

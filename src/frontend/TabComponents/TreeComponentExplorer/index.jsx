@@ -62,7 +62,7 @@ export default class TreeComponentExplorer extends React.Component {
   }
 
   dataDecorator = injectStores({
-    subscribe: ({ treeExplorerStore }, { path }) => ({
+    subscribe: (stores, { path }) => ({
       treeExplorerStore: [`inspected--${path.join('/')}`],
     }),
     shouldUpdate: () => true,

@@ -33,6 +33,7 @@ export default class Tab extends React.PureComponent {
       <span
         className={css(styles.tab, active && styles.active, processing && styles.processing)}
         onClick={onClick}
+        data-test={`MainMenu-Tab-${this.props.type}`}
       >
         <div className={css(styles.icon)}>{this.getIcon()}</div>
         <span className={css(styles.tabLabel)}> {children}</span>

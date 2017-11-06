@@ -73,7 +73,7 @@ export default class TabMST extends React.PureComponent {
     switch (e.keyCode) {
       case 37:
       case 38: {
-          // left arrow
+        // left arrow
         // up arrow
         if (this.props.activeLogItemIndex > 0) {
           e.preventDefault();

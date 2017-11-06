@@ -45,7 +45,7 @@ export default function ChangeDataViewerPopover({
       stopInspecting={stopInspecting}
       showMenu={showMenu}
       decorator={injectStores({
-        subscribe: ({ treeExplorerStore }, props) => ({
+        subscribe: (stores, props) => ({
           actionsLoggerStore: [`inspected--${props.path.join('/')}`],
         }),
         shouldUpdate: () => true,

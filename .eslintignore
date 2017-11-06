@@ -1,4 +1,4 @@
-/playground/**
+/vendor/**
 /node_modules/**
 /lib/**
 /packages/**/lib/**

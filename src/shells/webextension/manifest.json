@@ -20,7 +20,7 @@
   "commands": {
     "open-devtools-window": {
       "suggested_key": {
-        "default": "Alt+Shift+M"
+        "default": "Alt+M"
       },
       "description": "DevTools window to left"
     }

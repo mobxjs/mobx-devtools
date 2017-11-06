@@ -27,7 +27,7 @@ MainMenu.propTypes = {
 
 export default function MainMenu({ availableTabs, activeTab, onTabChange, processingTabs }) {
   return (
-    <div className={css(styles.container)}>
+    <div className={css(styles.container)} data-test="MainMenu">
       {availableTabs.map(type => (
         <Tab
           key={type}

@@ -8,6 +8,7 @@ installGlobalHook(window);
 // eslint-disable-next-line no-underscore-dangle
 const hook = window.__MOBX_DEVTOOLS_GLOBAL_HOOK__;
 
+// eslint-disable-next-line import/no-unresolved
 hook.injectMobxReact(require('mobx-react'), require('mobx'));
 
 const listenersA = [];

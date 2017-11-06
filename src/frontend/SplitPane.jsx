@@ -18,7 +18,6 @@ const dispatchResizeEvent = () => {
 };
 
 export default class SplitPane extends React.Component {
-
   static propTypes = {
     initialWidth: PropTypes.number.isRequired,
     initialHeight: PropTypes.number.isRequired,

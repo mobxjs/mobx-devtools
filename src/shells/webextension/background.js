@@ -6,6 +6,15 @@ import debugConnection from '../../utils/debugConnection';
  * Runs all the time and serves as a central message hub for panels, contentScript, backend
  */
 
+// if (__DEV__) {
+chrome.extension.onMessage.addListener((evt, { tab }) => {
+  if (evt.eventName === 'open-mobx-devtools-window') {
+    window.contentTabId = tab.id;
+    openWindow(tab.id);
+  }
+});
+// }
+
 const orphansByTabId = {};
 
 function getActiveContentWindow(cb) {
@@ -126,7 +135,7 @@ function doublePipe(one, two) {
   two.onDisconnect.addListener(shutdown);
 }
 
-chrome.contextMenus.onClicked.addListener(({ menuItemId }, contentWindow) => {
+chrome.contextMenus.onClicked.addListener((_, contentWindow) => {
   openWindow(contentWindow.id);
 });
 

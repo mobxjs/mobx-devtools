@@ -14,13 +14,13 @@ export default function ButtonRecord({ active, onClick, showTipStartRecoding }) 
     <div className={css(styles.button)} onClick={onClick}>
       <span className={css(styles.record, active && styles.recordActive)} />
       {showTipStartRecoding && (
-      <div className={css(styles.tipStartRecoding)}>
-        <div className={css(styles.tipStartRecodingIcon)}>
-          <StartRecordingArrow />
-        </div>
-            Click to start recording
+        <div className={css(styles.tipStartRecoding)}>
+          <div className={css(styles.tipStartRecodingIcon)}>
+            <StartRecordingArrow />
           </div>
-        )}
+            Click to start recording
+        </div>
+      )}
     </div>
   );
 }

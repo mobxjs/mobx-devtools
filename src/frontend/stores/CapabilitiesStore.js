@@ -1,7 +1,6 @@
 import AbstractStore from './AbstractStore';
 
 export default class CapabilitiesStore extends AbstractStore {
-
   constructor(bridge) {
     super();
     this.bridge = bridge;

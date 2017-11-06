@@ -36,7 +36,7 @@ export default class LogItemExplorer extends React.PureComponent {
   };
 
   dataDecorator = injectStores({
-    subscribe: ({ mstLoggerStore }, { path }) => ({
+    subscribe: (stores, { path }) => ({
       treeExplorerStore: [`inspected--${path.join('/')}`],
     }),
     shouldUpdate: () => true,

@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "name": "mobx-devtools-playground",
+  "version": "0.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andykog/mobx-devtools.git"
+  },
+  "author": "Andy Kogut",
+  "license": "MIT",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development webpack-dev-server --hot"
+  },
+  "devDependencies": {
+    "cross-env": "^5.1.1",
+    "mobx-react": "^4.3.3",
+    "mobx-state-tree": "^1.1.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.3"
+  },
+  "dependencies": {
+    "mobx": "^3.3.1"
+  }
+}

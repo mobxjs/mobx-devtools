@@ -7,7 +7,7 @@
 
 ## Start the test project
 
-- run `yarn start:todomvc-plain`
+- run `yarn start-playground-plain`
 
 
 ## Chrome extension

@@ -301,6 +301,7 @@ function Head({ depth, hovered, selected, children, getRef, ...otherProps }) {
       ref={getRef}
       style={{ paddingLeft: calcPaddingLeft(depth) }}
       className={css(styles.head, hovered && styles.headHovered, selected && styles.headSelected)}
+      data-test="components-Node-Head"
       {...otherProps}
     >
       <span className={css(selected && styles.selectedContent)}>{children}</span>
