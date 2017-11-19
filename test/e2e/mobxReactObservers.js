@@ -1,6 +1,6 @@
 const { By } = require('selenium-webdriver');
 const prepare = require('../prepare');
-const { startDevServer } = require('../../packages/playground/webpack');
+const { startDevServer } = require('../../packages/playground/webpack.makeConfig');
 
 const componentsButtonLocator = By.css('[data-test="MainMenu-Tab-components"]');
 const componentsTreeNodeHead = By.css('[data-test="components-Node-Head"]');

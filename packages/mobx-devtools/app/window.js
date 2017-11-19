@@ -1,23 +1,25 @@
 const startServer = require('./startServer');
+
 const port = process.env.PORT || 8098;
-const initFrontend = require('../lib/frontend').default;
+const initFrontend = require('../lib/frontend').default; // eslint-disable-line
+
 const node = document.getElementById('container');
 
-let onDisconnect;
+let onDisconnect; // eslint-disable-line
 let deinitFrontend;
 
 global.chrome = {};
 
-const stopServer = startServer({
+startServer({
   port,
   onConnect(socket) {
-    var listeners = [];
+    const listeners = [];
     socket.onmessage = (evt) => {
-      var data = JSON.parse(evt.data);
-      listeners.forEach((fn) => fn(data));
+      const data = JSON.parse(evt.data);
+      listeners.forEach(fn => fn(data));
     };
 
-    wall = {
+    const wall = {
       listen(fn) {
         listeners.push(fn);
       },
@@ -40,7 +42,7 @@ const stopServer = startServer({
   },
   onError(e) {
     if (deinitFrontend) deinitFrontend();
-    var message;
+    let message;
     if (e.code === 'EADDRINUSE') {
       message = 'Another instance of DevTools is running';
     } else {
@@ -48,13 +50,13 @@ const stopServer = startServer({
     }
     setTimeout(() => {
       node.innerHTML = `<div id="waiting"><h2>${message}</h2></div>`;
-    }, 10)
+    }, 10);
   },
   onDisconnect() {
     if (deinitFrontend) deinitFrontend();
     setTimeout(() => {
       node.innerHTML = '<div id="waiting"><h2>Waiting for connection…</h2></div>';
-    }, 10)
+    }, 10);
   },
 });
 

@@ -8,5 +8,6 @@
 *.iws
 /lib
 /packages/**/lib
+/packages/**/dist
 /packages/**/node_modules
 /packages/**/npm-debug.log

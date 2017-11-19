@@ -20,15 +20,15 @@ exports.makeConfig = ({
     {}
   ),
   output: {
-    path: path.join(rootPath, 'dist'),
+    path: path.join(__dirname, 'dist'),
     filename: '[name].bundle.js',
-    publicPath: '/',
+    publicPath: '',
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
       'mobx-state-tree': path.join(__dirname, 'node_modules/mobx-state-tree'),
-      'mobx-devtools-mst': path.join(rootPath, 'packages/mobx-devtools-mst'),
+      'mobx-devtools-mst': path.join(rootPath, 'packages/mobx-devtools-mst/src'),
       'mobx-devtools': path.join(rootPath, 'packages/mobx-devtools'),
       aphrodite: 'aphrodite/no-important',
     },
@@ -42,6 +42,7 @@ exports.makeConfig = ({
     },
   },
   module: {
+    noParse: /mobx-devtools-mst/,
     loaders: [
       {
         test: /\.jsx?$/,

@@ -71,24 +71,38 @@ function handleInstallError(tabId, error) {
   orphanDevtools.forEach(d => d.postMessage('content-script-installation-error'));
 }
 
-function installContentScript(tabId) {
+const waitTabLoad = (tabId, cb) => {
+  if (!chrome.tabs.get) { // electron doesn't support this api
+    cb();
+    return;
+  }
   chrome.tabs.get(+tabId, (tab) => {
     if (chrome.runtime.lastError) {
-      handleInstallError(tabId, chrome.runtime.lastError);
+      cb(chrome.runtime.lastError);
     } else if (tab.status === 'complete') {
-      chrome.tabs.executeScript(tabId, { file: '/contentScript.js' }, (res) => {
-        const err = chrome.runtime.lastError;
-        if (err || !res) handleInstallError(tabId, err);
-      });
+      cb();
     } else {
       chrome.tabs.onUpdated.addListener(function listener(tid, changeInfo) {
         if (tid !== tabId || changeInfo.status === 'loading') return;
         chrome.tabs.onUpdated.removeListener(listener);
-        installContentScript(tabId);
+        cb(tabId);
       });
     }
   });
-}
+};
+
+const installContentScript = (tabId) => {
+  waitTabLoad(+tabId, (err) => {
+    if (err) {
+      handleInstallError(tabId, err);
+    } else {
+      chrome.tabs.executeScript(tabId, { file: '/contentScript.js' }, (res) => {
+        const installError = chrome.runtime.lastError;
+        if (err || !res) handleInstallError(tabId, installError);
+      });
+    }
+  });
+};
 
 function doublePipe(one, two) {
   if (!one.$i) {
@@ -135,23 +149,29 @@ function doublePipe(one, two) {
   two.onDisconnect.addListener(shutdown);
 }
 
-chrome.contextMenus.onClicked.addListener((_, contentWindow) => {
-  openWindow(contentWindow.id);
-});
+if (chrome.contextMenus) { // electron doesn't support this api
+  chrome.contextMenus.onClicked.addListener((_, contentWindow) => {
+    openWindow(contentWindow.id);
+  });
+}
 
-chrome.commands.onCommand.addListener((shortcut) => {
-  if (shortcut === 'open-devtools-window') {
-    getActiveContentWindow((contentWindow) => {
-      window.contentTabId = contentWindow.id;
-      openWindow(contentWindow.id);
-    });
-  }
-});
+if (chrome.commands) { // electron doesn't support this api
+  chrome.commands.onCommand.addListener((shortcut) => {
+    if (shortcut === 'open-devtools-window') {
+      getActiveContentWindow((contentWindow) => {
+        window.contentTabId = contentWindow.id;
+        openWindow(contentWindow.id);
+      });
+    }
+  });
+}
 
-chrome.browserAction.onClicked.addListener((tab) => {
-  window.contentTabId = tab.id;
-  openWindow(tab.id);
-});
+if (chrome.browserAction) { // electron doesn't support this api
+  chrome.browserAction.onClicked.addListener((tab) => {
+    window.contentTabId = tab.id;
+    openWindow(tab.id);
+  });
+}
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
@@ -160,6 +180,7 @@ chrome.runtime.onInstalled.addListener(() => {
     contexts: ['all'],
   });
 });
+
 
 chrome.runtime.onConnect.addListener((port) => {
   let tab = null;

@@ -1,8 +1,11 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Ability to use the extension inside electron environment
 
 ## [0.9.8] - 2017-10-30
+### Fixed
 - Fixed mobx-devtools-mst error in node.js environment (#8)
 
 ## [0.9.7] - 2017-10-27
