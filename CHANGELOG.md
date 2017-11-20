@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.9.9] - 2017-11-20
 ### Fixed
 - Ability to use the extension inside electron environment
 
