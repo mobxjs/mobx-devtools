@@ -64,6 +64,11 @@ export default (onChange) => {
     const isGroupEnd = change.spyReportEnd === true;
 
     if (isGroupEnd) {
+      if (path.length === 0) {
+        // eslint-disable-next-line no-console
+        if (__DEV__) console.warn('groupStart & groupEnd mismatch');
+        return;
+      }
       const superChange = path[path.length - 1];
       path.splice(path.length - 1);
       superChange.time = change.time;

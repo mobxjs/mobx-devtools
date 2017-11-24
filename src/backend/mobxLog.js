@@ -1,4 +1,4 @@
-import makeChangesProcessor from '../utils/changesProcessor_';
+import makeChangesProcessor from '../utils/changesProcessor';
 import consoleLogChange from './utils/consoleLogChange';
 import makeInspector from './utils/inspector';
 import storaTempValueInGlobalScope from './utils/storaTempValueInGlobalScope';
