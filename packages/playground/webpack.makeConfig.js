@@ -30,6 +30,8 @@ exports.makeConfig = ({
       'mobx-state-tree': path.join(__dirname, 'node_modules/mobx-state-tree'),
       'mobx-devtools-mst': path.join(rootPath, 'packages/mobx-devtools-mst/src'),
       'mobx-devtools': path.join(rootPath, 'packages/mobx-devtools'),
+      'mobx-react': path.join(__dirname, 'node_modules/mobx-react'),
+      mobx: path.join(__dirname, 'node_modules/mobx'),
       aphrodite: 'aphrodite/no-important',
     },
   },
@@ -42,7 +44,6 @@ exports.makeConfig = ({
     },
   },
   module: {
-    noParse: /mobx-devtools-mst/,
     loaders: [
       {
         test: /\.jsx?$/,
