@@ -1,28 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mobx Developer Tools</title>
-    <meta charset=utf8>
+  <title>Mobx Developer Tools</title>
+  <meta charset=utf8>
+  <style>
+    html {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      flex: 1;
+      display: flex;
+      width: 100%;
+      max-width: 100%; /* ff */
+    }
+    #container {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      max-width: 100%; /* ff */
+    }
+    #container {
+      font-size: 13px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+    #waiting {
+      padding: 20px 20px 5px;
+      max-width: 350px;
+      margin: 20px auto auto;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24), 0 0 0 10000px #f7f9fb;
+    }
+    #waiting h2 {
+      margin: 0 0 15px;
+    }
+    #waiting p {
+      margin: 0 0 15px;
+    }
+    #waiting input {
+      width: 100%;
+      padding: 3px 5px;
+      line-height: 21px;
+      border: 1px solid #ddd;
+      border-radius: 2px;
+      margin: 4px 0;
+      font-family: inherit;
+    }
+    #loading-status {
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 <body>
 <div id="container">
-    <div id="waiting">
-        <h2>Waiting for React to connect…</h2>
-        <div>
-            <div>
-                Add <input id="localhost"><br/>
-                or <input id="byip">
-            </div>
-            <div>
-                to the top of the page you want to debug,
-                <br/>
-                <b>before</b> importing MobX.
-            </div>
-        </div>
-        <br />
-        <br />
-        <div id="loading-status">Starting the server…</div>
-    </div>
+  <div id="waiting">
+    <h2>Waiting for connection…</h2>
+    <p>
+      <div>
+        Add <input id="localhost" readonly><br/>
+        or <input id="byip" readonly>
+      </div>
+      <div>
+        to the top of the page you want to debug,
+        <br/>
+        <b>before</b> importing MobX and related libs.
+      </div>
+    </p>
+    <div id="loading-status">Starting the server…</div>
+  </div>
 </div>
 <script src="window.js"></script>
 </body>

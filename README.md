@@ -2,6 +2,7 @@
 This repository is home for:
 * [MobX Developer Tools for **Chrome**](https://chrome.google.com/webstore/detail/mobx-developer-tools/pfgnfdagidkfgccljigdamigbcnndkod)
 * [MobX Developer Tools for **Firefox**](https://addons.mozilla.org/en-US/firefox/addon/mobx-devtools/)
+* [Standalone app](#standalone-app) for Safari, IE etc. 
 
 ![MobX DevTools](preview.gif)
 
@@ -22,6 +23,18 @@ const myStore = MyStore.create(/* ... */);
 makeInspectable(myStore);
 ```
 ![MobX DevTools MST](preview-mst.png)
+
+
+#### Standalone app
+
+Install:
+```sh
+npm install --global mobx-devtools
+```
+Start: 
+```sh
+mobx-devtools
+```
 
 
 # Requirements

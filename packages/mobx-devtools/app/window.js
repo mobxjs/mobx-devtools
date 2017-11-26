@@ -2,6 +2,7 @@ const startServer = require('./startServer');
 
 const port = process.env.PORT || 8098;
 const initFrontend = require('../lib/frontend').default; // eslint-disable-line
+const ip = require('ip');
 
 const node = document.getElementById('container');
 
@@ -10,8 +11,25 @@ let deinitFrontend;
 
 global.chrome = {};
 
+document.getElementById('localhost').value = `<script src="//localhost:${port}"></script>`;
+document.getElementById('byip').value = `<script src="//${ip.address()}:${port}"></script>`;
+
+[
+  document.getElementById('localhost'),
+  document.getElementById('byip'),
+].forEach((el) => {
+  el.onclick = function () {
+    this.selectionStart = 0;
+    this.selectionEnd = this.value.length;
+  };
+});
+
+
 startServer({
   port,
+  onStarted() {
+    document.getElementById('loading-status').style.display = 'none';
+  },
   onConnect(socket) {
     const listeners = [];
     socket.onmessage = (evt) => {

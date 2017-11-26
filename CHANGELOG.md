@@ -1,6 +1,11 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Standalone app.
+
+### Fixed
+- Handle groupStart & groupEnd mismatch (#10)
 
 ## [0.9.9] - 2017-11-20
 ### Fixed

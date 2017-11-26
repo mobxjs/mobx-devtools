@@ -8,7 +8,7 @@
   "author": "Andy Kogut",
   "license": "MIT",
   "scripts": {
-    "build": "cross-env NODE_ENV=production echo 'mobx-devtools pkg: notheing to build'"
+    "build": "webpack"
   },
   "bin": {
     "mobx-devtools": "./bin.js"
@@ -19,6 +19,7 @@
   "homepage": "https://mobxjs.github.io/mobx",
   "dependencies": {
     "electron": "^1.7.9",
+    "ip": "^1.1.5",
     "ws": "^3.2.0"
   }
 }
