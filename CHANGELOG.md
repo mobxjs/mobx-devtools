@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.9.10] - 2017-11-27
 ### Added
 - Standalone app.
 
