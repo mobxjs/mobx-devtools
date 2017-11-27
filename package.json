@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "bootstrap": "yarn && lerna run bootstrap",
+        "bootstrap": "yarn && lerna bootstrap",
         "publish-all": "yarn ; lerna run build && node scripts/bump-version-push-publish && npm run build:chrome && npm run build:firefox && npm run publish:chrome && npm run publish:firefox",
         "build": "lerna run build && npm run build:chrome && npm run build:firefox",
         "start-playground": "cross-env NODE_ENV=development webpack-dev-server --config packages/playground/webpack.config.js",

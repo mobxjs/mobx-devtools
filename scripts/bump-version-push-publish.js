@@ -12,7 +12,7 @@ prompt.get([
     name: 'newVersion',
     description: `Current version: ${vMajor}.${vMinor}.${vPatch}.  New version`,
     type: 'string',
-    pattern: /^\d+\.\d+\.\d$/,
+    pattern: /^\d+\.\d+\.\d+$/,
     message: 'Must be in semver format',
     default: `${vMajor}.${vMinor}.${+vPatch + 1}`,
   },
