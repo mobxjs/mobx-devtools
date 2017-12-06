@@ -19,6 +19,8 @@
         "test:e2e": "npm run test:e2e:chrome",
         "test:e2e:chrome": "cross-env NODE_ENV=test TARGET_BROWSER=chrome node scripts/webextension/build.js && npm run test:e2e:chrome:now",
         "test:e2e:chrome:now": "cross-env NODE_ENV=test cross-env TARGET_BROWSER=chrome mocha test/e2e",
+        "test:e2e:firefox": "cross-env NODE_ENV=test TARGET_BROWSER=firefox node scripts/webextension/build.js && npm run test:e2e:firefox:now",
+        "test:e2e:firefox:now": "cross-env NODE_ENV=test cross-env TARGET_BROWSER=firefox mocha test/e2e",
         "lint": "eslint '**/*.js' '**/*.jsx'",
         "lint-fix": "eslint --fix '**/*.js' '**/*.jsx'",
         "prettier": "prettier --write --print-width 100 --tab-width 2 --single-quote \"src/**/*.js\" \"src/**/*.jsx\"",
@@ -90,5 +92,7 @@
         "webpack-dev-server": "^2.8.2",
         "write-file-webpack-plugin": "^4.1.0"
     },
-    "dependencies": {}
+    "dependencies": {
+        "geckodriver": "^1.10.0"
+    }
 }

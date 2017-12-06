@@ -1,4 +1,5 @@
 const chromedriver = require('chromedriver');
+const geckodriver = require('geckodriver');
 const webdriver = require('selenium-webdriver');
 const path = require('path');
 
@@ -9,8 +10,22 @@ const startBrowser = () => {
     case 'chrome':
       chromedriver.start();
       return () => chromedriver.stop();
+    case 'firefox':
+      geckodriver.start();
+      return () => geckodriver.stop();
     default:
-      return () => {};
+      throw new Error(`${TARGET_BROWSER} browser driver is not configured`);
+  }
+};
+
+const getServerAddr = () => {
+  switch (TARGET_BROWSER) {
+    case 'chrome':
+      return 'http://localhost:9515';
+    case 'firefox':
+      return 'http://localhost:4444';
+    default:
+      throw new Error(`${TARGET_BROWSER} browser server address is not configured`);
   }
 };
 
@@ -21,14 +36,19 @@ const getCapabilities = () => {
         args: [`load-extension=${path.join(__dirname, '../lib/chrome')}`],
       },
     };
-    default: return {};
+    // TODO: Run unsigned extension in ff
+    // case 'firefox': return {
+    //   'moz:firefoxOptions': {},
+    // };
+    default:
+      throw new Error(`${TARGET_BROWSER} browser capabilities are not configured`);
   }
 };
 
 module.exports = async ({ initialUrl, openDevtool = true }) => {
   const stopBrowser = startBrowser();
   const driver = new webdriver.Builder()
-    .usingServer('http://localhost:9515')
+    .usingServer(getServerAddr())
     .withCapabilities(getCapabilities())
     .forBrowser(TARGET_BROWSER)
     .build();

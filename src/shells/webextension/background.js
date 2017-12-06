@@ -6,13 +6,14 @@ import debugConnection from '../../utils/debugConnection';
  * Runs all the time and serves as a central message hub for panels, contentScript, backend
  */
 
-if (process.env.NODE_ENV === 'test' && chrome.extension) { // doesn't work in ff!
-  chrome.extension.onMessage.addListener((evt, { tab }) => {
+if (process.env.NODE_ENV === 'test') {
+  const listener = (evt, { tab }) => {
     if (evt.eventName === 'open-mobx-devtools-window') {
       window.contentTabId = tab.id;
       openWindow(tab.id);
     }
-  });
+  };
+  chrome.runtime.onMessage.addListener(listener);
 }
 
 const orphansByTabId = {};
