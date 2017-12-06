@@ -80,7 +80,6 @@ class _Node extends React.Component {
 
   $head = undefined;
   $tail = undefined;
-  $ownerWindow = undefined;
 
   findOwnerWindow() {
     if (!this.$head) {
@@ -299,12 +298,16 @@ function Head({ depth, hovered, selected, children, getRef, ...otherProps }) {
   return (
     <div
       ref={getRef}
-      style={{ paddingLeft: calcPaddingLeft(depth) }}
       className={css(styles.head, hovered && styles.headHovered, selected && styles.headSelected)}
       data-test="components-Node-Head"
       {...otherProps}
     >
-      <span className={css(selected && styles.selectedContent)}>{children}</span>
+      <span
+        style={{ paddingLeft: calcPaddingLeft(depth) }}
+        className={css(styles.content, selected && styles.selectedContent)}
+      >
+        {children}
+      </span>
     </div>
   );
 }
@@ -320,11 +323,15 @@ function Tail({ depth, hovered, selected, children, getRef, ...otherProps }) {
   return (
     <div
       ref={getRef}
-      style={{ paddingLeft: calcPaddingLeft(depth) }}
       className={css(styles.tail, hovered && styles.tailHovered, selected && styles.tailSelected)}
       {...otherProps}
     >
-      <span className={css(selected && styles.selectedContent)}>{children}</span>
+      <span
+        style={{ paddingLeft: calcPaddingLeft(depth) }}
+        className={css(styles.content, selected && styles.selectedContent)}
+      >
+        {children}
+      </span>
     </div>
   );
 }
@@ -371,11 +378,6 @@ const styles = StyleSheet.create({
   head: {
     cursor: 'default',
     borderTop: '1px solid transparent',
-    position: 'relative',
-    display: 'flex',
-    paddingRight: 5,
-    paddingBottom: 4,
-    paddingTop: 4,
     borderRadius: 4,
   },
   headHovered: {
@@ -403,9 +405,6 @@ const styles = StyleSheet.create({
   tail: {
     borderTop: '1px solid transparent',
     cursor: 'default',
-    paddingBottom: 3,
-    paddingTop: 3,
-    borderRadius: 4,
   },
   tailHovered: {
     backgroundColor: 'var(--treenode-hovered-bg)',
@@ -414,6 +413,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'var(--treenode-selected-bg)',
   },
 
+  content: {
+    display: 'block',
+    position: 'relative',
+    paddingRight: 5,
+    paddingBottom: 4,
+    paddingTop: 4,
+  },
   selectedContent: {
     filter: 'contrast(0.1) brightness(2)',
   },

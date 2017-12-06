@@ -2,7 +2,6 @@
 
 let panelCreated = false;
 let loadCheckInterval;
-
 function createPanelIfMobxLoaded() {
   if (panelCreated) {
     return;

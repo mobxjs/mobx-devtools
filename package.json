@@ -17,7 +17,7 @@
         "test": "npm run test:unit ; npm run test:e2e",
         "test:unit": "cross-env NODE_ENV=test mocha --require 'babel-core/register' 'src/**/*-test.js'",
         "test:e2e": "npm run test:e2e:chrome",
-        "test:e2e:chrome": "npm run build:chrome && npm run test:e2e:chrome:now",
+        "test:e2e:chrome": "cross-env NODE_ENV=test TARGET_BROWSER=chrome node scripts/webextension/build.js && npm run test:e2e:chrome:now",
         "test:e2e:chrome:now": "cross-env NODE_ENV=test cross-env TARGET_BROWSER=chrome mocha test/e2e",
         "lint": "eslint '**/*.js' '**/*.jsx'",
         "lint-fix": "eslint --fix '**/*.js' '**/*.jsx'",

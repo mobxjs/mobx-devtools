@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Fixed problems in firefox (#14)
 
 ## [0.9.10] - 2017-11-27
 ### Added

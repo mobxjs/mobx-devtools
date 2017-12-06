@@ -6,6 +6,16 @@ import { render } from 'react-dom';
 
 const store = observable({ count: 0 });
 
+@observer
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        {this.props.children}
+      </div>
+    );
+  }
+}
 
 @observer
 class Counter extends React.Component {
@@ -20,4 +30,4 @@ class Counter extends React.Component {
   }
 }
 
-render(<Counter />, document.querySelector('#root'));
+render(<App><Counter /></App>, document.querySelector('#root'));
