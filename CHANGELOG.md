@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Actions' names in changes log (#15)
 
 ## [0.9.11] - 2017-12-6
 ### Fixed
