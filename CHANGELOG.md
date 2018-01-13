@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.9.12] - 2018-1-13
 ### Added
 - Actions' names in changes log (#15)
 
