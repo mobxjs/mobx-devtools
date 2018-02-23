@@ -68,7 +68,7 @@ function isNumeric(str) {
 
 function handleInstallError(tabId, error) {
   if (__DEV__) console.warn(error); // eslint-disable-line no-console
-  const orphanDevtools = orphansByTabId[tabId].find(p => !p.contentScript).map(p => p.devtools);
+  const orphanDevtools = orphansByTabId[tabId].filter(p => !p.contentScript).map(p => p.devtools);
   orphanDevtools.forEach(d => d.postMessage('content-script-installation-error'));
 }
 
@@ -86,7 +86,7 @@ const waitTabLoad = (tabId, cb) => {
       chrome.tabs.onUpdated.addListener(function listener(tid, changeInfo) {
         if (tid !== tabId || changeInfo.status === 'loading') return;
         chrome.tabs.onUpdated.removeListener(listener);
-        cb(tabId);
+        cb();
       });
     }
   });
