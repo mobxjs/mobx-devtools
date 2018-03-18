@@ -68,7 +68,9 @@ function isNumeric(str) {
 
 function handleInstallError(tabId, error) {
   if (__DEV__) console.warn(error); // eslint-disable-line no-console
-  const orphanDevtools = orphansByTabId[tabId].filter(p => !p.contentScript).map(p => p.devtools);
+  const orphanDevtools = orphansByTabId[tabId]
+    .filter(p => !p.contentScript && p.devtools !== undefined)
+    .map(p => p.devtools);
   orphanDevtools.forEach(d => d.postMessage('content-script-installation-error'));
 }
 
