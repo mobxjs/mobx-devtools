@@ -2,12 +2,12 @@ import getId from '../utils/getId';
 
 const summary = (logItem) => {
   const sum = Object.create(null);
-  const patch = logItem.patch;
-  sum.patch = patch && {
+  const patches = logItem.patches;
+  sum.patches = patches && patches.map(patch => ({
     op: patch.op,
     path: patch.path,
     value: (patch.value && typeof patch.value === 'object') ? {} : patch.value,
-  };
+  }));
   sum.id = logItem.id;
   sum.rootId = logItem.rootId;
   sum.timestamp = logItem.timestamp;
@@ -21,13 +21,12 @@ export default (bridge, hook) => {
   let trackingEnabled = false;
   let insideUntracked = false;
 
-  const addLogItem = (rootId, { patch }) => {
+  const addLogItem = (rootId, { snapshot, patches }) => {
     const rootData = rootDataById[rootId];
     if (!rootData) return;
-    const snapshot = rootData.mst.getSnapshot(rootData.root);
     const logItemId = getId();
     const logItem = {
-      patch,
+      patches,
       snapshot,
       id: logItemId,
       rootId,
@@ -45,11 +44,21 @@ export default (bridge, hook) => {
       const rootId = getId(root);
       if (rootDataById[rootId]) return;
 
-      const dispose = mst.onPatch(root, (patch) => {
-        if (trackingEnabled && !insideUntracked) {
-          addLogItem(rootId, { patch });
-        }
-      });
+      let patches = [];
+
+      const rootDisposables = [
+        mst.onPatch(root, (patch) => {
+          if (trackingEnabled && !insideUntracked) {
+            patches.push(patch);
+          }
+        }),
+        mst.onSnapshot(root, (snapshot) => {
+          if (trackingEnabled && !insideUntracked) {
+            addLogItem(rootId, { snapshot, patches });
+            patches = [];
+          }
+        }),
+      ];
 
       mst.addDisposer(root, () => removeRoot(rootId));
 
@@ -58,7 +67,7 @@ export default (bridge, hook) => {
         activeLogItemId: undefined,
         root,
         mobxid,
-        dispose,
+        dispose: () => rootDisposables.forEach(fn => fn()),
         rootId,
         mst,
         name: name || (root.toString && root.toString()),
@@ -102,7 +111,7 @@ export default (bridge, hook) => {
       if (!logItem) return;
       rootData.activeLogItemId = logItemId;
       insideUntracked = true;
-      rootData.mst.applySnapshot(rootData.root, logItem.snapshot);
+      rootData.mst.applySnapshot(rootData.root, logItem.snapshot || {});
       insideUntracked = false;
     }),
     bridge.sub('backend-mst:forget-mst-items', ({ rootId, itemsIds }) => {

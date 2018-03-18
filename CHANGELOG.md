@@ -4,6 +4,9 @@
 ### Fixed
 - Fixed background page errors that prevented connecting to frontend
 
+### Changed
+- MST tab now displays snapshots instead of patches
+
 ## [0.9.12] - 2018-1-13
 ### Added
 - Actions' names in changes log (#15)

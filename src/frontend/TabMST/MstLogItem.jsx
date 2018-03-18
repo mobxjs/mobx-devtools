@@ -1,23 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-import PreviewValue from '../PreviewValue';
+import pluralize from '../../utils/pluralize';
 
 const getTitle = (logItem, initial) => {
   if (initial) {
     return 'Initial';
   }
-  if (logItem.patch) {
-    const path = logItem.patch.path.replace(/^\//, '').replace(/\//g, '.');
-    switch (logItem.patch.op) {
-      case 'remove':
-        return (
-          <span>{path} <span className={css(styles.removedLabel)}>Removed</span></span>
-        );
-      default: return (
-        <span>{path} = <PreviewValue data={logItem.patch.value} /></span>
-      );
-    }
+  if (logItem.patches) {
+    return `${logItem.patches.length} ${pluralize(logItem.patches.length, 'patch', 'patches')}`;
   }
   return 'Change';
 };
@@ -185,11 +176,7 @@ const styles = StyleSheet.create({
   titleSelected: {
     filter: 'contrast(0.1) brightness(2)',
   },
-  removedLabel: {
-    textTransform: 'uppercase',
-    fontSize: 10,
-    color: '#c41a16',
-  },
+
   rightButtons: {
     opacity: 'var(--log-item-buttons-pane-opacity)',
     display: 'flex',
