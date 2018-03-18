@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.9.13] - 2018-3-18
 ### Fixed
 - Fixed background page errors that prevented connecting to frontend
 
