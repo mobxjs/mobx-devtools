@@ -108,7 +108,7 @@ function publishCrhome(target = 'default') {
   };
 
   request({
-    url: 'https://accounts.google.com/o/oauth2/token',
+    url: 'https://www.googleapis.com/oauth2/v4/token',
     method: 'POST',
     form: {
 
@@ -116,7 +116,6 @@ function publishCrhome(target = 'default') {
       client_secret: GAPI_MOBX_EXTENSION_CLIENT_SECRET,
       refresh_token: GAPI_MOBX_EXTENSION_REFRESH_TOKEN,
       grant_type: 'refresh_token',
-      redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
     },
   }, handleAuthResponse);
 }
