@@ -10,7 +10,7 @@ function observableName(mobx, object) {
   if (!object || typeof object !== 'object') {
     return '';
   }
-  return mobx.extras.getDebugName(object);
+  return mobx.getDebugName(object);
 }
 
 function isPrimitive(value) {

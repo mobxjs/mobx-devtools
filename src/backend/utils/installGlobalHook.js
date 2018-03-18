@@ -14,7 +14,13 @@ export default function installGlobalHook(window) {
     if (!a) return false;
     switch (name) {
       case 'mobx':
-        return Boolean(a[name] && a[name].extras && a[name].spy);
+        if (a[name] && !a[name].getDebugName && a[name].extras) {
+          // Support MobX < 4 API
+          a[name] = {};
+          for (let p in a[name]) { a[name][p] = a[name][p]; }
+          for (let p in a[name].extras) { a[name][p] = a[name].extras[p]; }
+        }
+        return Boolean(a[name] && a[name].spy);
       case 'mobxReact':
         return Boolean(a[name] && a[name].componentByNodeRegistery);
       default:
