@@ -3,7 +3,7 @@
   "version": "0.9.10",
   "repository": {
     "type": "git",
-    "url": "https://github.com/andykog/mobx-devtools.git"
+    "url": "https://github.com/mobxjs/mobx-devtools.git"
   },
   "author": "Andy Kogut",
   "license": "MIT",
