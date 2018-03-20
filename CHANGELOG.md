@@ -1,8 +1,13 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Older MobX support (#26)
 
 ## [0.9.13] - 2018-3-18
+### Added
+- MobX@4 support
+
 ### Fixed
 - Fixed background page errors that prevented connecting to frontend
 
