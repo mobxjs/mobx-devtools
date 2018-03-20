@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.9.14] - 2018-3-20
 ### Fixed
 - Older MobX support (#26)
 
