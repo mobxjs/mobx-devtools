@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.9.15] - 2018-3-24
 ### Added
 - Made maps inspectable (#27)
 
