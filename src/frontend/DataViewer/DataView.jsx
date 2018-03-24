@@ -29,12 +29,15 @@ export default class DataView extends React.Component {
     ChildDataItem: PropTypes.func.isRequired,
   };
 
-  renderItem(name, key, editable) {
+  renderItem(name, key, editable, path) {
+    if (!path) {
+      path = this.props.path.concat([name]);
+    }
     return (
       <this.props.ChildDataItem
         key={key}
         name={name}
-        path={this.props.path.concat([name])}
+        path={path}
         startOpen={this.props.startOpen}
         getValueByPath={this.props.getValueByPath}
         inspect={this.props.inspect}
@@ -57,6 +60,7 @@ export default class DataView extends React.Component {
 
     const isArray = Array.isArray(value);
     const isDeptreeNode = value[symbols.type] === 'deptreeNode';
+    const isMap = value[symbols.type] === 'map';
     const elements = [];
     if (isArray) {
       // Iterate over array, filling holes with special items
@@ -94,6 +98,12 @@ export default class DataView extends React.Component {
           />
         );
       });
+    } else if (isMap) {
+      if (value[symbols.entries]) {
+        value[symbols.entries].forEach(([key], i) => elements.push(
+          this.renderItem(key, key, editable, this.props.path.concat([symbols.entries, i, 1]))
+        ));
+      }
     } else {
       // Iterate over a regular object
       let names = Object.keys(value).filter(n => n[0] !== '@' || n[1] !== '@');
@@ -116,6 +126,8 @@ export default class DataView extends React.Component {
                 return 'Empty array';
               case isDeptreeNode:
                 return 'No dependencies';
+              case isMap:
+                return 'Empty map';
               default:
                 return 'Empty object';
             }

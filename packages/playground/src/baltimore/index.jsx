@@ -19,6 +19,13 @@ class App extends React.Component {
 
 @observer
 class Counter extends React.Component {
+
+  constructor(...args) {
+    super(...args);
+    this.map = new Map([[ 'a', '1'], ['b', 2]]);
+    this.omap = observable.map({ a: '1', b: 2 });
+  }
+
   render() {
     return (
       <div>

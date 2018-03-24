@@ -8,6 +8,7 @@ export const allowedComplexObjects = new Set();
 export const symbols = {
   type: '@@type',
   name: '@@name',
+  entries: '@@entries',
   reference: '@@reference',
   proto: '@@proto',
   inspected: '@@inspected',
@@ -61,6 +62,20 @@ function serialize(data, path = [], seen = new Map(), propToExtract) {
 
     const prototype = Object.getPrototypeOf(data);
     const inspecting = allowedComplexObjects.has(data);
+
+    if (data instanceof Map || prototype.isMobXObservableMap) {
+      const result = {
+        [symbols.type]: 'map',
+        [symbols.name]: data.constructor && data.constructor.name,
+        [symbols.inspected]: inspecting,
+        [symbols.editable]: inspecting && '$mobx' in data,
+        [symbols.mobxObject]: '$mobx' in data,
+      };
+      if (inspecting) {
+        result[symbols.entries] = [...data.entries()];
+      }
+      return result;
+    }
 
     if (prototype && prototype !== Object.prototype) {
       // This is complex object (dom node or mobx.something)
