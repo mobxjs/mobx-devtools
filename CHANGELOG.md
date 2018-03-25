@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.9.16] - 2018-3-25
 ### Fixed
 - Extension doesn't work (#27)
 
