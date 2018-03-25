@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Fixed
+- Extension doesn't work (#27)
 
 ## [0.9.15] - 2018-3-24
 ### Added

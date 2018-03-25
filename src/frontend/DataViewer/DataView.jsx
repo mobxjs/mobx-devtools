@@ -30,14 +30,11 @@ export default class DataView extends React.Component {
   };
 
   renderItem(name, key, editable, path) {
-    if (!path) {
-      path = this.props.path.concat([name]);
-    }
     return (
       <this.props.ChildDataItem
         key={key}
         name={name}
-        path={path}
+        path={path || this.props.path.concat([name])}
         startOpen={this.props.startOpen}
         getValueByPath={this.props.getValueByPath}
         inspect={this.props.inspect}
