@@ -24,6 +24,9 @@ class Counter extends React.Component {
     super(...args);
     this.map = new Map([[ 'a', '1'], ['b', 2]]);
     this.omap = observable.map({ a: '1', b: 2 });
+    this.date = new Date();
+    this.array = [1, 2, 3];
+    this.oarray = observable([1, 2, 3]);
   }
 
   render() {

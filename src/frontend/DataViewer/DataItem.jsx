@@ -66,6 +66,7 @@ export default class DataItem extends React.Component {
     const value = this.value;
     const otype = typeof value;
     return (
+      value instanceof Date ||
       otype === 'number' ||
       otype === 'string' ||
       value === null ||

@@ -13,10 +13,14 @@ export default class PreviewValue extends React.PureComponent {
   };
 
   render() {
-    if (this.props.data && typeof this.props.data === 'object') {
-      return <PreviewComplexValue {...this.props} />;
+    if (
+      !this.props.data ||
+      this.props.data instanceof Date ||
+      typeof this.props.data !== 'object'
+    ) {
+      return <PreviewSimpleValue {...this.props} />;
     }
-    return <PreviewSimpleValue {...this.props} />;
+    return <PreviewComplexValue {...this.props} />;
   }
 }
 
@@ -243,6 +247,8 @@ function valueToText(value) {
   if (value === undefined) {
     return 'undefined';
   } else if (typeof value === 'number') {
+    return value.toString();
+  } else if (value instanceof Date) {
     return value.toString();
   }
   return JSON.stringify(value);

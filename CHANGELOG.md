@@ -4,6 +4,9 @@
 ### Fixed
 - MST tab not working
 
+### Added
+- Made dates inspectable (#27)
+
 ## [0.9.16] - 2018-3-25
 ### Fixed
 - Extension doesn't work (#27)
