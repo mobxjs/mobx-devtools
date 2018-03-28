@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "mobx-devtools-playground",
-  "version": "0.9.15",
+  "version": "0.9.17",
   "main": "dist/electronBackground.bundle.js",
   "repository": {
     "type": "git",
