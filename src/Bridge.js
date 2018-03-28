@@ -63,7 +63,7 @@ function serialize(data, path = [], seen = new Map(), propToExtract) {
     const prototype = Object.getPrototypeOf(data);
     const inspecting = allowedComplexObjects.has(data);
 
-    if (data instanceof Map || prototype.isMobXObservableMap) {
+    if (data instanceof Map || (prototype && prototype.isMobXObservableMap)) {
       const result = {
         [symbols.type]: 'map',
         [symbols.name]: data.constructor && data.constructor.name,
