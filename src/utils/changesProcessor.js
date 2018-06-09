@@ -23,12 +23,13 @@ function isPrimitive(value) {
   );
 }
 
-function getNameForThis(who) {
+function getNameForThis(mobx, who) {
   if (who === null || who === undefined) {
     return '';
   } else if (who && typeof who === 'object') {
-    if (who && who.$mobx) {
-      return who.$mobx.name;
+    const $mobx = mobx.$mobx || '$mobx';
+    if (who && who[$mobx]) {
+      return who[$mobx].name;
     } else if (who.constructor) {
       return who.constructor.name || 'object';
     }
@@ -36,14 +37,14 @@ function getNameForThis(who) {
   return `${typeof who}`;
 }
 
-function formatValue(value) {
+function formatValue(mobx, value) {
   if (isPrimitive(value)) {
     if (typeof value === 'string' && value.length > 100) {
       return `${value.substr(0, 97)}...`;
     }
     return value;
   }
-  return `(${getNameForThis(value)})`;
+  return `(${getNameForThis(mobx, value)})`;
 }
 
 export default (onChange) => {
@@ -86,11 +87,11 @@ export default (onChange) => {
       switch (change.type) {
         case 'action':
           // name, target, arguments, fn
-          change.targetName = getNameForThis(change.target);
+          change.targetName = getNameForThis(mobx, change.target);
           break;
         case 'transaction':
           // name, target
-          change.targetName = getNameForThis(change.target);
+          change.targetName = getNameForThis(mobx, change.target);
           break;
         case 'scheduled-reaction':
           // object
@@ -103,7 +104,7 @@ export default (onChange) => {
         case 'compute':
           // object, target, fn
           change.objectName = observableName(mobx, change.object);
-          change.targetName = getNameForThis(change.target);
+          change.targetName = getNameForThis(mobx, change.target);
           break;
         case 'error':
           // message
@@ -119,8 +120,8 @@ export default (onChange) => {
           // (map, obbject) object, name, newValue, oldValue
           // (value) object, newValue, oldValue
           change.objectName = observableName(mobx, change.object);
-          change.newValue = formatValue(change.newValue);
-          change.oldValue = formatValue(change.oldValue);
+          change.newValue = formatValue(mobx, change.newValue);
+          change.oldValue = formatValue(mobx, change.oldValue);
           break;
         case 'splice':
           change.objectName = observableName(mobx, change.object);
@@ -129,17 +130,17 @@ export default (onChange) => {
         case 'add':
           // (map, object) object, name, newValue
           change.objectName = observableName(mobx, change.object);
-          change.newValue = formatValue(change.newValue);
+          change.newValue = formatValue(mobx, change.newValue);
           break;
         case 'delete':
           // (map) object, name, oldValue
           change.objectName = observableName(mobx, change.object);
-          change.oldValue = formatValue(change.oldValue);
+          change.oldValue = formatValue(mobx, change.oldValue);
           break;
         case 'create':
           // (value) object, newValue
           change.objectName = observableName(mobx, change.object);
-          change.newValue = formatValue(change.newValue);
+          change.newValue = formatValue(mobx, change.newValue);
           break;
         default:
           break;

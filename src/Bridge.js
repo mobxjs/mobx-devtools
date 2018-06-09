@@ -68,7 +68,7 @@ function serialize(data, path = [], seen = new Map(), propToExtract) {
         [symbols.type]: 'map',
         [symbols.name]: data.constructor && data.constructor.name,
         [symbols.inspected]: inspecting,
-        [symbols.editable]: inspecting && '$mobx' in data,
+        [symbols.editable]: false, // TODO: figure out the way to edit maps
         [symbols.mobxObject]: '$mobx' in data,
       };
       if (inspecting) {
@@ -84,7 +84,7 @@ function serialize(data, path = [], seen = new Map(), propToExtract) {
         [symbols.type]: 'object',
         [symbols.name]: data.constructor && data.constructor.name,
         [symbols.inspected]: inspecting,
-        [symbols.editable]: inspecting && '$mobx' in data,
+        [symbols.editable]: true,
         [symbols.mobxObject]: '$mobx' in data,
         [symbols.proto]: {
           [symbols.type]: 'object',

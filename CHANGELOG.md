@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- mobx@5 support
 
 ## [0.9.17] - 2018-3-28
 ### Fixed

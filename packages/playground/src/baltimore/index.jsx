@@ -27,6 +27,8 @@ class Counter extends React.Component {
     this.date = new Date();
     this.array = [1, 2, 3];
     this.oarray = observable([1, 2, 3]);
+    this.obj = {a: 's'};
+    this.number = 5;
   }
 
   render() {

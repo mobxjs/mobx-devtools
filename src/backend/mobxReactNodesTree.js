@@ -166,7 +166,8 @@ export default (bridge) => {
     bridge.sub('getDeptree', ({ componentId }) => {
       const componentInfo = componentsById[componentId];
       if (!componentInfo) return;
-      componentInfo.dependencyTree = getDependencyTree(componentInfo.component.render.$mobx);
+      const $mobx = collections[componentInfo.mobxid].mobx.$mobx || '$mobx';
+      componentInfo.dependencyTree = getDependencyTree(componentInfo.component.render[$mobx]);
       bridge.send('frontend:mobx-react-component-updated', componentInfo);
     }),
     bridge.sub('inspect-component', ({ componentId, path }) => {
