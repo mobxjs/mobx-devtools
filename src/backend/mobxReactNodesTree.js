@@ -24,8 +24,12 @@ export default (bridge) => {
     for (const mobxid in collections) {
       if (Object.prototype.hasOwnProperty.call(collections, mobxid)) {
         const { mobxReact } = collections[mobxid];
-        const component = mobxReact && mobxReact.componentByNodeRegistery.get(node);
+        let component = mobxReact && mobxReact.componentByNodeRegistery.get(node);
         if (component) {
+          component = Object.assign({
+            props: component.props,
+            state: component.state,
+          }, component);
           mobxIdsByComponent.set(component, mobxid);
           return component;
         }
