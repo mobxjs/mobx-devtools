@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.9.19] - 2018-8-31
 ### Fixed
 - Props & state not displayed when on component view (#34)
 
