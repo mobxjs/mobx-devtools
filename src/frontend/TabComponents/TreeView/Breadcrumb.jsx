@@ -64,6 +64,7 @@ export default class Breadcrumb extends React.Component {
               onMouseOver={() => this.handleCrumbMouseOver(id)}
               // eslint-disable-next-line react/jsx-no-bind
               onMouseOut={() => this.handleCrumbMouseOut(id)}
+              // eslint-disable-next-line react/jsx-no-bind
               onClick={isSelected ? null : () => this.props.select(id)}
             >
               {node.name || `"${node.text}"`}

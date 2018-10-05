@@ -41,6 +41,7 @@ const Node = @injectStores({
     };
   },
 })
+// eslint-disable-next-line indent
 class _Node extends React.Component {
   static propTypes = {
     node: PropTypes.object.isRequired,

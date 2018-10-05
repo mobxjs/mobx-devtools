@@ -18,7 +18,7 @@ export default (config) => {
     ReactDOM.render(
       <App
         {...config}
-        reload={reload}
+        reload={reload} // eslint-disable-line react/jsx-no-bind
       >
         <RichPanel />
       </App>,
