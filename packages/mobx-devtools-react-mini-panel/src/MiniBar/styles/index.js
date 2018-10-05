@@ -1,8 +1,7 @@
-/* eslint-disable global-require */
+/* eslint-disable */
 
 // For test environment
 // Evaling so that webpack doesn't complain about using require.extensions.
-// eslint-disable-next-line no-eval
 const requireExtensions = eval("typeof require === 'function' && require.extensions");
 if (module.webpackPolyfill === undefined && requireExtensions) {
   requireExtensions['.svg'] = module => `SKIPPED_SVG<${module.filename}>`;
