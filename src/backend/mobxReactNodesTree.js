@@ -60,6 +60,15 @@ export default (bridge) => {
     }
   };
 
+  const getComponentName = function (node) {
+    if (node.constructor.displayName) {
+      return node.constructor.displayName;
+    } else if (node.constructor.name) {
+      return node.constructor.name;
+    }
+    return 'div';
+  };
+
   const trackComponent = (component, node) => {
     const id = getId(component);
     nodesById[id] = node;
@@ -70,7 +79,7 @@ export default (bridge) => {
         component,
         mobxid: mobxIdsByComponent.get(component),
         children: [],
-        name: component.constructor.name || 'div',
+        name: getComponentName(component),
         renders: 0,
         props: component.props,
         state: component.state,
