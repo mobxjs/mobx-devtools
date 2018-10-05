@@ -49,7 +49,7 @@ prompt.get([
 
   const child = exec([
     './node_modules/.bin/lerna run build',
-    `./node_modules/.bin/lerna run publish --skip-git --repo-version ${newVersion} --yes`,
+    `./node_modules/.bin/lerna publish --skip-git --repo-version ${newVersion} --yes`,
     'git add .',
     `git commit -m '${commitMessage}'`,
     `git tag v${newVersion}`,
