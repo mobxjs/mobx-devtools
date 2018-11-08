@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- mobx-devtools-mst mobx@5 support
 - filter events in Changes tab
 
 ## [0.9.19] - 2018-8-31
