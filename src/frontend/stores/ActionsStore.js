@@ -135,7 +135,8 @@ export default class ActionsStore extends AbstractStore {
         return false;
       }
       if (this.searchText[0] !== '/') {
-        return logItem.name.indexOf(this.searchText) !== -1;
+        // case insensitive
+        return logItem.name.toUpperCase().indexOf(this.searchText.toUpperCase()) !== -1;
       }
       try {
         // regex expression may be invalid
