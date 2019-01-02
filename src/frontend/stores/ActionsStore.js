@@ -7,6 +7,7 @@ export default class ActionsStore extends AbstractStore {
   logFilter = undefined;
   logItemsById = {};
   logItemsIds = [];
+  searchText = '';
 
   constructor(bridge) {
     super();
@@ -78,6 +79,11 @@ export default class ActionsStore extends AbstractStore {
     this.emit('log');
   }
 
+  setSearchText(text) {
+    this.searchText = text;
+    this.emit('log');
+  }
+
   setLogFilter(logFilter) {
     this.setValueAndEmit('logFilter', logFilter);
     this.logFilter = logFilter;
@@ -120,5 +126,24 @@ export default class ActionsStore extends AbstractStore {
       default:
         return [];
     }
+  }
+
+  getFilteredLogItemsIds() {
+    return this.logItemsIds.filter((id) => {
+      const logItem = this.logItemsById[id];
+      if (!logItem || !logItem.name) {
+        return false;
+      }
+      if (this.searchText[0] !== '/') {
+        return logItem.name.indexOf(this.searchText) !== -1;
+      }
+      try {
+        // regex expression may be invalid
+        const regex = new RegExp(this.searchText.slice(1), 'i');
+        return regex.test(logItem.name);
+      } catch (e) {
+        return false;
+      }
+    });
   }
 }

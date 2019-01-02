@@ -6,12 +6,14 @@ import ButtonRecord from '../SecondaryPanel/ButtonRecord';
 import ButtonClear from '../SecondaryPanel/ButtonClear';
 import Log from './Log';
 import injectStores from '../../utils/injectStores';
+import InputSearch from '../SecondaryPanel/InputSearch';
 
 @injectStores({
   subscribe: {
     actionsLoggerStore: ['logEnabled', 'log'],
   },
   injectProps: ({ actionsLoggerStore }) => ({
+    searchText: actionsLoggerStore.searchText,
     logEnabled: actionsLoggerStore.logEnabled,
     logItemsIds: actionsLoggerStore.logItemsIds,
     clearLog() {
@@ -20,14 +22,19 @@ import injectStores from '../../utils/injectStores';
     toggleLogging() {
       actionsLoggerStore.toggleLogging();
     },
+    setSearchText(e) {
+      actionsLoggerStore.setSearchText(e.target.value);
+    },
   }),
 })
 export default class TabChanges extends React.PureComponent {
   static propTypes = {
+    searchText: PropTypes.string.isRequired,
     logEnabled: PropTypes.bool.isRequired,
     logItemsIds: PropTypes.array.isRequired,
     clearLog: PropTypes.func.isRequired,
     toggleLogging: PropTypes.func.isRequired,
+    setSearchText: PropTypes.func.isRequired,
   };
 
   render() {
@@ -40,6 +47,10 @@ export default class TabChanges extends React.PureComponent {
             showTipStartRecoding={!this.props.logEnabled && this.props.logItemsIds.length === 0}
           />
           <ButtonClear onClick={this.props.clearLog} />
+          <InputSearch
+            searchText={this.props.searchText}
+            changeSearch={this.props.setSearchText}
+          />
         </SecondaryPanel>
         <Log />
       </div>
