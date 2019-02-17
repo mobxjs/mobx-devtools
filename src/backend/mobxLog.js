@@ -10,6 +10,7 @@ const summary = (change) => {
   sum.type = change.type;
   sum.name = change.name;
   sum.objectName = change.objectName;
+  sum.key = change.key;
   sum.oldValue = change.oldValue;
   sum.newValue = change.newValue;
   sum.hasChildren = change.children.length > 0;

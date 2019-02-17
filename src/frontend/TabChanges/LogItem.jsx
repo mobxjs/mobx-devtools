@@ -7,6 +7,7 @@ import { IconComputed, IconScheduledReaction, IconError } from './icons';
 import injectStores from '../../utils/injectStores';
 import Popover from '../Popover';
 import ChangeDataViewerPopover from './ChangeDataViewerPopover';
+import { changeDisplayName } from './utils';
 
 const getColor = (type) => {
   switch (type) {
@@ -102,7 +103,7 @@ export default class LogItem extends React.Component {
               <ChangeDataViewerPopover
                 path={this.props.path.concat(['object'])}
                 value={change.object}
-                displayName={change.objectName}
+                displayName={changeDisplayName(change)}
                 getValueByPath={this.props.getValueByPath}
                 inspect={this.props.inspect}
                 stopInspecting={this.props.stopInspecting}
@@ -122,7 +123,7 @@ export default class LogItem extends React.Component {
             <ChangeDataViewerPopover
               path={this.props.path.concat(['object'])}
               value={change.object}
-              displayName={change.objectName}
+              displayName={changeDisplayName(change)}
               getValueByPath={this.props.getValueByPath}
               inspect={this.props.inspect}
               stopInspecting={this.props.stopInspecting}
@@ -160,7 +161,7 @@ export default class LogItem extends React.Component {
               <ChangeDataViewerPopover
                 path={this.props.path.concat(['object'])}
                 value={change.object}
-                displayName={change.objectName}
+                displayName={changeDisplayName(change)}
                 getValueByPath={this.props.getValueByPath}
                 inspect={this.props.inspect}
                 stopInspecting={this.props.stopInspecting}
@@ -196,7 +197,7 @@ export default class LogItem extends React.Component {
             <ChangeDataViewerPopover
               path={this.props.path.concat(['object'])}
               value={change.object}
-              displayName={change.objectName}
+              displayName={changeDisplayName(change)}
               getValueByPath={this.props.getValueByPath}
               inspect={this.props.inspect}
               stopInspecting={this.props.stopInspecting}
@@ -213,7 +214,7 @@ export default class LogItem extends React.Component {
             <ChangeDataViewerPopover
               path={this.props.path.concat(['object'])}
               value={change.object}
-              displayName={change.objectName}
+              displayName={changeDisplayName(change)}
               getValueByPath={this.props.getValueByPath}
               inspect={this.props.inspect}
               stopInspecting={this.props.stopInspecting}
