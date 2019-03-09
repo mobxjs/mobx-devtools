@@ -60,7 +60,7 @@ export default (bridge) => {
     }
   };
 
-  const getComponentName = function (node) {
+  const getComponentName = function getComponentName(node) {
     if (node.constructor.displayName) {
       return node.constructor.displayName;
     } else if (node.constructor.name) {
