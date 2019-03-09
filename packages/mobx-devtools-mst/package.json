@@ -1,6 +1,6 @@
 {
   "name": "mobx-devtools-mst",
-  "version": "0.9.18",
+  "version": "0.9.21",
   "main": "lib/index.js",
   "typings": "lib/index",
   "repository": {

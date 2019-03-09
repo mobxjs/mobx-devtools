@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.9.21] - 2019-3-9
 - mobx-devtools-mst mobx@5 support
 - filter events in Changes tab
 - Made sets inspectable (#49)
