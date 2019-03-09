@@ -14,7 +14,7 @@ const ITEM_HEIGHT = 24;
   },
   injectProps: ({ actionsLoggerStore }) => ({
     logItemsById: actionsLoggerStore.logItemsById,
-    logItemsIds: actionsLoggerStore.logItemsIds,
+    logItemsIds: actionsLoggerStore.getFilteredLogItemsIds(),
     inspect(changeId, path) {
       actionsLoggerStore.inspect(changeId, path);
     },
@@ -81,11 +81,13 @@ export default class Log extends React.Component {
     }
   };
 
-  renderItem = ({ index, style, key }) => {
-    const change = this.props.logItemsById[this.props.logItemsIds[index]];
+  renderItem = ({ index, style }) => {
+    const id = this.props.logItemsIds[index];
+    const change = this.props.logItemsById[id];
+
     if (!change.height) change.height = ITEM_HEIGHT;
     return (
-      <div style={style} key={key}>
+      <div style={style} key={id}>
         <LogItem
           getValueByPath={path => this.props.getValueByPath(change.id, path)}
           inspect={path => this.props.inspect(change.id, path)}
