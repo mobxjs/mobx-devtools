@@ -3,6 +3,7 @@
 ## [Unreleased]
 - mobx-devtools-mst mobx@5 support
 - filter events in Changes tab
+- Made sets inspectable (#49)
 
 ## [0.9.19] - 2018-8-31
 ### Fixed

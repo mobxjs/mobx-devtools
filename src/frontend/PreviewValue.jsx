@@ -184,6 +184,7 @@ class PreviewComplexValue extends React.PureComponent { // eslint-disable-line r
         );
       case 'object':
       case 'map':
+      case 'set':
         return (
           <span className={css(styles.previewComplex, mobxObject && styles.mobxObject)}>
             {`${this.props.displayName || data[symbols.name]}{…}`}

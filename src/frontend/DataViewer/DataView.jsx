@@ -58,6 +58,7 @@ export default class DataView extends React.Component {
     const isArray = Array.isArray(value);
     const isDeptreeNode = value[symbols.type] === 'deptreeNode';
     const isMap = value[symbols.type] === 'map';
+    const isSet = value[symbols.type] === 'set';
     const elements = [];
     if (isArray) {
       // Iterate over array, filling holes with special items
@@ -96,6 +97,12 @@ export default class DataView extends React.Component {
         );
       });
     } else if (isMap) {
+      if (value[symbols.entries]) {
+        value[symbols.entries].forEach(([key], i) => elements.push(
+          this.renderItem(key, key, editable, this.props.path.concat([symbols.entries, i, 1]))
+        ));
+      }
+    } else if (isSet) {
       if (value[symbols.entries]) {
         value[symbols.entries].forEach(([key], i) => elements.push(
           this.renderItem(key, key, editable, this.props.path.concat([symbols.entries, i, 1]))

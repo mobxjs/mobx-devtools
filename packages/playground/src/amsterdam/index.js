@@ -20,6 +20,7 @@ const observableObject = observable({
   count: 0,
   count2: 0,
   count3: 0,
+  map1: undefined,
 });
 
 const myClass = new MyClass();
@@ -38,6 +39,9 @@ reaction(
 const actionIncrement = action(() => { myClass.count += 1; });
 const actionIncrement2 = action(() => { myClass.count2 += 1; });
 const actionIncrement3 = action(() => { myClass.count3 += 1; });
+const actionMapSet = action(() => {
+  observableObject.map1 = new Map([['timestamp', Date.now()]]);
+});
 
 root.appendChild(createButton('Increment counter (object)', () => {
   observableObject.count += 1;
@@ -50,3 +54,4 @@ root.appendChild(createButton('Increment counter (class)', () => {
 root.appendChild(createButton('actionIncrement', actionIncrement));
 root.appendChild(createButton('actionIncrement2', actionIncrement2));
 root.appendChild(createButton('actionIncrement3', actionIncrement3));
+root.appendChild(createButton('actionMapSet', actionMapSet));

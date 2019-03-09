@@ -77,6 +77,20 @@ function serialize(data, path = [], seen = new Map(), propToExtract) {
       return result;
     }
 
+    if (data instanceof Set || (prototype && prototype.isMobXObservableSet)) {
+      const result = {
+        [symbols.type]: 'set',
+        [symbols.name]: data.constructor && data.constructor.name,
+        [symbols.inspected]: inspecting,
+        [symbols.editable]: false, // TODO: figure out the way to edit sets
+        [symbols.mobxObject]: '$mobx' in data,
+      };
+      if (inspecting) {
+        result[symbols.entries] = [...data.entries()];
+      }
+      return result;
+    }
+
     if (prototype && prototype !== Object.prototype) {
       // This is complex object (dom node or mobx.something)
       // only short signature will be sent to prevent performance loss
