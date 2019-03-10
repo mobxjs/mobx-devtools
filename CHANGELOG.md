@@ -1,7 +1,7 @@
 # Changelog
 
 ## [Unreleased]
-- Remove destroyed mst roots from UI (resolves #48)
+- Remove destroyed mst roots from UI (#48)
 
 ## [0.9.21] - 2019-3-9
 - mobx-devtools-mst mobx@5 support
