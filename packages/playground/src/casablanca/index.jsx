@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { types } from 'mobx-state-tree';
+import { types, destroy } from 'mobx-state-tree';
 import { observer } from 'mobx-react';
 import { render } from 'react-dom';
 import inspectTree from 'mobx-devtools-mst'; // eslint-disable-line
@@ -61,6 +61,7 @@ class TodoAppComponent extends React.Component {
       <div>
         {storeInstance.todos.map(t => <TodoComponent key={t.id} {...t} />)}
         <input type="test" onKeyDown={this.handleInputKeydown} />
+        <button onClick={() => destroy(storeInstance)}>destroy</button>
       </div>
     );
   }

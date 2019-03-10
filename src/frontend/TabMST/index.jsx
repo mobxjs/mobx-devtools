@@ -19,6 +19,7 @@ import LogItemExplorer from './LogItemExplorer';
       'mstLogEnabled',
       'activeRootId',
       'activeLogItemId',
+      'mstRootsUpdated',
     ],
   },
   injectProps: ({ mstLoggerStore, capabilitiesStore }) => {
@@ -103,6 +104,12 @@ export default class TabMST extends React.PureComponent {
   render() {
     if (!this.props.mstFound) return null;
 
+    if (this.props.rootsIds.length === 0) {
+      return (
+        <div className={css(styles.emptyState)}>No roots</div>
+      );
+    }
+
     const tabs = this.props.rootsIds.map(id => ({
       id,
       title: this.props.rootNamesById[id] || String(id),
@@ -147,6 +154,14 @@ export default class TabMST extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+  emptyState: {
+    flex: '1 1 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 20,
+    color: '#777',
+    fontWeight: 'bold',
+  },
   tabmst: {
     flex: '1 1 auto',
     display: 'flex',

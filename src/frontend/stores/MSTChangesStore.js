@@ -46,6 +46,12 @@ export default class MSTChangesStore extends AbstractStore {
         roots.forEach(({ id, name }) => {
           this.rootNamesById[id] = name;
         });
+        this.emit('mstRootsUpdated');
+      }),
+      bridge.sub('frontend:remove-mst-root', (rootId) => {
+        delete this.rootNamesById[rootId];
+        delete this.itemsDataByRootId[rootId];
+        this.emit('mstRootsUpdated');
       })
     );
 

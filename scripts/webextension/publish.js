@@ -67,6 +67,7 @@ function publishCrhome(target = 'default') {
     }
     const { error, statusDetail } = JSON.parse(body);
     if (error) {
+      console.log({ error });
       throw error;
     }
     console.log('Chrome published', statusDetail); // eslint-disable-line no-console
