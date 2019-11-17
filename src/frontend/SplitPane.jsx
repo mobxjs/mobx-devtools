@@ -46,7 +46,7 @@ export default class SplitPane extends React.Component {
 
         this.setState(
           {
-            width: Math.min(250, width),
+            width: Math.max(250, width),
             height: Math.floor(this.el.offsetHeight * 0.3),
             isVertical,
           },
