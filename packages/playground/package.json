@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "cross-env": "^5.1.1",
-    "electron": "1.8.2-beta.2",
+    "electron": "1.8.8",
     "mobx": "^5.0.2",
     "mobx-react": "^5.2.2",
     "mobx-state-tree": "^2.0.5",
