@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     flex: '1 1 auto',
     padding: 5,
     overflow: 'auto',
+    maxHeight: '95vh',
   },
   patches: {
     marginTop: 20,
