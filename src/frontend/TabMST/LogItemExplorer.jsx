@@ -36,6 +36,32 @@ export default class LogItemExplorer extends React.PureComponent {
     getValueByPath: PropTypes.func.isRequired,
   };
 
+  state = {
+    logExplorerHeight: 400,
+  }
+
+  componentDidMount() {
+    this.resizeTimeout = setTimeout(() => this.updateSize(), 0); // timeout for css applying
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  handleResize = () => {
+    if (this.resizeTimeout) return;
+    this.resizeTimeout = setTimeout(() => { this.updateSize(); }, 200);
+  };
+
+  updateSize() {
+    if (!this.containerEl) return;
+    this.resizeTimeout = undefined;
+    this.setState({
+      logExplorerHeight: this.containerEl.offsetHeight,
+    });
+  }
+
   dataDecorator = injectStores({
     subscribe: (stores, { path }) => ({
       treeExplorerStore: [`inspected--${path.join('/')}`],
@@ -45,8 +71,17 @@ export default class LogItemExplorer extends React.PureComponent {
 
   render() {
     if (!this.props.logItem) return null;
+    const padding = 5;
     return (
-      <div className={css(styles.logExplorer)}>
+      <div
+        className={css(styles.logExplorer)}
+        ref={(el) => {
+          this.containerEl = el;
+        }}
+        style={
+          { padding, height: this.state.logExplorerHeight - (padding * 2) }
+        }
+      >
         {this.props.logItem.snapshot &&
           <Collapsible head={'State'} startOpen>
             <DataViewer
@@ -81,9 +116,7 @@ export default class LogItemExplorer extends React.PureComponent {
 const styles = StyleSheet.create({
   logExplorer: {
     flex: '1 1 auto',
-    padding: 5,
     overflow: 'auto',
-    maxHeight: '95vh',
   },
   patches: {
     marginTop: 20,
