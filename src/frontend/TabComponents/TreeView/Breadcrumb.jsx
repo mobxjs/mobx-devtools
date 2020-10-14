@@ -21,7 +21,7 @@ function getBreadcrumbPath(store) {
     treeExplorerStore: ['breadcrumbHead', 'selectedNodeId'],
   },
   injectProps: ({ treeExplorerStore }) => ({
-    select: id => treeExplorerStore.selectBreadcrumb(id),
+    select: (id) => treeExplorerStore.selectBreadcrumb(id),
     hover: (id, isHovered) => treeExplorerStore.setHover(id, isHovered, false),
     selectedId: treeExplorerStore.selectedNodeId,
     path: getBreadcrumbPath(treeExplorerStore),

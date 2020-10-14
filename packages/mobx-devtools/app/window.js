@@ -1,8 +1,9 @@
+const ip = require('ip');
+
 const startServer = require('./startServer');
 
 const port = process.env.PORT || 8098;
 const initFrontend = require('../lib/frontend').default; // eslint-disable-line
-const ip = require('ip');
 
 const node = document.getElementById('container');
 
@@ -18,12 +19,11 @@ document.getElementById('byip').value = `<script src="//${ip.address()}:${port}"
   document.getElementById('localhost'),
   document.getElementById('byip'),
 ].forEach((el) => {
-  el.onclick = function () {
+  el.onclick = function onClick() {
     this.selectionStart = 0;
     this.selectionEnd = this.value.length;
   };
 });
-
 
 startServer({
   port,
@@ -34,7 +34,7 @@ startServer({
     const listeners = [];
     socket.onmessage = (evt) => {
       const data = JSON.parse(evt.data);
-      listeners.forEach(fn => fn(data));
+      listeners.forEach((fn) => fn(data));
     };
 
     const wall = {
@@ -55,7 +55,7 @@ startServer({
           onDisconnect = undefined;
         };
       },
-      inject: done => done(wall, () => socket.close()),
+      inject: (done) => done(wall, () => socket.close()),
     });
   },
   onError(e) {
@@ -77,4 +77,3 @@ startServer({
     }, 10);
   },
 });
-

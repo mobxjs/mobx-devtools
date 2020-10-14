@@ -4,7 +4,7 @@ const deduplicateDependencies = (depTree) => {
   if (!depTree.dependencies) return;
 
   for (let i = depTree.dependencies.length - 1; i >= 0; i -= 1) {
-    const name = depTree.dependencies[i].name;
+    const { name } = depTree.dependencies[i];
     for (let i2 = i - 1; i2 >= 0; i2 -= 1) {
       if (depTree.dependencies[i2].name === name) {
         depTree.dependencies[i2].dependencies = [].concat(
@@ -28,8 +28,8 @@ const unique = (list) => {
   });
 };
 
-const getDepsTree = node => ({
-  dependencies: node.observing ? unique(node.observing).map(n => getDepsTree(n)) : [],
+const getDepsTree = (node) => ({
+  dependencies: node.observing ? unique(node.observing).map((n) => getDepsTree(n)) : [],
   node,
   constructorName: node.constructor.name,
   [symbols.name]: node.name,

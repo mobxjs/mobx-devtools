@@ -9,19 +9,21 @@ TreeItem.propTypes = {
   name: PropTypes.string,
 };
 
-function TreeItem({ dependencies, isLast, isRoot, name }) {
+function TreeItem({
+  dependencies, isLast, isRoot, name,
+}) {
   return (
     <div className={css(styles.item)}>
       <span className={css(styles.box, isRoot && styles.box.root)}>{name}</span>
       {dependencies && (
         <div className={css(styles.tree)}>
-          {dependencies.map((d, i) =>
-            (<TreeItem
+          {dependencies.map((d, i) => (
+            <TreeItem
               key={d.name}
               dependencies={d.dependencies}
               isLast={i === dependencies.length - 1}
-            />)
-          )}
+            />
+          ))}
         </div>
       )}
       {!isRoot && <span className={css(styles.itemHorisontalDash)} />}

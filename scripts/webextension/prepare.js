@@ -1,10 +1,9 @@
 /* eslint-disable camelcase */
 const del = require('del');
 const fs = require('fs');
-const manifest = require('../../src/shells/webextension/manifest.json');
 const path = require('path');
+const manifest = require('../../src/shells/webextension/manifest.json');
 const lernaJson = require('../../lerna.json');
-
 
 const { TARGET_BROWSER, NODE_ENV } = process.env;
 

@@ -172,21 +172,25 @@ class PopoverBubble extends Component {
     const selfRect = rectFromEl(this.el);
     const triggerRect = rectFromEl(triggerHtmlElement);
     if (
-      shallowequal(triggerRect, this.$previousTriggerRect) &&
-      shallowequal(selfRect, this.$previousSelfRect)
+      shallowequal(triggerRect, this.$previousTriggerRect)
+      && shallowequal(selfRect, this.$previousSelfRect)
     ) {
       return;
     }
     this.$previousTriggerRect = triggerRect;
     this.$previousSelfRect = selfRect;
-    const placements = [placement, ...availablePlacements.filter(p => p !== placement)];
+    const placements = [placement, ...availablePlacements.filter((p) => p !== placement)];
     this.setState(this.calculate(placements, selfRect, triggerRect));
   };
 
   render() {
-    const { withArrow, onMouseEnter, onMouseLeave, onTouchStart } = this.props;
+    const {
+      withArrow, onMouseEnter, onMouseLeave, onTouchStart,
+    } = this.props;
     const { content } = this.state;
-    const { arrowCoordinates, bodyCoordinates, maxWidth, maxHeight, placement } = this.state;
+    const {
+      arrowCoordinates, bodyCoordinates, maxWidth, maxHeight, placement,
+    } = this.state;
 
     return (
       <div className={css(theme.default)}>
@@ -198,7 +202,9 @@ class PopoverBubble extends Component {
         )}
         <div
           className={css(styles.popover, popoverStyleForPlacement(placement))}
-          style={{ top: bodyCoordinates.top, left: bodyCoordinates.left, maxWidth, maxHeight }}
+          style={{
+            top: bodyCoordinates.top, left: bodyCoordinates.left, maxWidth, maxHeight,
+          }}
           ref={(el) => {
             this.el = el;
           }}
@@ -247,17 +253,17 @@ export default class PopoverTrigger extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     if (
-      !nextState.shown &&
-      !nextProps.requireClick &&
-      (nextState.hovered || nextState.bubbleHovered || nextProps.shown)
+      !nextState.shown
+      && !nextProps.requireClick
+      && (nextState.hovered || nextState.bubbleHovered || nextProps.shown)
     ) {
       this.show(nextState);
     }
     setTimeout(() => {
       if (
-        this.state.shown &&
-        !this.props.requireClick &&
-        (!this.state.hovered && !this.state.bubbleHovered && !this.props.shown)
+        this.state.shown
+        && !this.props.requireClick
+        && (!this.state.hovered && !this.state.bubbleHovered && !this.props.shown)
       ) {
         this.hide();
       }
@@ -277,6 +283,7 @@ export default class PopoverTrigger extends Component {
   }
 
   htmlPortal = document.createElement('div');
+
   popup = undefined;
 
   handleMouseEnter = (e) => {
@@ -311,7 +318,7 @@ export default class PopoverTrigger extends Component {
 
   handleFinishInteractionAnywhere = (e) => {
     const clickInsideTrigger = this.triggerEl && this.triggerEl.contains(e.target);
-    const clickInsideHtmlPortal = activeHtmlPortals.find(p => p.contains(e.target)) !== undefined;
+    const clickInsideHtmlPortal = activeHtmlPortals.find((p) => p.contains(e.target)) !== undefined;
     if (clickInsideTrigger === false && clickInsideHtmlPortal === false) {
       document.removeEventListener('touchstart', this.handleFinishInteractionAnywhere, true);
       document.removeEventListener('click', this.handleFinishInteractionAnywhere, true);

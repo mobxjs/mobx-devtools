@@ -155,9 +155,9 @@ consoleX.dir = (...args) => console.dir(...args);
 
 export default function consoleLogChange(change) {
   if (
-    advicedToUseChrome === false &&
-    typeof window.navigator !== 'undefined' &&
-    window.navigator.userAgent.indexOf('Chrome') === -1
+    advicedToUseChrome === false
+    && typeof window.navigator !== 'undefined'
+    && window.navigator.userAgent.indexOf('Chrome') === -1
   ) {
     consoleX.warn('The output of the MobX logger is optimized for Chrome');
     advicedToUseChrome = true;

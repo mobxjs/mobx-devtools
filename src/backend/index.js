@@ -31,7 +31,7 @@ export default (bridge, hook) => {
   disposables.push(
     bridge.sub('backend:ping', () => bridge.send('frontend:pong')),
     hook.sub('instances-injected', (mobxid) => {
-      backends.forEach(p => p.setup(mobxid, hook.collections[mobxid]));
+      backends.forEach((p) => p.setup(mobxid, hook.collections[mobxid]));
     })
   );
 

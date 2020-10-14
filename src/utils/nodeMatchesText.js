@@ -1,16 +1,16 @@
 import * as SearchUtils from './SearchUtils';
 
 export default function nodeMatchesText(node, needle) {
-  const name = node.name;
+  const { name } = node;
   const useRegex = SearchUtils.shouldSearchUseRegex(needle);
   if (name) {
     return validString(name, needle, useRegex);
   }
-  const text = node.text;
+  const { text } = node;
   if (text) {
     return validString(text, needle, useRegex);
   }
-  const children = node.children;
+  const { children } = node;
   if (typeof children === 'string') {
     return validString(children, needle, useRegex);
   }

@@ -110,7 +110,7 @@ export default class TabMST extends React.PureComponent {
       );
     }
 
-    const tabs = this.props.rootsIds.map(id => ({
+    const tabs = this.props.rootsIds.map((id) => ({
       id,
       title: this.props.rootNamesById[id] || String(id),
     }));

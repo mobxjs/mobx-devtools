@@ -15,22 +15,22 @@ function observableName(mobx, object) {
 
 function isPrimitive(value) {
   return (
-    value === null ||
-    value === undefined ||
-    typeof value === 'string' ||
-    typeof value === 'number' ||
-    typeof value === 'boolean'
+    value === null
+    || value === undefined
+    || typeof value === 'string'
+    || typeof value === 'number'
+    || typeof value === 'boolean'
   );
 }
 
 function getNameForThis(mobx, who) {
   if (who === null || who === undefined) {
     return '';
-  } else if (who && typeof who === 'object') {
+  } if (who && typeof who === 'object') {
     const $mobx = mobx.$mobx || '$mobx';
     if (who && who[$mobx]) {
       return who[$mobx].name;
-    } else if (who.constructor) {
+    } if (who.constructor) {
       return who.constructor.name || 'object';
     }
   }

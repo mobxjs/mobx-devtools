@@ -2,8 +2,8 @@ import getId from '../utils/getId';
 
 const summary = (logItem) => {
   const sum = Object.create(null);
-  const patches = logItem.patches;
-  sum.patches = patches && patches.map(patch => ({
+  const { patches } = logItem;
+  sum.patches = patches && patches.map((patch) => ({
     op: patch.op,
     path: patch.path,
     value: (patch.value && typeof patch.value === 'object') ? {} : patch.value,
@@ -67,7 +67,7 @@ export default (bridge, hook) => {
         activeLogItemId: undefined,
         root,
         mobxid,
-        dispose: () => rootDisposables.forEach(fn => fn()),
+        dispose: () => rootDisposables.forEach((fn) => fn()),
         rootId,
         mst,
         name: name || (root.toString && root.toString()),
@@ -85,14 +85,14 @@ export default (bridge, hook) => {
   };
 
   const disposables = [
-    () => Object.keys(rootDataById).forEach(rootId => removeRoot(rootId)),
+    () => Object.keys(rootDataById).forEach((rootId) => removeRoot(rootId)),
     hook.sub('mst-root', addRoot),
     hook.sub('mst-root-dispose', removeRoot),
     bridge.sub('backend-mst:set-tracking-enabled', (val) => {
       if (val === trackingEnabled) return;
       trackingEnabled = val;
       if (val) {
-        bridge.send('frontend:mst-roots', Object.keys(rootDataById).map(id => ({
+        bridge.send('frontend:mst-roots', Object.keys(rootDataById).map((id) => ({
           id,
           name: rootDataById[id].name,
         })));
@@ -136,7 +136,7 @@ export default (bridge, hook) => {
       }
     },
     dispose() {
-      disposables.forEach(fn => fn());
+      disposables.forEach((fn) => fn());
     },
   };
 };

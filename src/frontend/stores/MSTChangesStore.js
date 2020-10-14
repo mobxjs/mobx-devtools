@@ -5,6 +5,7 @@ export default class MSTChangesStore extends AbstractStore {
   mstLogEnabled = false;
 
   itemsDataByRootId = {};
+
   rootNamesById = {};
 
   constructor(bridge) {
@@ -13,7 +14,7 @@ export default class MSTChangesStore extends AbstractStore {
 
     this.addDisposer(
       bridge.sub('frontend:append-mst-log-items', (newLogItem) => {
-        const rootId = newLogItem.rootId;
+        const { rootId } = newLogItem;
         if (!this.itemsDataByRootId[rootId]) {
           if (!this.activeRootId) {
             this.activeRootId = rootId;
@@ -79,7 +80,7 @@ export default class MSTChangesStore extends AbstractStore {
   spliceLogItems(rootId, startIndex = 0, endIndex = Infinity) {
     const itemData = this.itemsDataByRootId[rootId];
     if (!itemData) return;
-    const logItemsIds = itemData.logItemsIds;
+    const { logItemsIds } = itemData;
     const removedItemsIds = logItemsIds.splice(startIndex, endIndex);
     removedItemsIds.forEach((id) => {
       delete itemData.logItemsById[id];

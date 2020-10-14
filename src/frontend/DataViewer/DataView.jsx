@@ -8,7 +8,10 @@ import Spinner from '../Spinner';
 const renderSparseArrayHole = (count, key) => (
   <li key={key}>
     <div className={css(styles.head)}>
-      <div className={css(styles.sparseArrayHole)}>undefined × {count}</div>
+      <div className={css(styles.sparseArrayHole)}>
+        undefined ×
+        {count}
+      </div>
     </div>
   </li>
 );
@@ -110,14 +113,14 @@ export default class DataView extends React.Component {
       }
     } else {
       // Iterate over a regular object
-      let names = Object.keys(value).filter(n => n[0] !== '@' || n[1] !== '@');
+      let names = Object.keys(value).filter((n) => n[0] !== '@' || n[1] !== '@');
       if (this.props.hidenKeysRegex) {
-        names = names.filter(n => !this.props.hidenKeysRegex.test(n));
+        names = names.filter((n) => !this.props.hidenKeysRegex.test(n));
       }
       if (!this.props.noSort) {
         names.sort(alphanumericSort);
       }
-      names.forEach(name => elements.push(this.renderItem(name, name, editable)));
+      names.forEach((name) => elements.push(this.renderItem(name, name, editable)));
     }
 
     if (!elements.length) {

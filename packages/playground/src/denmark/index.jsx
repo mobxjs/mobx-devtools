@@ -1,6 +1,8 @@
 /* eslint-disable react/jsx-no-bind */
 import React from 'react';
-import { observable, action, computed, configure } from 'mobx';
+import {
+  observable, action, computed, configure,
+} from 'mobx';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { render } from 'react-dom';
@@ -49,7 +51,10 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        time: {tick.data}s
+        time:
+        {' '}
+        {tick.data}
+        s
         {this.props.children}
       </div>
     );

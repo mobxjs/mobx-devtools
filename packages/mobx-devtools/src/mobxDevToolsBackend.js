@@ -31,7 +31,7 @@ const connectToDevTools = (options) => {
 
     bridge.once('disconnect', () => {
       debugConnection('[contentScript -x BACKEND]');
-      listeners.forEach(listener => window.removeEventListener('message', listener));
+      listeners.forEach((listener) => window.removeEventListener('message', listener));
       listeners = [];
       disposeBackend();
     });

@@ -82,15 +82,16 @@ export default class LogItemExplorer extends React.PureComponent {
           { padding, height: this.state.logExplorerHeight - (padding * 2) }
         }
       >
-        {this.props.logItem.snapshot &&
-          <Collapsible head={'State'} startOpen>
+        {this.props.logItem.snapshot
+          && (
+          <Collapsible head="State" startOpen>
             <DataViewer
               path={['snapshot']}
               getValueByPath={this.props.getValueByPath}
               decorator={this.dataDecorator}
             />
           </Collapsible>
-        }
+          )}
         {this.props.logItem.patches && !this.props.initial && (
           <div className={css(styles.patches)}>
             {this.props.logItem.patches.map((patch) => {
@@ -98,16 +99,25 @@ export default class LogItemExplorer extends React.PureComponent {
               switch (patch.op) {
                 case 'remove':
                   return (
-                    <div>{path} <span className={css(styles.removedLabel)}>Removed</span></div>
+                    <div>
+                      {path}
+                      {' '}
+                      <span className={css(styles.removedLabel)}>Removed</span>
+                    </div>
                   );
                 default: return (
-                  <div>{path} = <PreviewValue data={patch.value} /></div>
+                  <div>
+                    {path}
+                    {' '}
+                    =
+                    {' '}
+                    <PreviewValue data={patch.value} />
+                  </div>
                 );
               }
             })}
           </div>
-        )
-        }
+        )}
       </div>
     );
   }

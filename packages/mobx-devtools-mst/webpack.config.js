@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
 
-
 module.exports = {
   devtool: false,
   entry: path.join(__dirname, 'src'),

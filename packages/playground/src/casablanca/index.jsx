@@ -16,15 +16,15 @@ const TodoStore = types
   .model('TodoStore', {
     todos: types.array(Todo),
   })
-  .views(self => ({
+  .views((self) => ({
     get completedTodos() {
-      return self.todos.filter(t => t.done);
+      return self.todos.filter((t) => t.done);
     },
     findTodosByUser(user) {
-      return self.todos.filter(t => t.assignee === user);
+      return self.todos.filter((t) => t.assignee === user);
     },
   }))
-  .actions(self => ({
+  .actions((self) => ({
     addTodo(title) {
       self.todos.push({
         id: getId(),
@@ -41,7 +41,10 @@ class TodoComponent extends React.Component {
   render() {
     return (
       <div>
-        #{this.props.id} <strong>{this.props.title}</strong>
+        #
+        {this.props.id}
+        {' '}
+        <strong>{this.props.title}</strong>
       </div>
     );
   }
@@ -56,12 +59,14 @@ class TodoAppComponent extends React.Component {
     }
   };
 
+  onDestroy = () => destroy(storeInstance)
+
   render() {
     return (
       <div>
-        {storeInstance.todos.map(t => <TodoComponent key={t.id} {...t} />)}
+        {storeInstance.todos.map((t) => <TodoComponent key={t.id} {...t} />)}
         <input type="test" onKeyDown={this.handleInputKeydown} />
-        <button onClick={() => destroy(storeInstance)}>destroy</button>
+        <button onClick={this.onDestroy}>destroy</button>
       </div>
     );
   }
@@ -71,4 +76,3 @@ render(
   <TodoAppComponent />,
   document.querySelector('#root')
 );
-

@@ -21,13 +21,13 @@ const listenersA = [];
 const listenersB = [];
 
 const bridgeA = new Bridge({
-  listen: fn => listenersA.push(fn),
-  send: data => listenersB.forEach(fn => fn(data)),
+  listen: (fn) => listenersA.push(fn),
+  send: (data) => listenersB.forEach((fn) => fn(data)),
 });
 
 const bridgeB = new Bridge({
-  listen: fn => listenersB.push(fn),
-  send: data => listenersA.forEach(fn => fn(data)),
+  listen: (fn) => listenersB.push(fn),
+  send: (data) => listenersA.forEach((fn) => fn(data)),
 });
 
 bridgeA.serializationOff();
@@ -98,4 +98,3 @@ export default class DevTool extends React.PureComponent {
     );
   }
 }
-

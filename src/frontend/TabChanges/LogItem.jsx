@@ -71,17 +71,16 @@ export default class LogItem extends React.Component {
     this.setState({ open });
   };
 
-  recomputeHeight = () =>
-    setTimeout(() => {
-      // timeout for css applying
-      if (this.props.onHeightUpdate && this.el) {
-        const height = this.el.offsetHeight;
-        if (this.props.change.height !== height) {
-          this.props.change.height = this.el.offsetHeight;
-          this.props.onHeightUpdate();
-        }
+  recomputeHeight = () => setTimeout(() => {
+    // timeout for css applying
+    if (this.props.onHeightUpdate && this.el) {
+      const height = this.el.offsetHeight;
+      if (this.props.change.height !== height) {
+        this.props.change.height = this.el.offsetHeight;
+        this.props.onHeightUpdate();
       }
-    }, 0);
+    }
+  }, 0);
 
   renderChange() {
     const { change } = this.props;
@@ -94,8 +93,7 @@ export default class LogItem extends React.Component {
             <span className={css(styles.headContentTitle)}>
               {change.name
                 ? change.name
-                : change.type.toUpperCase().slice(0, 1) + change.type.slice(1)
-              }
+                : change.type.toUpperCase().slice(0, 1) + change.type.slice(1)}
             </span>
             {' '}
             {change.object && (
@@ -134,7 +132,7 @@ export default class LogItem extends React.Component {
               requireClick
               // eslint-disable-next-line react/jsx-no-bind
               onShown={() => this.props.getDetails && this.props.getDetails(change.id)}
-              content={
+              content={(
                 <LObjDiff
                   change={change}
                   path={this.props.path}
@@ -143,7 +141,7 @@ export default class LogItem extends React.Component {
                   stopInspecting={this.props.stopInspecting}
                   showMenu={this.props.showMenu}
                 />
-              }
+              )}
             >
               <div>
                 <LObjDiffPreview change={change} />
@@ -155,7 +153,10 @@ export default class LogItem extends React.Component {
         return (
           <div className={css(styles.headContent, styles.headContentWithIcon)}>
             <IconComputed className={css(styles.headContentIcon)} />
-            <span className={css(styles.headContentTitle)}>Computed {change.targetName}</span>
+            <span className={css(styles.headContentTitle)}>
+              Computed
+              {change.targetName}
+            </span>
             {change.object && (
               <ChangeDataViewerPopover
                 path={this.props.path.concat(['object'])}
@@ -239,8 +240,8 @@ export default class LogItem extends React.Component {
   }
 
   render() {
-    const change = this.props.change;
-    const open = this.state.open;
+    const { change } = this.props;
+    const { open } = this.state;
     const openable = this.props.change.hasChildren || (this.props.change.children || []).length > 0;
     return (
       <div
@@ -264,8 +265,8 @@ export default class LogItem extends React.Component {
         </div>
         {open && (
           <div className={css(styles.body)}>
-            {change.children &&
-              change.children.map((c, i) => (
+            {change.children
+              && change.children.map((c, i) => (
                 <LogItem
                   getValueByPath={this.props.getValueByPath}
                   inspect={this.props.inspect}

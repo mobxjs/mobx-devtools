@@ -7,7 +7,7 @@ const getLSSettings = () => {
   }
 };
 const setLSSettings = (settings) => {
-  window.localStorage.setItem(LS_KEY, JSON.stringify(Object.assign({}, getLSSettings(), settings)));
+  window.localStorage.setItem(LS_KEY, JSON.stringify({ ...getLSSettings(), ...settings }));
 };
 
 const memoryStorage = {};

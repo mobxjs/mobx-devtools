@@ -12,7 +12,9 @@ const createButton = (title, onClick) => {
 
 class MyClass {
   @observable count = 0;
+
   @observable count2 = 0;
+
   @observable count3 = 0;
 }
 

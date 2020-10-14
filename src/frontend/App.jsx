@@ -70,6 +70,7 @@ export default class App extends React.PureComponent {
   }
 
   $unMounted = false;
+
   $disposables = [];
 
   reload() {
@@ -88,7 +89,7 @@ export default class App extends React.PureComponent {
     }
   }
 
-  handleContextMenu = e => e.preventDefault();
+  handleContextMenu = (e) => e.preventDefault();
 
   renderContent() {
     if (this.state.contentScriptInstallationError) {

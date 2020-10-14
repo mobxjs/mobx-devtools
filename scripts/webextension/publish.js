@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const { TARGET_BROWSER } = process.env;
 const manifest = require(`../../lib/${TARGET_BROWSER}/manifest.json`);
 
-
 switch (TARGET_BROWSER) {
   case 'firefox': {
     publishFirefox();
@@ -30,8 +29,8 @@ function publishFirefox() {
     exp: issuedAt + 60,
   }, MOZ_API_JWT_SECRET, { algorithm: 'HS256' });
 
-  const id = manifest.applications.gecko.id;
-  const version = manifest.version;
+  const { id } = manifest.applications.gecko;
+  const { version } = manifest;
 
   request({
     url: `https://addons.mozilla.org/api/v3/addons/${id}/versions/${version}/`,
@@ -50,7 +49,6 @@ function publishFirefox() {
   });
 }
 
-
 function publishCrhome(target = 'default') {
   const {
     GAPI_MOBX_EXTENSION_CLIENT_ID,
@@ -67,6 +65,7 @@ function publishCrhome(target = 'default') {
     }
     const { error, statusDetail } = JSON.parse(body);
     if (error) {
+      // eslint-disable-next-line no-console
       console.log({ error });
       throw error;
     }

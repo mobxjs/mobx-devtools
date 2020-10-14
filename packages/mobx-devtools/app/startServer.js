@@ -9,7 +9,9 @@ log.error = (...a) => console.error('[Mobx DevTools]', ...a); // eslint-disable-
 
 let restartTimeout = null;
 
-module.exports = function startServer({ port, onConnect, onError, onDisconnect, onStarted }) {
+module.exports = function startServer({
+  port, onConnect, onError, onDisconnect, onStarted,
+}) {
   const httpServer = require('http').createServer();
   const server = new ws.Server({ server: httpServer });
   let connected = false;

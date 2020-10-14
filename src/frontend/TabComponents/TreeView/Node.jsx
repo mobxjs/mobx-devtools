@@ -80,6 +80,7 @@ class _Node extends React.Component {
   }
 
   $head = undefined;
+
   $tail = undefined;
 
   findOwnerWindow() {
@@ -123,12 +124,17 @@ class _Node extends React.Component {
     } = this.props;
 
     if (!node) {
-      return <span>Node was deleted {__DEV__ && this.props.id}</span>;
+      return (
+        <span>
+          Node was deleted
+          {__DEV__ && this.props.id}
+        </span>
+      );
     }
 
-    const children = node.children;
+    const { children } = node;
 
-    const collapsed = node.collapsed;
+    const { collapsed } = node;
     const inverted = selected;
 
     const headEvents = {
@@ -206,10 +212,10 @@ class _Node extends React.Component {
         <span className={css(styles.bracket)}>&lt;/</span>
         <span className={css(styles.jsxTag)}>{name}</span>
         <span className={css(styles.bracket)}>&gt;</span>
-        {selected &&
-          ((collapsed && !this.props.isBottomTagSelected) || this.props.isBottomTagSelected) && (
+        {selected
+          && ((collapsed && !this.props.isBottomTagSelected) || this.props.isBottomTagSelected) && (
             <span className={css(styles.tmpValueName)}> == $m</span>
-          )}
+        )}
       </span>
     );
 
@@ -247,11 +253,11 @@ class _Node extends React.Component {
           {node.ref && <Props key="ref" props={{ ref: node.ref }} inverted={headInverted} />}
           {node.props && <Props key="props" props={node.props} inverted={headInverted} />}
           <span className={css(styles.bracket)}>&gt;</span>
-          {selected &&
-            !collapsed &&
-            !this.props.isBottomTagSelected && (
+          {selected
+            && !collapsed
+            && !this.props.isBottomTagSelected && (
               <span className={css(styles.tmpValueName)}> == $m</span>
-            )}
+          )}
         </span>
         {collapsed && <span>…</span>}
         {collapsed && closeTag}
@@ -270,7 +276,7 @@ class _Node extends React.Component {
           hovered={hovered && !isBottomTagHovered}
           selected={selected && !isBottomTagSelected}
         />
-        <div>{children.map(id => <Node key={id} depth={depth + 1} id={id} />)}</div>
+        <div>{children.map((id) => <Node key={id} depth={depth + 1} id={id} />)}</div>
         <Tail
           getRef={(t) => { this.$tail = t; }} // eslint-disable-line react/jsx-no-bind
           {...tailEvents}
@@ -295,7 +301,9 @@ Head.propTypes = {
   getRef: PropTypes.func,
 };
 
-function Head({ depth, hovered, selected, children, getRef, ...otherProps }) {
+function Head({
+  depth, hovered, selected, children, getRef, ...otherProps
+}) {
   return (
     <div
       ref={getRef}
@@ -320,7 +328,9 @@ Tail.propTypes = {
   children: PropTypes.node,
   getRef: PropTypes.func,
 };
-function Tail({ depth, hovered, selected, children, getRef, ...otherProps }) {
+function Tail({
+  depth, hovered, selected, children, getRef, ...otherProps
+}) {
   return (
     <div
       ref={getRef}
@@ -356,7 +366,7 @@ function Guideline({ depth, hovered, selected }) {
   );
 }
 
-const calcPaddingLeft = depth => 5 + ((depth + 1) * 10);
+const calcPaddingLeft = (depth) => 5 + ((depth + 1) * 10);
 
 const styles = StyleSheet.create({
   container: {

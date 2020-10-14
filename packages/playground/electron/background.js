@@ -2,7 +2,6 @@ import path from 'path';
 import url from 'url';
 import { app, BrowserWindow } from 'electron';
 
-
 app.on('ready', () => {
   BrowserWindow.addDevToolsExtension(path.join(app.getAppPath(), '../../lib/chrome'));
 

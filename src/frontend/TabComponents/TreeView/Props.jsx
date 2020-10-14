@@ -14,7 +14,7 @@ export default class Props extends React.PureComponent {
       return <span />;
     }
 
-    const names = Object.keys(props).filter(name => name !== 'children');
+    const names = Object.keys(props).filter((name) => name !== 'children');
 
     const items = [];
 

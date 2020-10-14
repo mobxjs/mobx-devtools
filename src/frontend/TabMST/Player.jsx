@@ -45,7 +45,13 @@ export default class Player extends React.Component {
         >
           <IconLeft />
         </span>
-        <span className={css(styles.progress)}>{currentIndex + 1} / {length}</span>
+        <span className={css(styles.progress)}>
+          {currentIndex + 1}
+          {' '}
+          /
+          {' '}
+          {length}
+        </span>
         <span
           className={css(styles.lrButton, nextDisabled && styles.lrButtonDisabled)}
           onClick={this.handleNext}

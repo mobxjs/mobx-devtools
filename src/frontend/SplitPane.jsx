@@ -84,7 +84,7 @@ export default class SplitPane extends React.Component {
   handleDraggableMove = (x, y) => {
     const rect = this.el.getBoundingClientRect();
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       width: this.state.isVertical ? prevState.width : Math.floor(rect.left + (rect.width - x)),
       height: !this.state.isVertical ? prevState.height : Math.floor(rect.top + (rect.height - y)),
     }));

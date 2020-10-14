@@ -57,7 +57,7 @@ export default class MiniBar extends React.PureComponent {
     additionalMiniPanelStyles.left = position.left;
 
     return (
-      <div style={Object.assign({}, styles.panel, additionalMiniPanelStyles)}>
+      <div style={({ ...styles.panel, ...additionalMiniPanelStyles })}>
         <MiniBarButton
           id="buttonUpdates"
           onToggle={this.props.toggleShowingUpdates}

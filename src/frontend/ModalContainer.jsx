@@ -28,7 +28,7 @@ export default class ModalContainer extends React.PureComponent {
     }
   }
 
-  stopPropagation = e => e.stopPropagation();
+  stopPropagation = (e) => e.stopPropagation();
 
   render() {
     const { children, onOverlayClick } = this.props;

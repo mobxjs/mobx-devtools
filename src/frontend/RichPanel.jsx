@@ -53,9 +53,9 @@ export default class RichPanel extends React.Component {
 
   componentWillUpdate(nextProps) {
     if (
-      this.state.preferredTab &&
-      this.state.activeTab !== this.state.preferredTab &&
-      this.getAvailableTabs(nextProps).includes(this.state.preferredTab)
+      this.state.preferredTab
+      && this.state.activeTab !== this.state.preferredTab
+      && this.getAvailableTabs(nextProps).includes(this.state.preferredTab)
     ) {
       // eslint-disable-next-line react/no-will-update-set-state
       this.setState({ activeTab: this.state.preferredTab });
@@ -68,7 +68,7 @@ export default class RichPanel extends React.Component {
       props.mstFound && 'mst',
       'changes',
       props.mobxReactFound && 'performance',
-    ].filter(t => t);
+    ].filter((t) => t);
   }
 
   handleTabChage = (tab) => {
@@ -95,7 +95,10 @@ export default class RichPanel extends React.Component {
     const availableTabs = this.getAvailableTabs();
 
     return (
-      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div style={{
+        width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
+      }}
+      >
         <MainMenu
           availableTabs={availableTabs}
           activeTab={this.state.activeTab}

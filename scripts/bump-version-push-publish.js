@@ -1,11 +1,9 @@
-
 const prompt = require('prompt');
 const fs = require('fs');
+const { exec } = require('child_process');
 const lernaJson = require('../lerna.json');
 
 const [vMajor, vMinor, vPatch] = lernaJson.version.split('.');
-const exec = require('child_process').exec;
-
 
 prompt.get([
   {

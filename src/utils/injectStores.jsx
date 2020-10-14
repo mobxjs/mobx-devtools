@@ -3,8 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => TargetComponent =>
-  class StoreInjectorHOC extends React.Component {
+export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => (TargetComponent) => class StoreInjectorHOC extends React.Component {
     static contextTypes = {
       stores: PropTypes.object.isRequired,
     };
@@ -59,15 +58,14 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => TargetCo
 
     componentWillUnmount() {
       this.$isMounted = false;
-      this.disposables.forEach(fn => fn());
+      this.disposables.forEach((fn) => fn());
       Object.keys(this.eventsByStore).forEach((s) => {
-        this.eventsByStore[s].forEach(name =>
-          this.context.stores[s].off(name, this.scheduleUpdate)
-        );
+        this.eventsByStore[s].forEach((name) => this.context.stores[s].off(name, this.scheduleUpdate));
       });
     }
 
     eventsByStore = {};
+
     disposables = [];
 
     scheduleUpdate = () => {
@@ -86,7 +84,7 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => TargetCo
     render() {
       return <TargetComponent {...injectProps(this.context.stores, this.props)} {...this.props} />;
     }
-  };
+};
 
 function arrayDiff(array, oldArray) {
   const names = new Set();

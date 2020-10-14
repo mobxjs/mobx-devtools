@@ -3,10 +3,15 @@ import preferences from '../../preferences';
 
 export default class ActionsStore extends AbstractStore {
   logEnabled = false;
+
   consoleLogEnabled = false;
+
   logFilter = undefined;
+
   logItemsById = {};
+
   logItemsIds = [];
+
   searchText = '';
 
   constructor(bridge) {

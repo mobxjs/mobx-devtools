@@ -20,7 +20,9 @@ const handshake = (backendId) => {
   function sendMessageToBackend(payload) {
     debugConnection('[backgrond -> CONTENTSCRIPT -> backend]', payload);
     window.postMessage(
-      { source: 'mobx-devtools-content-script', payload, contentScriptId, backendId },
+      {
+        source: 'mobx-devtools-content-script', payload, contentScriptId, backendId,
+      },
       '*'
     );
   }
@@ -31,9 +33,9 @@ const handshake = (backendId) => {
 
   function handleMessageFromPage(evt) {
     if (
-      evt.data.source === 'mobx-devtools-backend' &&
-      evt.data.contentScriptId === contentScriptId &&
-      evt.data.backendId === backendId
+      evt.data.source === 'mobx-devtools-backend'
+      && evt.data.contentScriptId === contentScriptId
+      && evt.data.backendId === backendId
     ) {
       debugConnection('[backend -> CONTENTSCRIPT -> backgrond]', evt);
       evt.data.payload.contentScriptId = contentScriptId;
@@ -77,12 +79,12 @@ let connected = false;
 
 window.addEventListener('message', function listener(message) {
   if (
-    message.data.source === 'mobx-devtools-backend' &&
-    message.data.payload === 'contentScript:pong' &&
-    message.data.contentScriptId === contentScriptId
+    message.data.source === 'mobx-devtools-backend'
+    && message.data.payload === 'contentScript:pong'
+    && message.data.contentScriptId === contentScriptId
   ) {
     debugConnection('[backend -> CONTENTSCRIPT]', message);
-    const backendId = message.data.backendId;
+    const { backendId } = message.data;
     clearTimeout(handshakeFailedTimeout);
     clearInterval(pingInterval);
     debugConnection('[CONTENTSCRIPT -> backend]', 'backend:hello');

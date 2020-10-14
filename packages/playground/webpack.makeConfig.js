@@ -98,7 +98,7 @@ exports.makeConfig = ({
       chunks: [],
       template: path.join(__dirname, 'page.html'),
     }),
-    ...pages.map(entry => new HtmlWebpackPlugin({
+    ...pages.map((entry) => new HtmlWebpackPlugin({
       title: entry,
       chunks: [entry],
       filename: `${entry}.html`,
@@ -118,14 +118,14 @@ exports.makeConfig = ({
   },
 });
 
-exports.startDevServer = options => new Promise((resolve, reject) => {
+exports.startDevServer = (options) => new Promise((resolve, reject) => {
   const webpackConfig = exports.makeConfig(options);
   const compiler = webpack(webpackConfig);
-  const playDevServer = new WebpackDevServer(compiler, Object.assign(
-    {},
-    webpackConfig.devServer,
-    { publicPath: webpackConfig.output.publicPath }
-  ));
+  const playDevServer = new WebpackDevServer(compiler, ({
+
+    ...webpackConfig.devServer,
+    publicPath: webpackConfig.output.publicPath,
+  }));
 
   playDevServer.listen(options.port);
 

@@ -28,11 +28,11 @@ export default function ChangeDataViewerPopover({
   const value = getValueByPath(path);
   const otype = typeof value;
   if (
-    otype === 'number' ||
-    otype === 'string' ||
-    value === null ||
-    value === undefined ||
-    otype === 'boolean'
+    otype === 'number'
+    || otype === 'string'
+    || value === null
+    || value === undefined
+    || otype === 'boolean'
   ) {
     return <PreviewValue data={value} className={className} path={path} />;
   }

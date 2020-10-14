@@ -14,11 +14,11 @@ hook.injectMobxReact(require('mobx-react'), require('mobx'));
 const listenersA = [];
 const listenersB = [];
 
-const randomDelay = fn => setTimeout(fn, Math.ceil(Math.random() * 30));
+const randomDelay = (fn) => setTimeout(fn, Math.ceil(Math.random() * 30));
 
 const bridgeA = new Bridge({
-  listen: fn => listenersA.push(fn),
-  send: data => randomDelay(() => listenersB.forEach(fn => fn(data))),
+  listen: (fn) => listenersA.push(fn),
+  send: (data) => randomDelay(() => listenersB.forEach((fn) => fn(data))),
 });
 
 initBackend(bridgeA, hook);
@@ -54,8 +54,8 @@ initFrontend({
   node: createNode(),
   inject: (done) => {
     const wall = {
-      listen: fn => listenersB.push(fn),
-      send: data => randomDelay(() => listenersA.forEach(fn => fn(data))),
+      listen: (fn) => listenersB.push(fn),
+      send: (data) => randomDelay(() => listenersA.forEach((fn) => fn(data))),
     };
     done(wall, () => {});
   },

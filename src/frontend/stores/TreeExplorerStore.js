@@ -4,14 +4,23 @@ import AbstractStore from './AbstractStore';
 
 export default class TreeExplorerStore extends AbstractStore {
   roots = [];
+
   loaded = false;
+
   selectedNodeId = undefined;
+
   hoveredNodeId = undefined;
+
   isBottomTagSelected = undefined;
+
   isBottomTagHovered = undefined;
+
   nodeParentsById = {};
+
   nodesById = {};
+
   searchText = '';
+
   pickingComponent = false;
 
   constructor(bridge) {
@@ -20,7 +29,7 @@ export default class TreeExplorerStore extends AbstractStore {
 
     this.addDisposer(
       bridge.sub('frontend:mobx-react-components', (components) => {
-        components.forEach(c => this.addNode(c));
+        components.forEach((c) => this.addNode(c));
         if (this.prevSelectedNodeId && this.nodesById[this.prevSelectedNodeId]) {
           this.select(this.prevSelectedNodeId);
           this.uncollapseParents(this.prevSelectedNodeId);
@@ -95,23 +104,21 @@ export default class TreeExplorerStore extends AbstractStore {
       this.searchRoots = null;
     } else {
       if (
-        this.searchRoots &&
-        needle.indexOf(this.searchText.toLowerCase()) === 0 &&
-        !SearchUtils.shouldSearchUseRegex(text)
+        this.searchRoots
+        && needle.indexOf(this.searchText.toLowerCase()) === 0
+        && !SearchUtils.shouldSearchUseRegex(text)
       ) {
         this.searchRoots = this.searchRoots.filter((item) => {
           const node = this.nodesById[item];
           return (
-            (node.name && node.name.toLowerCase().indexOf(needle) !== -1) ||
-            (node.text && node.text.toLowerCase().indexOf(needle) !== -1) ||
-            (typeof node.children === 'string' &&
-              node.children.toLowerCase().indexOf(needle) !== -1)
+            (node.name && node.name.toLowerCase().indexOf(needle) !== -1)
+            || (node.text && node.text.toLowerCase().indexOf(needle) !== -1)
+            || (typeof node.children === 'string'
+              && node.children.toLowerCase().indexOf(needle) !== -1)
           );
         });
       } else {
-        this.searchRoots = Object.keys(this.nodesById).filter(key =>
-          nodeMatchesText(this.nodesById[key], needle, key, this)
-        );
+        this.searchRoots = Object.keys(this.nodesById).filter((key) => nodeMatchesText(this.nodesById[key], needle, key, this));
       }
       this.searchRoots.forEach((id) => {
         if (this.hasBottom(id)) {
@@ -137,7 +144,7 @@ export default class TreeExplorerStore extends AbstractStore {
 
   hasBottom(id) {
     const node = this.nodesById[id];
-    const children = node.children;
+    const { children } = node;
     if (typeof children === 'string' || !children || !children.length || node.collapsed) {
       return false;
     }
@@ -195,9 +202,9 @@ export default class TreeExplorerStore extends AbstractStore {
           this.nodeParentsById[childId] = data.id;
           const childNode = this.nodesById[childId];
           if (
-            this.searchRoots &&
-            childNode && // fixme
-            nodeMatchesText(childNode, this.searchText.toLowerCase(), childId, this)
+            this.searchRoots
+            && childNode // fixme
+            && nodeMatchesText(childNode, this.searchText.toLowerCase(), childId, this)
           ) {
             this.searchRoots = this.searchRoots.push(childId);
             this.emit('searchRoots');
@@ -282,8 +289,7 @@ export default class TreeExplorerStore extends AbstractStore {
   }
 
   selectBottom(id) {
-    this.isBottomTagSelected =
-      !this.nodesById[id].collapsed && this.nodesById[id].children.length > 0;
+    this.isBottomTagSelected = !this.nodesById[id].collapsed && this.nodesById[id].children.length > 0;
     this.select(id);
   }
 

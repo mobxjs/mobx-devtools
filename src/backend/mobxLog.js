@@ -105,7 +105,7 @@ export default (bridge) => {
       }
     },
     dispose() {
-      disposables.forEach(fn => fn());
+      disposables.forEach((fn) => fn());
     },
   };
 };

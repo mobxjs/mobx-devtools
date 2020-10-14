@@ -1,5 +1,6 @@
 export default class AbstractStore {
   $listeners = {};
+
   $disposables = [];
 
   setValueAndEmit(key, value) {
@@ -22,7 +23,7 @@ export default class AbstractStore {
 
   emit = (event) => {
     if (this.$listeners[event]) {
-      this.$listeners[event].forEach(fn => fn());
+      this.$listeners[event].forEach((fn) => fn());
     }
   };
 
@@ -51,7 +52,7 @@ export default class AbstractStore {
   }
 
   dispose() {
-    this.$disposables.forEach(fn => fn());
+    this.$disposables.forEach((fn) => fn());
     this.$disposables.splice(0);
   }
 }

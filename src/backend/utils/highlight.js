@@ -67,7 +67,9 @@ const addText = (hoverNode, content) => {
   hoverNode.textNode.innerHTML = content.text;
 };
 
-export const hightlight = (node, { delay, content, borderColor, backgroundColor } = {}) => {
+export const hightlight = (node, {
+  delay, content, borderColor, backgroundColor,
+} = {}) => {
   if (node && node.parentNode) {
     let hoverNode = hoverNodesMap.get(node);
     if (!hoverNode) {

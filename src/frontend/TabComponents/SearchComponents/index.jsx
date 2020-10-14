@@ -8,7 +8,7 @@ import injectStores from '../../../utils/injectStores';
   },
   injectProps: ({ treeExplorerStore }) => ({
     searchText: treeExplorerStore.searchText,
-    changeSearch: e => treeExplorerStore.changeSearch(e.target.value),
+    changeSearch: (e) => treeExplorerStore.changeSearch(e.target.value),
   }),
 })
 export default class SearchComponents extends React.PureComponent {
@@ -23,7 +23,7 @@ export default class SearchComponents extends React.PureComponent {
         type="search"
         value={this.props.searchText}
         onChange={this.props.changeSearch}
-        placeholder={'Search (string/regex)'}
+        placeholder="Search (string/regex)"
         style={{
           border: '1px solid rgba(0, 0, 0, 0.12)',
           padding: 3,

@@ -14,9 +14,9 @@ export default class PreviewValue extends React.PureComponent {
 
   render() {
     if (
-      !this.props.data ||
-      this.props.data instanceof Date ||
-      typeof this.props.data !== 'object'
+      !this.props.data
+      || this.props.data instanceof Date
+      || typeof this.props.data !== 'object'
     ) {
       return <PreviewSimpleValue {...this.props} />;
     }
@@ -103,7 +103,7 @@ class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line re
   };
 
   selectAll() {
-    const input = this.input;
+    const { input } = this;
     if (this.state.text.match(/^".*"$/)) {
       input.selectionStart = 1;
       input.selectionEnd = input.value.length - 1;
@@ -165,7 +165,10 @@ class PreviewComplexValue extends React.PureComponent { // eslint-disable-line r
     if (Array.isArray(data)) {
       return (
         <span className={css(styles.previewComplex)}>
-          {this.props.displayName || 'Array'}[{data.length}]
+          {this.props.displayName || 'Array'}
+          [
+          {data.length}
+          ]
         </span>
       );
     }
@@ -179,7 +182,8 @@ class PreviewComplexValue extends React.PureComponent { // eslint-disable-line r
       case 'function':
         return (
           <span className={css(styles.previewComplex, mobxObject && styles.mobxObject)}>
-            {this.props.displayName || data[symbols.name] || 'fn'}()
+            {this.props.displayName || data[symbols.name] || 'fn'}
+            ()
           </span>
         );
       case 'object':
@@ -247,9 +251,9 @@ function textToValue(txt) {
 function valueToText(value) {
   if (value === undefined) {
     return 'undefined';
-  } else if (typeof value === 'number') {
+  } if (typeof value === 'number') {
     return value.toString();
-  } else if (value instanceof Date) {
+  } if (value instanceof Date) {
     return value.toString();
   }
   return JSON.stringify(value);

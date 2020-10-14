@@ -82,11 +82,13 @@ export default class TreeComponentExplorer extends React.Component {
         {node.dependencyTree && (
           <Collapsible
             startOpen={false}
-            head={
+            head={(
               <div className={css(styles.subheading)}>
-                Dependencies ({node.dependencyTree.dependencies.length})
+                Dependencies (
+                {node.dependencyTree.dependencies.length}
+                )
               </div>
-            }
+            )}
           >
             <div className={css(styles.block)}>
               <DataViewer

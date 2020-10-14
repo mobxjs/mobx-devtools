@@ -35,12 +35,17 @@ export default class MstLogItem extends React.PureComponent {
   };
 
   handleSelect = () => this.props.onSelect(this.props.logItem.id);
+
   handleActivate = () => this.props.onActivate(this.props.logItem.id);
+
   handleCancel = () => this.props.onCancel(this.props.logItem.id);
+
   handleCommit = () => this.props.onCommit(this.props.logItem.id);
 
   render() {
-    const { active, initial, selected, logItem, style } = this.props;
+    const {
+      active, initial, selected, logItem, style,
+    } = this.props;
     return (
       <div
         onClick={this.handleSelect}
@@ -52,7 +57,8 @@ export default class MstLogItem extends React.PureComponent {
         </div>
 
         <div className={css(styles.rightButtons, selected && styles.rightButtonsSelected)}>
-          {!initial &&
+          {!initial
+            && (
             <div
               onClick={this.handleCommit}
               className={css(styles.button)}
@@ -60,8 +66,9 @@ export default class MstLogItem extends React.PureComponent {
             >
               <CommitIcon />
             </div>
-          }
-          {!initial &&
+            )}
+          {!initial
+            && (
             <div
               onClick={this.handleCancel}
               className={css(styles.button)}
@@ -69,7 +76,7 @@ export default class MstLogItem extends React.PureComponent {
             >
               <CancelIcon />
             </div>
-          }
+            )}
           {!active && (
             <div
               onClick={this.handleActivate}
@@ -134,7 +141,6 @@ const CommitIcon = () => (
     </g>
   </svg>
 );
-
 
 const styles = StyleSheet.create({
   logItem: {

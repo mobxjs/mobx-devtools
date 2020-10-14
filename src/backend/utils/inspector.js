@@ -10,7 +10,7 @@ export default (onResult) => {
   const PARENT = Symbol('PARENT');
   const KEY = Symbol('KEY');
 
-  const getNodeForPath = path => path.reduce((acc, next) => {
+  const getNodeForPath = (path) => path.reduce((acc, next) => {
     if (!acc[next]) {
       acc[next] = { [KEY]: next, [PARENT]: acc, [PATH]: (acc[PATH] || []).concat(next) };
     }
@@ -26,9 +26,9 @@ export default (onResult) => {
     return false;
   };
 
-  const getPathsForObject = object => (nodesByObject.get(object) || []).map(node => node[PATH]);
+  const getPathsForObject = (object) => (nodesByObject.get(object) || []).map((node) => node[PATH]);
 
-  const getObjectForPath = path => path.reduce(
+  const getObjectForPath = (path) => path.reduce(
     (acc, next) => acc && acc[next === symbols.proto ? '__proto__' : next],
     inspectedObject
   );

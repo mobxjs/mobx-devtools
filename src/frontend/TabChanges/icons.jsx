@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const IconScheduledReaction = props => (
+export const IconScheduledReaction = (props) => (
   <svg
     baseProfile="basic"
     xmlns="http://www.w3.org/2000/svg"
@@ -20,7 +20,7 @@ export const IconScheduledReaction = props => (
   </svg>
 );
 
-export const IconComputed = props => (
+export const IconComputed = (props) => (
   <svg
     baseProfile="basic"
     xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@ export const IconComputed = props => (
   </svg>
 );
 
-export const IconError = props => (
+export const IconError = (props) => (
   <svg
     baseProfile="basic"
     xmlns="http://www.w3.org/2000/svg"

@@ -2,6 +2,7 @@ import AbstractStore from './AbstractStore';
 
 export default class UpdatesHighlighterStore extends AbstractStore {
   updatesEnabled = false;
+
   updatesFilterByDuration = { slow: false, medium: false, fast: false };
 
   constructor(bridge) {

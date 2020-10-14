@@ -1,7 +1,6 @@
-const now =
-  typeof window.performance === 'object' && window.performance.now
-    ? () => window.performance.now()
-    : () => Date.now();
+const now = typeof window.performance === 'object' && window.performance.now
+  ? () => window.performance.now()
+  : () => Date.now();
 
 export const allowedComplexObjects = new Set();
 
@@ -135,7 +134,7 @@ function serialize(data, path = [], seen = new Map(), propToExtract) {
 const deserialize = (data, root) => {
   if (!data || typeof data !== 'object') return data;
   if (data instanceof Array) {
-    return data.map(o => deserialize(o, root || data));
+    return data.map((o) => deserialize(o, root || data));
   }
   if (data[symbols.reference]) {
     return data[symbols.reference].reduce((acc, next) => acc[next], root || data);
@@ -152,9 +151,8 @@ const deserialize = (data, root) => {
 // If you change it, make sure it behaves reasonably well in Firefox.
 let lastRunTimeMS = 5;
 const cancelIdleCallback = window.cancelIdleCallback || clearTimeout;
-const requestIdleCallback =
-  window.requestIdleCallback ||
-  function reqIdleCallback(cb) {
+const requestIdleCallback = window.requestIdleCallback
+  || function reqIdleCallback(cb) {
     // Magic numbers determined by tweaking in Firefox.
     // There is no special meaning to them.
     let delayMS = 3000 * lastRunTimeMS;
@@ -177,6 +175,7 @@ const requestIdleCallback =
 
 export default class Bridge {
   $listeners = [];
+
   $buffer = [];
 
   constructor(wall) {
@@ -188,8 +187,8 @@ export default class Bridge {
 
   serializationOff() {
     // When there is no need in serialization, dont waste resources
-    this.$serialize = a => a;
-    this.$deserialize = a => a;
+    this.$serialize = (a) => a;
+    this.$deserialize = (a) => a;
   }
 
   send(eventName, eventData = {}) {
@@ -283,7 +282,7 @@ export default class Bridge {
     if (typeof payload === 'string') {
       const handlers = this.$listeners[payload];
       if (handlers) {
-        handlers.forEach(fn => fn());
+        handlers.forEach((fn) => fn());
       }
     }
 
@@ -303,7 +302,7 @@ export default class Bridge {
       const handlers = this.$listeners[payload.eventName];
       const eventData = this.$deserialize(payload.eventData);
       if (handlers) {
-        handlers.forEach(fn => fn(eventData));
+        handlers.forEach((fn) => fn(eventData));
       }
     }
 
@@ -312,7 +311,7 @@ export default class Bridge {
         const handlers = this.$listeners[event.eventName];
         const eventData = this.$deserialize(event.eventData);
         if (handlers) {
-          handlers.forEach(fn => fn(eventData));
+          handlers.forEach((fn) => fn(eventData));
         }
       });
     }

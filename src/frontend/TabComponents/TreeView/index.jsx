@@ -25,7 +25,7 @@ const MAX_SEARCH_ROOTS = 200;
       const siblingsIds = parentId ? treeExplorerStore.nodesById[parentId].children : roots;
       const childrenIds = treeExplorerStore.nodesById[treeExplorerStore.selectedNodeId].children;
       const isBottomTag = treeExplorerStore.isBottomTagSelected;
-      const collapsed = treeExplorerStore.nodesById[treeExplorerStore.selectedNodeId].collapsed;
+      const { collapsed } = treeExplorerStore.nodesById[treeExplorerStore.selectedNodeId];
       switch (direction) {
         case 'up': {
           const sidx = siblingsIds.indexOf(treeExplorerStore.selectedNodeId);
@@ -175,7 +175,7 @@ export default class TreeView extends React.Component {
     }
 
     // Convert search text into a case-insensitive regex for match-highlighting.
-    const searchText = this.props.searchText;
+    const { searchText } = this.props;
     const searchRegExp = SearchUtils.isValidRegex(searchText)
       ? SearchUtils.searchTextToRegExp(searchText)
       : null;
@@ -187,7 +187,7 @@ export default class TreeView extends React.Component {
             <div className={css(styles.scrollContents)}>
               {this.props.roots
                 .slice(0, MAX_SEARCH_ROOTS)
-                .map(id => <Node depth={0} id={id} key={id} searchRegExp={searchRegExp} />)}
+                .map((id) => <Node depth={0} id={id} key={id} searchRegExp={searchRegExp} />)}
               <span>Some results not shown. Narrow your search criteria to find them</span>
             </div>
           </div>
@@ -199,7 +199,7 @@ export default class TreeView extends React.Component {
       <div className={css(styles.container)}>
         <div ref={(n) => { this.node = n; }} className={css(styles.scroll)}>
           <div className={css(styles.scrollContents)}>
-            {this.props.roots.map(id => (
+            {this.props.roots.map((id) => (
               <Node depth={0} id={id} key={id} searchRegExp={searchRegExp} />
             ))}
           </div>

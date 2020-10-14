@@ -4,7 +4,7 @@ import { css, StyleSheet } from 'aphrodite';
 import PreviewValue from '../PreviewValue';
 import { symbols } from '../../Bridge';
 
-const truncate = str => (str.length > 40 ? `${str.slice(0, 40)}…` : str);
+const truncate = (str) => (str.length > 40 ? `${str.slice(0, 40)}…` : str);
 
 export default class DataItem extends React.Component {
   static propTypes = {
@@ -63,20 +63,20 @@ export default class DataItem extends React.Component {
   };
 
   isSimple() {
-    const value = this.value;
+    const { value } = this;
     const otype = typeof value;
     return (
-      value instanceof Date ||
-      otype === 'number' ||
-      otype === 'string' ||
-      value === null ||
-      value === undefined ||
-      otype === 'boolean'
+      value instanceof Date
+      || otype === 'number'
+      || otype === 'string'
+      || value === null
+      || value === undefined
+      || otype === 'boolean'
     );
   }
 
   isDeptreeNode() {
-    const value = this.value;
+    const { value } = this;
     return value && value[symbols.type] === 'deptreeNode';
   }
 
@@ -113,7 +113,7 @@ export default class DataItem extends React.Component {
   }
 
   render() {
-    const value = this.value;
+    const { value } = this;
     const complex = !this.isSimple();
 
     return (
@@ -124,7 +124,8 @@ export default class DataItem extends React.Component {
             className={css([styles.name, complex && styles.nameComplex])}
             onClick={this.toggleOpen}
           >
-            {truncate(this.props.name)}:
+            {truncate(this.props.name)}
+            :
           </div>
           <div onContextMenu={this.handleContextMenu} className={css(styles.preview)}>
             <PreviewValue
@@ -135,8 +136,8 @@ export default class DataItem extends React.Component {
             />
           </div>
         </div>
-        {complex &&
-          this.state.open && (
+        {complex
+          && this.state.open && (
             <div className={css(styles.children)}>
               <this.props.ChildDataView
                 value={value}
@@ -150,7 +151,7 @@ export default class DataItem extends React.Component {
                 ChildDataItem={this.props.ChildDataItem}
               />
             </div>
-          )}
+        )}
       </li>
     );
   }
