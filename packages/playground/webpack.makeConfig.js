@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackDevServer = require('webpack-dev-server');
 
 exports.makeConfig = ({
-  pages = ['amsterdam', 'baltimore', 'baltimore-hooks', 'casablanca', 'denmark'],
+  pages = ['amsterdam', 'baltimore', 'baltimore-hooks', 'casablanca', 'denmark', 'todo-6'],
   plainDevtool = false,
 }) => ({
   devtool: 'eval',
