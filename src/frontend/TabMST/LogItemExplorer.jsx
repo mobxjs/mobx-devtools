@@ -93,15 +93,18 @@ export default class LogItemExplorer extends React.PureComponent {
         }
         {this.props.logItem.patches && !this.props.initial && (
           <div className={css(styles.patches)}>
-            {this.props.logItem.patches.map((patch) => {
+            {this.props.logItem.patches.map((patch, index) => {
+              const key = `${patch.path}-${index}`;
               const path = patch.path.replace(/^\//, '').replace(/\//g, '.');
               switch (patch.op) {
                 case 'remove':
                   return (
-                    <div>{path} <span className={css(styles.removedLabel)}>Removed</span></div>
+                    <div key={key}>
+                      {path} <span className={css(styles.removedLabel)}>Removed</span>
+                    </div>
                   );
                 default: return (
-                  <div>{path} = <PreviewValue data={patch.value} /></div>
+                  <div key={key}>{path} = <PreviewValue data={patch.value} /></div>
                 );
               }
             })}

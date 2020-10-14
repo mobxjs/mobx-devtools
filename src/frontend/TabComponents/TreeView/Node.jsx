@@ -208,8 +208,8 @@ class _Node extends React.Component {
         <span className={css(styles.bracket)}>&gt;</span>
         {selected &&
           ((collapsed && !this.props.isBottomTagSelected) || this.props.isBottomTagSelected) && (
-          <span className={css(styles.tmpValueName)}> == $m</span>
-        )}
+            <span className={css(styles.tmpValueName)}> == $m</span>
+          )}
       </span>
     );
 
@@ -250,8 +250,8 @@ class _Node extends React.Component {
           {selected &&
             !collapsed &&
             !this.props.isBottomTagSelected && (
-            <span className={css(styles.tmpValueName)}> == $m</span>
-          )}
+              <span className={css(styles.tmpValueName)}> == $m</span>
+            )}
         </span>
         {collapsed && <span>…</span>}
         {collapsed && closeTag}
