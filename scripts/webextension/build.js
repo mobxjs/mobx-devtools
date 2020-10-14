@@ -13,7 +13,7 @@ webpack(config, (err, stats) => {
   // console.log(stats)
   if (err) throw err;
   if (stats.hasErrors()) {
-    const errors = stats.toJson().errors.map((m) => new Error(m));
+    const errors = stats.toJson().errors.map(m => new Error(m));
     // eslint-disable-next-line no-console
     console.error(...errors);
     throw errors[0];

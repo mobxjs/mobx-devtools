@@ -20,7 +20,7 @@ export default class Player extends React.Component {
 
   handleDraggableStart = () => {};
 
-  handleDraggableMove = (x) => {
+  handleDraggableMove = x => {
     const rect = this.seekBar.getBoundingClientRect();
     const percent = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
     const targetIndex = Math.round((this.props.length - 1) * percent);
@@ -55,7 +55,7 @@ export default class Player extends React.Component {
           <IconRight />
         </span>
         <span
-          ref={(el) => {
+          ref={el => {
             this.seekBar = el;
           }}
           className={css(styles.seekBar, disabled && styles.seekBarDisabled)}

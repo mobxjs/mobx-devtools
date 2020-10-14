@@ -8,7 +8,7 @@ import { render } from 'react-dom';
 
 const store = observable({ count: 0 });
 
-const App = observer((props) => <div>{props.children}</div>);
+const App = observer(props => <div>{props.children}</div>);
 
 App.propTypes = {
   children: PropTypes.node,

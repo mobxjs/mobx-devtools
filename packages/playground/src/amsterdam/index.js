@@ -29,7 +29,7 @@ const myClass = new MyClass();
 
 reaction(
   () => myClass.count2,
-  (c) => {
+  c => {
     myClass.count = c;
   },
   { name: 'My reaction' },
@@ -37,7 +37,7 @@ reaction(
 
 reaction(
   () => myClass.count3,
-  (c) => {
+  c => {
     myClass.count2 = c;
   },
 );

@@ -6,7 +6,7 @@ import debugConnection from '../../utils/debugConnection';
 let onDisconnect;
 
 const whenTabLoaded = (tabId, cb) => {
-  chrome.tabs.get(tabId, (tab) => {
+  chrome.tabs.get(tabId, tab => {
     if (tab.status !== 'loading') {
       cb();
       return;
@@ -46,7 +46,7 @@ const inject = (contentTabId, done) =>
 
       const wall = {
         listen(fn) {
-          port.onMessage.addListener((message) => {
+          port.onMessage.addListener(message => {
             debugConnection('[background -> FRONTEND]', message);
             fn(message);
           });
@@ -65,12 +65,12 @@ chrome.runtime.getBackgroundPage(({ contentTabId }) =>
   initFrontend({
     node: document.getElementById('container'),
     debugName: 'Window UI',
-    reloadSubscribe: (reloadFn) => {
+    reloadSubscribe: reloadFn => {
       onDisconnect = () => reloadFn();
       return () => {
         onDisconnect = undefined;
       };
     },
-    inject: (done) => inject(contentTabId, done),
+    inject: done => inject(contentTabId, done),
   }),
 );

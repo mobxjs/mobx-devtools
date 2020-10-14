@@ -24,19 +24,19 @@ export default (bridge, hook) => {
 
   backends.forEach(({ dispose }) => disposables.push(dispose));
 
-  Object.keys(hook.collections).forEach((mobxid) => {
+  Object.keys(hook.collections).forEach(mobxid => {
     backends.forEach(({ setup }) => setup(mobxid, hook.collections[mobxid]));
   });
 
   disposables.push(
     bridge.sub('backend:ping', () => bridge.send('frontend:pong')),
-    hook.sub('instances-injected', (mobxid) => {
-      backends.forEach((p) => p.setup(mobxid, hook.collections[mobxid]));
+    hook.sub('instances-injected', mobxid => {
+      backends.forEach(p => p.setup(mobxid, hook.collections[mobxid]));
     }),
   );
 
   return function dispose() {
-    disposables.forEach((fn) => {
+    disposables.forEach(fn => {
       fn();
     });
   };

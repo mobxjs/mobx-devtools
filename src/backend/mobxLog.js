@@ -3,7 +3,7 @@ import consoleLogChange from './utils/consoleLogChange';
 import makeInspector from './utils/inspector';
 import storaTempValueInGlobalScope from './utils/storaTempValueInGlobalScope';
 
-const summary = (change) => {
+const summary = change => {
   const sum = Object.create(null);
   sum.summary = true;
   sum.id = change.id;
@@ -20,7 +20,7 @@ const summary = (change) => {
   return sum;
 };
 
-export default (bridge) => {
+export default bridge => {
   let logEnabled = false;
   let consoleLogEnabled = false;
   const logFilter = undefined;
@@ -31,7 +31,7 @@ export default (bridge) => {
     bridge.send('inspect-change-result', { changeId: inspectedObject.id, path, data });
   });
 
-  const changesProcessor = makeChangesProcessor((change) => {
+  const changesProcessor = makeChangesProcessor(change => {
     if (logFilter) {
       try {
         const accept = logFilter(change);
@@ -52,22 +52,22 @@ export default (bridge) => {
   });
 
   const disposables = [
-    bridge.sub('set-log-enabled', (value) => {
+    bridge.sub('set-log-enabled', value => {
       logEnabled = value;
       bridge.send('log-enabled', value);
       if (!logEnabled && !consoleLogEnabled) changesProcessor.reset();
     }),
-    bridge.sub('set-console-log-enabled', (value) => {
+    bridge.sub('set-console-log-enabled', value => {
       consoleLogEnabled = value;
       bridge.send('console-log-enabled', value);
       if (!logEnabled && !consoleLogEnabled) changesProcessor.reset();
     }),
-    bridge.sub('get-log-item-details', (id) => {
+    bridge.sub('get-log-item-details', id => {
       bridge.send('log-item-details', itemsById[id]);
       return itemsById[id];
     }),
-    bridge.sub('remove-log-items', (ids) => {
-      ids.forEach((id) => {
+    bridge.sub('remove-log-items', ids => {
+      ids.forEach(id => {
         delete itemsById[id];
       });
     }),
@@ -96,7 +96,7 @@ export default (bridge) => {
     setup(mobxid, collection) {
       if (collection.mobx) {
         disposables.push(
-          collection.mobx.spy((change) => {
+          collection.mobx.spy(change => {
             if (logEnabled || consoleLogEnabled) {
               changesProcessor.push(change, collection.mobx);
             }
@@ -105,7 +105,7 @@ export default (bridge) => {
       }
     },
     dispose() {
-      disposables.forEach((fn) => fn());
+      disposables.forEach(fn => fn());
     },
   };
 };

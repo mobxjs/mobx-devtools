@@ -100,7 +100,7 @@ export default class TreeView extends React.Component {
 
   node = undefined;
 
-  handleKeyDown = (e) => {
+  handleKeyDown = e => {
     switch (e.keyCode) {
       case 38: {
         // up arrow
@@ -184,13 +184,13 @@ export default class TreeView extends React.Component {
       return (
         <div className={css(styles.container)}>
           <div
-            ref={(n) => {
+            ref={n => {
               this.node = n;
             }}
             className={css(styles.scroll)}
           >
             <div className={css(styles.scrollContents)}>
-              {this.props.roots.slice(0, MAX_SEARCH_ROOTS).map((id) => (
+              {this.props.roots.slice(0, MAX_SEARCH_ROOTS).map(id => (
                 <Node depth={0} id={id} key={id} searchRegExp={searchRegExp} />
               ))}
               <span>Some results not shown. Narrow your search criteria to find them</span>
@@ -203,13 +203,13 @@ export default class TreeView extends React.Component {
     return (
       <div className={css(styles.container)}>
         <div
-          ref={(n) => {
+          ref={n => {
             this.node = n;
           }}
           className={css(styles.scroll)}
         >
           <div className={css(styles.scrollContents)}>
-            {this.props.roots.map((id) => (
+            {this.props.roots.map(id => (
               <Node depth={0} id={id} key={id} searchRegExp={searchRegExp} />
             ))}
           </div>

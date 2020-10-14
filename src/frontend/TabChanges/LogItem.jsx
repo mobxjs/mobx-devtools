@@ -8,7 +8,7 @@ import injectStores from '../../utils/injectStores';
 import Popover from '../Popover';
 import ChangeDataViewerPopover from './ChangeDataViewerPopover';
 
-const getColor = (type) => {
+const getColor = type => {
   switch (type) {
     case 'action':
       return '#0486e2';
@@ -245,7 +245,7 @@ export default class LogItem extends React.Component {
     const openable = this.props.change.hasChildren || (this.props.change.children || []).length > 0;
     return (
       <div
-        ref={(el) => {
+        ref={el => {
           this.el = el;
         }}
         className={css(styles.container, open && styles.containerOpen)}

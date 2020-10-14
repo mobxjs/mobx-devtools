@@ -108,7 +108,7 @@ exports.makeConfig = ({
       template: path.join(__dirname, 'page.html'),
     }),
     ...pages.map(
-      (entry) =>
+      entry =>
         new HtmlWebpackPlugin({
           title: entry,
           chunks: [entry],
@@ -128,7 +128,7 @@ exports.makeConfig = ({
   },
 });
 
-exports.startDevServer = (options) =>
+exports.startDevServer = options =>
   new Promise((resolve, reject) => {
     const webpackConfig = exports.makeConfig(options);
     const compiler = webpack(webpackConfig);

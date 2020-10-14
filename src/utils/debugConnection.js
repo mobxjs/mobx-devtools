@@ -1,4 +1,4 @@
-const clean = (data) => {
+const clean = data => {
   if (!data) return [];
   if (!data.eventName) {
     if (data.data) return clean(data.data);
@@ -9,7 +9,7 @@ const clean = (data) => {
   return [data.eventName || data];
 };
 
-const stringify = (data) => {
+const stringify = data => {
   try {
     return JSON.stringify(data);
   } catch (e) {

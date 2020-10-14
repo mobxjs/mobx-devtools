@@ -74,7 +74,7 @@ export default class LogItemExplorer extends React.PureComponent {
     return (
       <div
         className={css(styles.logExplorer)}
-        ref={(el) => {
+        ref={el => {
           this.containerEl = el;
         }}
         style={{ padding, height: this.state.logExplorerHeight - padding * 2 }}
@@ -90,7 +90,7 @@ export default class LogItemExplorer extends React.PureComponent {
         )}
         {this.props.logItem.patches && !this.props.initial && (
           <div className={css(styles.patches)}>
-            {this.props.logItem.patches.map((patch) => {
+            {this.props.logItem.patches.map(patch => {
               const path = patch.path.replace(/^\//, '').replace(/\//g, '.');
               switch (patch.op) {
                 case 'remove':

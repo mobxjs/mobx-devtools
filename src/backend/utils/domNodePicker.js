@@ -1,7 +1,7 @@
 import { hightlight, stopHighlightingAll } from './highlight';
 
 export default (collections, done) => {
-  const find = (target) => {
+  const find = target => {
     let node = target;
     while (node) {
       for (const mobxid in collections) {
@@ -17,14 +17,14 @@ export default (collections, done) => {
     return undefined;
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = e => {
     stopHighlightingAll();
     if (find(e.target)) {
       hightlight(e.target, { borderColor: 'lightBlue' });
     }
   };
 
-  const handleClick = (e) => {
+  const handleClick = e => {
     const found = find(e.target);
     if (found) {
       e.stopPropagation();

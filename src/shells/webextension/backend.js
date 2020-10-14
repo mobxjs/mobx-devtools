@@ -15,7 +15,7 @@ function handshake(hook, contentScriptId) {
 
   const bridge = new Bridge({
     listen(fn) {
-      const listener = (evt) => {
+      const listener = evt => {
         if (
           evt.data.source === 'mobx-devtools-content-script' &&
           evt.data.contentScriptId === contentScriptId &&
@@ -46,7 +46,7 @@ function handshake(hook, contentScriptId) {
 
   bridge.once('disconnect', () => {
     debugConnection('[contentScript -x BACKEND]');
-    listeners.forEach((listener) => window.removeEventListener('message', listener));
+    listeners.forEach(listener => window.removeEventListener('message', listener));
     listeners = [];
     disposeBackend();
   });
@@ -83,7 +83,7 @@ function waitForPing() {
         '*',
       );
 
-      const helloListener = (e) => {
+      const helloListener = e => {
         if (
           e.data.source === 'mobx-devtools-content-script' &&
           e.data.payload === 'backend:hello' &&
@@ -98,7 +98,7 @@ function waitForPing() {
         }
       };
 
-      const failListener = (e) => {
+      const failListener = e => {
         if (
           e.data.source === 'mobx-devtools-content-script' &&
           e.data.payload === 'backend:connection-failed' &&

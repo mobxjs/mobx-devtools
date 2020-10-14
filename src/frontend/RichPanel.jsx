@@ -68,10 +68,10 @@ export default class RichPanel extends React.Component {
       props.mstFound && 'mst',
       'changes',
       props.mobxReactFound && 'performance',
-    ].filter((t) => t);
+    ].filter(t => t);
   }
 
-  handleTabChage = (tab) => {
+  handleTabChage = tab => {
     this.setState({ activeTab: tab, preferredTab: tab });
     preferences.set({ lastTab: tab });
   };

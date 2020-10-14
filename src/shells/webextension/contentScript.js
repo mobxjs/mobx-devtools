@@ -14,7 +14,7 @@ const contentScriptId = Math.random().toString(32).slice(2);
 // proxy from main page to devtools (via the background page)
 const port = chrome.runtime.connect({ name: 'content-script' });
 
-const handshake = (backendId) => {
+const handshake = backendId => {
   function sendMessageToBackend(payload) {
     debugConnection('[backgrond -> CONTENTSCRIPT -> backend]', payload);
     window.postMessage(

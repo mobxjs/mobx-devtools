@@ -70,7 +70,7 @@ module.exports = async ({ initialUrl, openDevtool = true }) => {
       5000,
       "Devtools wasn't open",
     );
-    devtoolWindowHandle = (await driver.getAllWindowHandles()).find((h) => h !== mainWindowHandle);
+    devtoolWindowHandle = (await driver.getAllWindowHandles()).find(h => h !== mainWindowHandle);
 
     await driver.switchTo().window(devtoolWindowHandle);
   }

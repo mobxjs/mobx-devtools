@@ -24,7 +24,7 @@ class TodoStore {
   }
 
   get completedTodos() {
-    return this.todos.filter((t) => t.done);
+    return this.todos.filter(t => t.done);
   }
 
   addTodo(title) {
@@ -44,7 +44,7 @@ const TodoComponent = observer(({ id, title }) => (
 ));
 
 const TodoAppComponent = observer(() => {
-  const handleInputKeydown = useCallback((e) => {
+  const handleInputKeydown = useCallback(e => {
     if (e.keyCode === 13) {
       storeInstance.addTodo(e.target.value);
       e.target.value = '';
@@ -53,7 +53,7 @@ const TodoAppComponent = observer(() => {
 
   return (
     <div>
-      {storeInstance.todos.map((t) => (
+      {storeInstance.todos.map(t => (
         <TodoComponent key={t.id} {...t} />
       ))}
       <input type="test" onKeyDown={handleInputKeydown} />

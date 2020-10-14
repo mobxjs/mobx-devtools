@@ -1,6 +1,6 @@
 import { symbols } from '../../Bridge';
 
-export default (value) => {
+export default value => {
   if (!value) {
     return;
   }

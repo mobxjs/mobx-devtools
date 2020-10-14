@@ -14,11 +14,11 @@ export default class Props extends React.PureComponent {
       return <span />;
     }
 
-    const names = Object.keys(props).filter((name) => name !== 'children');
+    const names = Object.keys(props).filter(name => name !== 'children');
 
     const items = [];
 
-    names.slice(0, 3).forEach((name) => {
+    names.slice(0, 3).forEach(name => {
       items.push(
         <span key={`prop-${name}`} className={css(styles.prop)}>
           <span className={css(styles.attributeName)}>{name}</span>

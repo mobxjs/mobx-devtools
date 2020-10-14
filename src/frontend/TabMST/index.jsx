@@ -70,7 +70,7 @@ export default class TabMST extends React.PureComponent {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  handleKeyDown = (e) => {
+  handleKeyDown = e => {
     switch (e.keyCode) {
       case 37:
       case 38: {
@@ -108,7 +108,7 @@ export default class TabMST extends React.PureComponent {
       return <div className={css(styles.emptyState)}>No roots</div>;
     }
 
-    const tabs = this.props.rootsIds.map((id) => ({
+    const tabs = this.props.rootsIds.map(id => ({
       id,
       title: this.props.rootNamesById[id] || String(id),
     }));
@@ -117,7 +117,7 @@ export default class TabMST extends React.PureComponent {
     return (
       <div
         className={css(styles.tabmst)}
-        ref={(el) => {
+        ref={el => {
           this.containerEl = el;
         }}
       >

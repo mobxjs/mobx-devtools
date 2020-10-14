@@ -1,6 +1,6 @@
 import { symbols } from '../Bridge';
 
-const deduplicateDependencies = (depTree) => {
+const deduplicateDependencies = depTree => {
   if (!depTree.dependencies) return;
 
   for (let i = depTree.dependencies.length - 1; i >= 0; i -= 1) {
@@ -19,17 +19,17 @@ const deduplicateDependencies = (depTree) => {
   depTree.dependencies.forEach(deduplicateDependencies);
 };
 
-const unique = (list) => {
+const unique = list => {
   const seen = new Set();
-  return list.filter((item) => {
+  return list.filter(item => {
     if (seen.has(item)) return false;
     seen.add(item);
     return true;
   });
 };
 
-const getDepsTree = (node) => ({
-  dependencies: node.observing ? unique(node.observing).map((n) => getDepsTree(n)) : [],
+const getDepsTree = node => ({
+  dependencies: node.observing ? unique(node.observing).map(n => getDepsTree(n)) : [],
   node,
   constructorName: node.constructor.name,
   [symbols.name]: node.name,

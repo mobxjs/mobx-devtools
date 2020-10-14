@@ -89,9 +89,9 @@ export default class Log extends React.Component {
     return (
       <div style={style} key={id}>
         <LogItem
-          getValueByPath={(path) => this.props.getValueByPath(change.id, path)}
-          inspect={(path) => this.props.inspect(change.id, path)}
-          stopInspecting={(path) => this.props.stopInspecting(change.id, path)}
+          getValueByPath={path => this.props.getValueByPath(change.id, path)}
+          inspect={path => this.props.inspect(change.id, path)}
+          stopInspecting={path => this.props.stopInspecting(change.id, path)}
           showMenu={(e, _val, path) => this.props.showMenu(e, change.id, path)}
           change={change}
           onHeightUpdate={() => this.list && this.list.recomputeRowHeights(index)}
@@ -107,12 +107,12 @@ export default class Log extends React.Component {
     return (
       <div
         className={css(styles.container)}
-        ref={(el) => {
+        ref={el => {
           this.containerEl = el;
         }}
       >
         <List
-          ref={(list) => {
+          ref={list => {
             this.list = list;
           }}
           onScroll={this.handleScroll}

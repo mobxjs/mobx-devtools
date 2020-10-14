@@ -51,13 +51,13 @@ class PreviewSimpleValue extends React.PureComponent {
     }
   }
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       text: e.target.value,
     });
   };
 
-  handleKeyDown = (e) => {
+  handleKeyDown = e => {
     if (e.key === 'Enter') {
       this.submit(true);
       this.setState({
@@ -122,7 +122,7 @@ class PreviewSimpleValue extends React.PureComponent {
       return (
         <input
           autoFocus
-          ref={(i) => {
+          ref={i => {
             this.input = i;
           }}
           className={css(styles.input)}

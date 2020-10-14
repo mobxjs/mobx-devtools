@@ -22,15 +22,15 @@ const TodoStore = types
   .model('TodoStore', {
     todos: types.array(Todo),
   })
-  .views((self) => ({
+  .views(self => ({
     get completedTodos() {
-      return self.todos.filter((t) => t.done);
+      return self.todos.filter(t => t.done);
     },
     findTodosByUser(user) {
-      return self.todos.filter((t) => t.assignee === user);
+      return self.todos.filter(t => t.assignee === user);
     },
   }))
-  .actions((self) => ({
+  .actions(self => ({
     addTodo(title) {
       self.todos.push({
         id: getId(),
@@ -57,7 +57,7 @@ class TodoComponent extends React.Component {
 
 @observer
 class TodoAppComponent extends React.Component {
-  handleInputKeydown = (e) => {
+  handleInputKeydown = e => {
     if (e.keyCode === 13) {
       storeInstance.addTodo(e.target.value);
       e.target.value = '';
@@ -69,7 +69,7 @@ class TodoAppComponent extends React.Component {
   render() {
     return (
       <div>
-        {storeInstance.todos.map((t) => (
+        {storeInstance.todos.map(t => (
           <TodoComponent key={t.id} {...t} />
         ))}
         <input type="test" onKeyDown={this.handleInputKeydown} />

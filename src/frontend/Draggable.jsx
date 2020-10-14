@@ -11,12 +11,12 @@ export default class Draggable extends React.Component {
     children: PropTypes.node,
   };
 
-  onMove = (evt) => {
+  onMove = evt => {
     evt.preventDefault();
     this.props.onMove(evt.pageX, evt.pageY);
   };
 
-  onUp = (evt) => {
+  onUp = evt => {
     evt.preventDefault();
     const doc = this.el.ownerDocument;
     doc.removeEventListener('mousemove', this.onMove);
@@ -24,7 +24,7 @@ export default class Draggable extends React.Component {
     this.props.onStop();
   };
 
-  startDragging = (evt) => {
+  startDragging = evt => {
     evt.preventDefault();
     const doc = this.el.ownerDocument;
     doc.addEventListener('mousemove', this.onMove);
@@ -35,7 +35,7 @@ export default class Draggable extends React.Component {
   render() {
     return (
       <div
-        ref={(el) => {
+        ref={el => {
           this.el = el;
         }}
         style={this.props.style}

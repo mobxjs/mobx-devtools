@@ -60,7 +60,7 @@ export default class ContextMenu extends React.Component {
     window.removeEventListener('click', this.handleClickOutside, true);
   }
 
-  handleClickOutside = (e) => {
+  handleClickOutside = e => {
     if (this.el && this.el.contains(e.target)) return;
     this.props.contextMenu.close();
     this.unsubscribeClickOutside();
@@ -74,12 +74,12 @@ export default class ContextMenu extends React.Component {
       <div
         className={css(styles.container)}
         style={{ left: Math.min(contextMenu.x, window.innerWidth - MIN_WIDTH), top: contextMenu.y }}
-        ref={(el) => {
+        ref={el => {
           this.el = el;
         }}
       >
         {contextMenu.items.map(
-          (item) =>
+          item =>
             item && (
               <div className={css(styles.item)} key={item.key} onClick={item.action}>
                 {item.title}

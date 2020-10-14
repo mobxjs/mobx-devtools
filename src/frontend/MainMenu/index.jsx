@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { css, StyleSheet } from 'aphrodite';
 import Tab from './MainMenuTab';
 
-const getTitle = (type) => {
+const getTitle = type => {
   switch (type) {
     case 'components':
       return 'Components';
@@ -28,7 +28,7 @@ MainMenu.propTypes = {
 export default function MainMenu({ availableTabs, activeTab, onTabChange, processingTabs }) {
   return (
     <div className={css(styles.container)} data-test="MainMenu">
-      {availableTabs.map((type) => (
+      {availableTabs.map(type => (
         <Tab
           key={type}
           type={type}

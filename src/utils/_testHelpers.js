@@ -1,6 +1,6 @@
 const { jsdom } = require('jsdom/lib/old-api.js');
 
-exports.jsdomHelper = (html) => {
+exports.jsdomHelper = html => {
   if (typeof document !== 'undefined') {
     return;
   }

@@ -8,7 +8,7 @@ function createPanelIfMobxLoaded() {
   }
   chrome.devtools.inspectedWindow.eval(
     '!!(Object.keys(window.__MOBX_DEVTOOLS_GLOBAL_HOOK__.collections).length)',
-    (pageHasMobx) => {
+    pageHasMobx => {
       if (!pageHasMobx || panelCreated) {
         return;
       }

@@ -20,14 +20,14 @@ const Node =
         hovered: treeExplorerStore.hoveredNodeId === props.id,
         searchRegExp: props.searchRegExp,
         scrollTo: () => {},
-        onToggleCollapse: (e) => {
+        onToggleCollapse: e => {
           e.preventDefault();
           treeExplorerStore.updateNode({ ...node, collapsed: !node.collapsed });
         },
-        onHover: (isHovered) => {
+        onHover: isHovered => {
           treeExplorerStore.setHover(props.id, isHovered, false);
         },
-        onHoverBottom: (isHovered) => {
+        onHoverBottom: isHovered => {
           treeExplorerStore.setHover(props.id, isHovered, true);
         },
         onSelect: () => {
@@ -36,7 +36,7 @@ const Node =
         onSelectBottom: () => {
           treeExplorerStore.selectBottom(props.id);
         },
-        onContextMenu: (e) => {
+        onContextMenu: e => {
           e.preventDefault();
           treeExplorerStore.showContextMenu('tree', e, props.id, node);
         },
@@ -182,7 +182,7 @@ const Node =
           <div className={css(styles.container)}>
             <Head
               // eslint-disable-next-line react/jsx-no-bind
-              getRef={(h) => {
+              getRef={h => {
                 this.$head = h;
               }}
               depth={depth}
@@ -245,7 +245,7 @@ const Node =
       const head = (
         <Head
           // eslint-disable-next-line react/jsx-no-bind
-          getRef={(h) => {
+          getRef={h => {
             this.$head = h;
           }}
           depth={depth}
@@ -283,13 +283,13 @@ const Node =
             selected={selected && !isBottomTagSelected}
           />
           <div>
-            {children.map((id) => (
+            {children.map(id => (
               <Node key={id} depth={depth + 1} id={id} />
             ))}
           </div>
           <Tail
             // eslint-disable-next-line react/jsx-no-bind
-            getRef={(t) => {
+            getRef={t => {
               this.$tail = t;
             }}
             {...tailEvents}
@@ -375,7 +375,7 @@ function Guideline({ depth, hovered, selected }) {
   );
 }
 
-const calcPaddingLeft = (depth) => 5 + (depth + 1) * 10;
+const calcPaddingLeft = depth => 5 + (depth + 1) * 10;
 
 const styles = StyleSheet.create({
   container: {

@@ -13,13 +13,13 @@ module.exports = function startServer({ port, onConnect, onError, onDisconnect, 
   const httpServer = require('http').createServer();
   const server = new ws.Server({ server: httpServer });
   let connected = false;
-  server.on('connection', (socket) => {
+  server.on('connection', socket => {
     if (connected) {
       connected.close();
       log.warn('Only one connection allowed at a time.', 'Closing the previous connection');
     }
     connected = socket;
-    socket.onerror = (err) => {
+    socket.onerror = err => {
       connected = false;
       onDisconnect();
       log.error('Error with websocket connection', err);
@@ -32,7 +32,7 @@ module.exports = function startServer({ port, onConnect, onError, onDisconnect, 
     onConnect(socket);
   });
 
-  server.on('error', (e) => {
+  server.on('error', e => {
     onError(e);
     log.error('Failed to start the DevTools server', e);
     restartTimeout = setTimeout(() => startServer(port), 1000);
@@ -43,7 +43,7 @@ module.exports = function startServer({ port, onConnect, onError, onDisconnect, 
     res.end(`${backendFile}\n;mobxDevtoolsBackend.connectToDevTools({});`);
   });
 
-  httpServer.on('error', (e) => {
+  httpServer.on('error', e => {
     onError(e);
     restartTimeout = setTimeout(() => startServer(port), 1000);
   });

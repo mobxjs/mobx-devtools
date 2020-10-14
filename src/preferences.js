@@ -6,7 +6,7 @@ const getLSSettings = () => {
     return {};
   }
 };
-const setLSSettings = (settings) => {
+const setLSSettings = settings => {
   window.localStorage.setItem(LS_KEY, JSON.stringify({ ...getLSSettings(), ...settings }));
 };
 
@@ -18,7 +18,7 @@ export default {
       // eslint-disable-next-line no-console
       console.warn(`[preferences] get() expected strings, given ${typeof keys[0]}`);
     }
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       if (chrome.storage) {
         chrome.storage.sync.get(keys, resolve);
       } else if (window.localStorage) {
@@ -34,7 +34,7 @@ export default {
   },
 
   set(settings) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       if (chrome.storage) {
         chrome.storage.sync.set(settings, resolve);
       } else if (window.localStorage) {
@@ -51,7 +51,7 @@ export default {
   },
 
   delete(key) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       if (chrome.storage) {
         chrome.storage.sync.remove(key, resolve);
       } else if (window.localStorage) {

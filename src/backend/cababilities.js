@@ -1,4 +1,4 @@
-export default (bridge) => {
+export default bridge => {
   let mobxFound = false;
   let mobxReactFound = false;
   let mstFound = false;
@@ -28,7 +28,7 @@ export default (bridge) => {
       sendCapabilities();
     },
     dispose() {
-      disposables.forEach((fn) => fn());
+      disposables.forEach(fn => fn());
     },
   };
 };

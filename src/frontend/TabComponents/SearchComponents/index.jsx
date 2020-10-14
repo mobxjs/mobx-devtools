@@ -8,7 +8,7 @@ import injectStores from '../../../utils/injectStores';
   },
   injectProps: ({ treeExplorerStore }) => ({
     searchText: treeExplorerStore.searchText,
-    changeSearch: (e) => treeExplorerStore.changeSearch(e.target.value),
+    changeSearch: e => treeExplorerStore.changeSearch(e.target.value),
   }),
 })
 export default class SearchComponents extends React.PureComponent {

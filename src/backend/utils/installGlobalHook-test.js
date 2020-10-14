@@ -3,8 +3,8 @@ const installGlobalHook = require('./installGlobalHook').default;
 
 describe('Global Hook', () => {
   let hook;
-  const getCollections = () => Object.keys(hook.collections).map((k) => hook.collections[k]);
-  const getCollection = (index) => getCollections()[index];
+  const getCollections = () => Object.keys(hook.collections).map(k => hook.collections[k]);
+  const getCollection = index => getCollections()[index];
 
   beforeEach(() => {
     const namespace = {};

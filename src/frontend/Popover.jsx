@@ -8,7 +8,7 @@ import theme from './theme';
 
 export const availablePlacements = ['top', 'bottom' /* , 'right' */];
 const between = (v, min, max) => Math.max(Math.min(v, max), min);
-const rectFromEl = (el) => {
+const rectFromEl = el => {
   const rect = el.getBoundingClientRect();
   return {
     bottom: rect.bottom,
@@ -23,7 +23,7 @@ const ARROW_SIZE = 6;
 // const MIN_WIDTH = 250;
 const GUTTER = 20;
 
-const popoverStyleForPlacement = (placement) => {
+const popoverStyleForPlacement = placement => {
   switch (placement) {
     case 'top':
       return styles.popoverTop;
@@ -36,7 +36,7 @@ const popoverStyleForPlacement = (placement) => {
   }
 };
 
-const arrowStyleForPlacement = (placement) => {
+const arrowStyleForPlacement = placement => {
   switch (placement) {
     case 'top':
       return styles.arrowTop;
@@ -177,7 +177,7 @@ class PopoverBubble extends Component {
     }
     this.$previousTriggerRect = triggerRect;
     this.$previousSelfRect = selfRect;
-    const placements = [placement, ...availablePlacements.filter((p) => p !== placement)];
+    const placements = [placement, ...availablePlacements.filter(p => p !== placement)];
     this.setState(this.calculate(placements, selfRect, triggerRect));
   };
 
@@ -202,7 +202,7 @@ class PopoverBubble extends Component {
             maxWidth,
             maxHeight,
           }}
-          ref={(el) => {
+          ref={el => {
             this.el = el;
           }}
           onMouseEnter={onMouseEnter}
@@ -285,12 +285,12 @@ export default class PopoverTrigger extends Component {
 
   popup = undefined;
 
-  handleMouseEnter = (e) => {
+  handleMouseEnter = e => {
     if (this.props.children.props.onMouseEnter) this.props.children.props.onMouseEnter(e);
     this.setState({ hovered: true });
   };
 
-  handleMouseLeave = (e) => {
+  handleMouseLeave = e => {
     if (this.props.children.props.onMouseLeave) this.props.children.props.onMouseLeave(e);
     this.setState({ hovered: false });
   };
@@ -303,7 +303,7 @@ export default class PopoverTrigger extends Component {
     this.setState({ bubbleHovered: false });
   };
 
-  handleClick = (e) => {
+  handleClick = e => {
     if (this.props.children.props.onClick) this.props.children.props.onClick(e);
     if (this.props.requireClick) {
       e.stopPropagation();
@@ -315,9 +315,9 @@ export default class PopoverTrigger extends Component {
     }
   };
 
-  handleFinishInteractionAnywhere = (e) => {
+  handleFinishInteractionAnywhere = e => {
     const clickInsideTrigger = this.triggerEl && this.triggerEl.contains(e.target);
-    const clickInsideHtmlPortal = activeHtmlPortals.find((p) => p.contains(e.target)) !== undefined;
+    const clickInsideHtmlPortal = activeHtmlPortals.find(p => p.contains(e.target)) !== undefined;
     if (clickInsideTrigger === false && clickInsideHtmlPortal === false) {
       document.removeEventListener('touchstart', this.handleFinishInteractionAnywhere, true);
       document.removeEventListener('click', this.handleFinishInteractionAnywhere, true);
@@ -339,7 +339,7 @@ export default class PopoverTrigger extends Component {
       render(
         <ContextProvider stores={this.context.stores}>
           <PopoverBubble
-            ref={(el) => {
+            ref={el => {
               this.popup = el;
             }}
             placement={placement}

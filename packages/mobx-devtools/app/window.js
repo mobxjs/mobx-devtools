@@ -15,7 +15,7 @@ global.chrome = {};
 document.getElementById('localhost').value = `<script src="//localhost:${port}"></script>`;
 document.getElementById('byip').value = `<script src="//${ip.address()}:${port}"></script>`;
 
-[document.getElementById('localhost'), document.getElementById('byip')].forEach((el) => {
+[document.getElementById('localhost'), document.getElementById('byip')].forEach(el => {
   el.onclick = function onClick() {
     this.selectionStart = 0;
     this.selectionEnd = this.value.length;
@@ -29,9 +29,9 @@ startServer({
   },
   onConnect(socket) {
     const listeners = [];
-    socket.onmessage = (evt) => {
+    socket.onmessage = evt => {
       const data = JSON.parse(evt.data);
-      listeners.forEach((fn) => fn(data));
+      listeners.forEach(fn => fn(data));
     };
 
     const wall = {
@@ -46,13 +46,13 @@ startServer({
     };
     deinitFrontend = initFrontend({
       node,
-      reloadSubscribe: (reloadFn) => {
+      reloadSubscribe: reloadFn => {
         onDisconnect = () => reloadFn();
         return () => {
           onDisconnect = undefined;
         };
       },
-      inject: (done) => done(wall, () => socket.close()),
+      inject: done => done(wall, () => socket.close()),
     });
   },
   onError(e) {

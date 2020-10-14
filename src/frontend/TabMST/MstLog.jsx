@@ -111,12 +111,12 @@ export default class Log extends React.PureComponent {
     return (
       <div
         className={css(styles.logItems)}
-        ref={(el) => {
+        ref={el => {
           this.containerEl = el;
         }}
       >
         <List
-          ref={(list) => {
+          ref={list => {
             this.list = list;
           }}
           onScroll={this.handleScroll}

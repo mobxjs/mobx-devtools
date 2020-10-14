@@ -129,7 +129,7 @@ export default function installGlobalHook(window) {
       },
       emit(evt, data) {
         if (this._listeners[evt]) {
-          this._listeners[evt].map((fn) => fn(data));
+          this._listeners[evt].map(fn => fn(data));
         }
       },
     },

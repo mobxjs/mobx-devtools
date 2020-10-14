@@ -49,7 +49,7 @@ function formatValue(mobx, value) {
   return `(${getNameForThis(mobx, value)})`;
 }
 
-export default (onChange) => {
+export default onChange => {
   let path = [];
 
   const push = (_change, mobx) => {

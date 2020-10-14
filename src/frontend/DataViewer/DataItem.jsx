@@ -4,7 +4,7 @@ import { css, StyleSheet } from 'aphrodite';
 import PreviewValue from '../PreviewValue';
 import { symbols } from '../../Bridge';
 
-const truncate = (str) => (str.length > 40 ? `${str.slice(0, 40)}…` : str);
+const truncate = str => (str.length > 40 ? `${str.slice(0, 40)}…` : str);
 
 export default class DataItem extends React.Component {
   static propTypes = {
@@ -58,7 +58,7 @@ export default class DataItem extends React.Component {
     }
   };
 
-  toggleBooleanValue = (e) => {
+  toggleBooleanValue = e => {
     this.props.change(this.props.path, e.target.checked);
   };
 
@@ -80,7 +80,7 @@ export default class DataItem extends React.Component {
     return value && value[symbols.type] === 'deptreeNode';
   }
 
-  handleContextMenu = (e) => {
+  handleContextMenu = e => {
     if (typeof this.props.showMenu === 'function') {
       this.props.showMenu(e, this.value, this.props.path);
     }
