@@ -1,9 +1,13 @@
 /* eslint-disable react/jsx-no-bind */
 import React from 'react';
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, configure } from 'mobx';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { render } from 'react-dom';
+
+configure({
+  enforceActions: 'never',
+});
 
 const store = observable({ count: 0 });
 const tick = observable({ data: 0 });

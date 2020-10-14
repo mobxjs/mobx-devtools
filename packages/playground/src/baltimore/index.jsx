@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import React from 'react';
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { render } from 'react-dom';
@@ -37,12 +37,20 @@ class Counter extends React.Component {
     this.number = 5;
   }
 
+  manuallyIncrease = action('manuallyIncrease', () => {
+    store.count += 1;
+  });
+
+  manuallyDecrease = action('manuallyDecrease', () => {
+    store.count -= 1;
+  });
+
   render() {
     return (
       <div>
-        <button onClick={() => { store.count -= 1; }}>–</button>
+        <button onClick={this.manuallyDecrease}>–</button>
         {store.count}
-        <button onClick={() => { store.count += 1; }}>+</button>
+        <button onClick={this.manuallyIncrease}>+</button>
       </div>
     );
   }
