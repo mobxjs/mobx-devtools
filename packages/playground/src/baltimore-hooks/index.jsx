@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-no-bind */
 import React from 'react';
 import { observable } from 'mobx';
@@ -7,17 +8,15 @@ import { render } from 'react-dom';
 
 const store = observable({ count: 0 });
 
-const App = observer((props) => {
-  return (
-    <div>
-      {props.children}
-    </div>
-  )
-})
+const App = observer(props => (
+  <div>
+    {props.children}
+  </div>
+));
 
 App.propTypes = {
   children: PropTypes.node,
-}
+};
 
 const Counter = observer(() => {
   const map = new Map([['a', '1'], ['b', 2]]);
@@ -35,7 +34,7 @@ const Counter = observer(() => {
       {store.count}
       <button onClick={() => { store.count += 1; }}>+</button>
     </div>
-  )
-})
+  );
+});
 
 render(<App><Counter /></App>, document.querySelector('#root'));
