@@ -16,11 +16,11 @@
   "devDependencies": {
     "cross-env": "^5.1.1",
     "electron": "1.8.2-beta.2",
-    "mobx": "^5.0.2",
-    "mobx-react": "^5.2.2",
-    "mobx-state-tree": "^2.0.5",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
+    "mobx": "^6.0.1",
+    "mobx-react": "^7.0.0",
+    "mobx-state-tree": "^3.17.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.3"
   }
