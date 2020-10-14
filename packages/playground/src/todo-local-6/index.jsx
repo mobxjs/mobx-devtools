@@ -15,16 +15,11 @@ const Todo = () => {
     <Observer>
       {() => (
         <div onClick={todo.toggle}>
-          {todo.title}
-          {' '}
-          {todo.done ? '[DONE]' : '[TODO]'}
+          {todo.title} {todo.done ? '[DONE]' : '[TODO]'}
         </div>
       )}
     </Observer>
   );
 };
 
-render(
-  <Todo />,
-  document.querySelector('#root')
-);
+render(<Todo />, document.querySelector('#root'));

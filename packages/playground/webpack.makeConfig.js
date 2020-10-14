@@ -6,18 +6,27 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackDevServer = require('webpack-dev-server');
 
 exports.makeConfig = ({
-  pages = ['amsterdam', 'baltimore', 'baltimore-hooks', 'casablanca', 'denmark', 'todo-6', 'todo-local-6'],
+  pages = [
+    'amsterdam',
+    'baltimore',
+    'baltimore-hooks',
+    'casablanca',
+    'denmark',
+    'todo-6',
+    'todo-local-6',
+  ],
   plainDevtool = false,
 }) => ({
   devtool: 'eval',
   entry: pages.reduce(
-    (acc, entry) => Object.assign(acc, {
-      [entry]: [
-        ...(plainDevtool ? [path.join(rootPath, 'src/shells/plain')] : []),
-        path.join(__dirname, `src/${entry}`),
-      ],
-    }),
-    {}
+    (acc, entry) =>
+      Object.assign(acc, {
+        [entry]: [
+          ...(plainDevtool ? [path.join(rootPath, 'src/shells/plain')] : []),
+          path.join(__dirname, `src/${entry}`),
+        ],
+      }),
+    {},
   ),
   output: {
     path: path.join(__dirname, 'dist'),
@@ -98,18 +107,19 @@ exports.makeConfig = ({
       chunks: [],
       template: path.join(__dirname, 'page.html'),
     }),
-    ...pages.map((entry) => new HtmlWebpackPlugin({
-      title: entry,
-      chunks: [entry],
-      filename: `${entry}.html`,
-      template: path.join(__dirname, 'page.html'),
-    })),
+    ...pages.map(
+      (entry) =>
+        new HtmlWebpackPlugin({
+          title: entry,
+          chunks: [entry],
+          filename: `${entry}.html`,
+          template: path.join(__dirname, 'page.html'),
+        }),
+    ),
   ],
   devServer: {
     port: 8082,
-    contentBase: [
-      path.join(__dirname, 'static'),
-    ],
+    contentBase: [path.join(__dirname, 'static')],
     stats: {
       errorDetails: true,
       assets: false,
@@ -118,17 +128,17 @@ exports.makeConfig = ({
   },
 });
 
-exports.startDevServer = (options) => new Promise((resolve, reject) => {
-  const webpackConfig = exports.makeConfig(options);
-  const compiler = webpack(webpackConfig);
-  const playDevServer = new WebpackDevServer(compiler, ({
+exports.startDevServer = (options) =>
+  new Promise((resolve, reject) => {
+    const webpackConfig = exports.makeConfig(options);
+    const compiler = webpack(webpackConfig);
+    const playDevServer = new WebpackDevServer(compiler, {
+      ...webpackConfig.devServer,
+      publicPath: webpackConfig.output.publicPath,
+    });
 
-    ...webpackConfig.devServer,
-    publicPath: webpackConfig.output.publicPath,
-  }));
+    playDevServer.listen(options.port);
 
-  playDevServer.listen(options.port);
-
-  compiler.plugin('done', () => resolve(() => playDevServer.close()));
-  compiler.plugin('failed', reject);
-});
+    compiler.plugin('done', () => resolve(() => playDevServer.close()));
+    compiler.plugin('failed', reject);
+  });

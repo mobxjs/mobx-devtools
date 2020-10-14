@@ -58,7 +58,7 @@ function openWindow(contentTabId) {
         }
       }
       chrome.tabs.onRemoved.addListener(closeListener);
-    }
+    },
   );
 }
 
@@ -75,7 +75,8 @@ function handleInstallError(tabId, error) {
 }
 
 const waitTabLoad = (tabId, cb) => {
-  if (!chrome.tabs.get) { // electron doesn't support this api
+  if (!chrome.tabs.get) {
+    // electron doesn't support this api
     cb();
     return;
   }
@@ -109,14 +110,10 @@ const installContentScript = (tabId) => {
 
 function doublePipe(one, two) {
   if (!one.$i) {
-    one.$i = Math.random()
-      .toString(32)
-      .slice(2);
+    one.$i = Math.random().toString(32).slice(2);
   }
   if (!two.$i) {
-    two.$i = Math.random()
-      .toString(32)
-      .slice(2);
+    two.$i = Math.random().toString(32).slice(2);
   }
 
   debugConnection(`BACKGORUND: connect ${one.name} <-> ${two.name} [${one.$i} <-> ${two.$i}]`);
@@ -152,13 +149,15 @@ function doublePipe(one, two) {
   two.onDisconnect.addListener(shutdown);
 }
 
-if (chrome.contextMenus) { // electron doesn't support this api
+if (chrome.contextMenus) {
+  // electron doesn't support this api
   chrome.contextMenus.onClicked.addListener((_, contentWindow) => {
     openWindow(contentWindow.id);
   });
 }
 
-if (chrome.commands) { // electron doesn't support this api
+if (chrome.commands) {
+  // electron doesn't support this api
   chrome.commands.onCommand.addListener((shortcut) => {
     if (shortcut === 'open-devtools-window') {
       getActiveContentWindow((contentWindow) => {
@@ -169,7 +168,8 @@ if (chrome.commands) { // electron doesn't support this api
   });
 }
 
-if (chrome.browserAction) { // electron doesn't support this api
+if (chrome.browserAction) {
+  // electron doesn't support this api
   chrome.browserAction.onClicked.addListener((tab) => {
     window.contentTabId = tab.id;
     openWindow(tab.id);

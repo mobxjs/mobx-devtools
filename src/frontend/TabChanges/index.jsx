@@ -47,10 +47,7 @@ export default class TabChanges extends React.PureComponent {
             showTipStartRecoding={!this.props.logEnabled && this.props.logItemsIds.length === 0}
           />
           <ButtonClear onClick={this.props.clearLog} />
-          <InputSearch
-            searchText={this.props.searchText}
-            changeSearch={this.props.setSearchText}
-          />
+          <InputSearch searchText={this.props.searchText} changeSearch={this.props.setSearchText} />
         </SecondaryPanel>
         <Log />
       </div>

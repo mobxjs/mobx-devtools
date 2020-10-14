@@ -33,9 +33,7 @@ export default class MiniBarButton extends React.PureComponent {
   handleMouseOut = () => this.setState({ hovered: false });
 
   render() {
-    const {
-      active, id, onToggle, style, hotkey,
-    } = this.props;
+    const { active, id, onToggle, style, hotkey } = this.props;
     const { hovered } = this.state;
 
     const additionalStyles = (() => {
@@ -75,11 +73,10 @@ export default class MiniBarButton extends React.PureComponent {
     })();
 
     const finalSyles = {
-
       ...styles.button,
       ...additionalStyles,
-      ...active && styles.button.active,
-      ...hovered && styles.button.hover,
+      ...(active && styles.button.active),
+      ...(hovered && styles.button.hover),
       ...style,
     };
 

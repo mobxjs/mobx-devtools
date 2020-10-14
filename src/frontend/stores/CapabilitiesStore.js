@@ -14,7 +14,7 @@ export default class CapabilitiesStore extends AbstractStore {
             this.emit(key);
           }
         });
-      })
+      }),
     );
 
     bridge.send('get-capabilities');

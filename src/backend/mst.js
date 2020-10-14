@@ -3,11 +3,13 @@ import getId from '../utils/getId';
 const summary = (logItem) => {
   const sum = Object.create(null);
   const { patches } = logItem;
-  sum.patches = patches && patches.map((patch) => ({
-    op: patch.op,
-    path: patch.path,
-    value: (patch.value && typeof patch.value === 'object') ? {} : patch.value,
-  }));
+  sum.patches =
+    patches &&
+    patches.map((patch) => ({
+      op: patch.op,
+      path: patch.path,
+      value: patch.value && typeof patch.value === 'object' ? {} : patch.value,
+    }));
   sum.id = logItem.id;
   sum.rootId = logItem.rootId;
   sum.timestamp = logItem.timestamp;
@@ -92,10 +94,13 @@ export default (bridge, hook) => {
       if (val === trackingEnabled) return;
       trackingEnabled = val;
       if (val) {
-        bridge.send('frontend:mst-roots', Object.keys(rootDataById).map((id) => ({
-          id,
-          name: rootDataById[id].name,
-        })));
+        bridge.send(
+          'frontend:mst-roots',
+          Object.keys(rootDataById).map((id) => ({
+            id,
+            name: rootDataById[id].name,
+          })),
+        );
         Object.keys(rootDataById).forEach((rootId) => {
           const rootData = rootDataById[rootId];
           if (Object.keys(rootData.logItemsById).length === 0) {

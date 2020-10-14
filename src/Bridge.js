@@ -1,6 +1,7 @@
-const now = typeof window.performance === 'object' && window.performance.now
-  ? () => window.performance.now()
-  : () => Date.now();
+const now =
+  typeof window.performance === 'object' && window.performance.now
+    ? () => window.performance.now()
+    : () => Date.now();
 
 export const allowedComplexObjects = new Set();
 
@@ -151,8 +152,9 @@ const deserialize = (data, root) => {
 // If you change it, make sure it behaves reasonably well in Firefox.
 let lastRunTimeMS = 5;
 const cancelIdleCallback = window.cancelIdleCallback || clearTimeout;
-const requestIdleCallback = window.requestIdleCallback
-  || function reqIdleCallback(cb) {
+const requestIdleCallback =
+  window.requestIdleCallback ||
+  function reqIdleCallback(cb) {
     // Magic numbers determined by tweaking in Firefox.
     // There is no special meaning to them.
     let delayMS = 3000 * lastRunTimeMS;

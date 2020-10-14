@@ -19,10 +19,10 @@ export default class PropVal extends React.PureComponent {
       return;
     }
     if (
-      this.props.val
-      && prevProps.val
-      && typeof this.props.val === 'object'
-      && typeof prevProps.val === 'object'
+      this.props.val &&
+      prevProps.val &&
+      typeof this.props.val === 'object' &&
+      typeof prevProps.val === 'object'
     ) {
       return;
     }
@@ -84,8 +84,7 @@ function previewProp(val, nested) {
       return (
         <span className={css(styles.previewPropArray)}>
           Array[
-          {val[consts.meta].length}
-          ]
+          {val[consts.meta].length}]
         </span>
       );
     }
@@ -94,8 +93,7 @@ function previewProp(val, nested) {
     case 'data_view': {
       return (
         <span className={css(styles.previewPropArray)}>
-          {`${val[consts.name]}[${val[consts.meta]
-            .length}]`}
+          {`${val[consts.name]}[${val[consts.meta].length}]`}
         </span>
       );
     }
@@ -128,13 +126,7 @@ function previewArray(val) {
   } else {
     delete items[`c${val.length - 1}`];
   }
-  return (
-    <span className={css(styles.previewArray)}>
-      [
-      {createFragment(items)}
-      ]
-    </span>
-  );
+  return <span className={css(styles.previewArray)}>[{createFragment(items)}]</span>;
 }
 
 function previewObject(val) {

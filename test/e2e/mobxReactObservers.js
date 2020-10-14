@@ -18,10 +18,13 @@ describe('Components (observers) devtool', function test() {
     await driver.wait(
       async () => (await driver.findElements(componentsButtonLocator)).length > 0,
       10000,
-      'Components tab wasn\'t shown'
+      "Components tab wasn't shown",
     );
 
-    await driver.actions().click(await driver.findElement(componentsButtonLocator)).perform();
+    await driver
+      .actions()
+      .click(await driver.findElement(componentsButtonLocator))
+      .perform();
   });
 
   after(async () => {
@@ -32,7 +35,7 @@ describe('Components (observers) devtool', function test() {
   it('should load components tree', async () => {
     await driver.wait(
       async () => (await driver.findElements(componentsTreeNodeHead)).length > 0,
-      5000
+      5000,
     );
   });
 });

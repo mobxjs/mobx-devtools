@@ -50,7 +50,7 @@ export default class SplitPane extends React.Component {
             height: Math.floor(this.el.offsetHeight * 0.3),
             isVertical,
           },
-          dispatchResizeEvent
+          dispatchResizeEvent,
         );
       }
     }, 0);
@@ -75,7 +75,7 @@ export default class SplitPane extends React.Component {
       {
         isVertical: shouldUseVerticalLayout(this.el),
       },
-      dispatchResizeEvent
+      dispatchResizeEvent,
     );
   };
 
@@ -103,7 +103,7 @@ export default class SplitPane extends React.Component {
         }}
         className={css(
           styles.container,
-          isVertical ? styles.containerVertical : styles.containerHorizontal
+          isVertical ? styles.containerVertical : styles.containerHorizontal,
         )}
       >
         <div className={css(styles.leftPaneContent)}>{this.props.left()}</div>
@@ -112,13 +112,13 @@ export default class SplitPane extends React.Component {
           className={css(
             styles.container,
             isVertical ? styles.containerVertical : styles.containerHorizontal,
-            styles.rightPane
+            styles.rightPane,
           )}
         >
           <Draggable
             className={css(
               styles.dragger,
-              isVertical ? styles.draggerVertical : styles.draggerHorizontal
+              isVertical ? styles.draggerVertical : styles.draggerHorizontal,
             )}
             onStart={this.handleDraggableStart}
             onMove={this.handleDraggableMove}
@@ -127,7 +127,7 @@ export default class SplitPane extends React.Component {
             <div
               className={css(
                 styles.draggerInner,
-                isVertical ? styles.draggerInnerVert : styles.draggerInnerHor
+                isVertical ? styles.draggerInnerVert : styles.draggerInnerHor,
               )}
             />
           </Draggable>

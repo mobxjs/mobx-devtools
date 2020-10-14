@@ -36,25 +36,25 @@ export default class TreeExplorerStore extends AbstractStore {
         }
         this.loaded = true;
         this.emit('loaded');
-      })
+      }),
     );
 
     this.addDisposer(
       bridge.sub('frontend:mobx-react-component-updated', (component) => {
         this.updateNode(component);
-      })
+      }),
     );
 
     this.addDisposer(
       bridge.sub('frontend:mobx-react-component-added', (component) => {
         this.addNode(component);
-      })
+      }),
     );
 
     this.addDisposer(
       bridge.sub('frontend:mobx-react-component-removed', (component) => {
         this.removeNode(component);
-      })
+      }),
     );
 
     this.addDisposer(
@@ -62,7 +62,7 @@ export default class TreeExplorerStore extends AbstractStore {
         this.select(componentId, true);
         this.uncollapseParents(componentId);
         this.stopPickingComponent();
-      })
+      }),
     );
 
     this.addDisposer(
@@ -73,7 +73,7 @@ export default class TreeExplorerStore extends AbstractStore {
         }
         // if (__DEV__) console.log(`inspected--${path.join('/')}`, data);
         this.emit(`inspected--${path.join('/')}`);
-      })
+      }),
     );
   }
 
@@ -104,21 +104,23 @@ export default class TreeExplorerStore extends AbstractStore {
       this.searchRoots = null;
     } else {
       if (
-        this.searchRoots
-        && needle.indexOf(this.searchText.toLowerCase()) === 0
-        && !SearchUtils.shouldSearchUseRegex(text)
+        this.searchRoots &&
+        needle.indexOf(this.searchText.toLowerCase()) === 0 &&
+        !SearchUtils.shouldSearchUseRegex(text)
       ) {
         this.searchRoots = this.searchRoots.filter((item) => {
           const node = this.nodesById[item];
           return (
-            (node.name && node.name.toLowerCase().indexOf(needle) !== -1)
-            || (node.text && node.text.toLowerCase().indexOf(needle) !== -1)
-            || (typeof node.children === 'string'
-              && node.children.toLowerCase().indexOf(needle) !== -1)
+            (node.name && node.name.toLowerCase().indexOf(needle) !== -1) ||
+            (node.text && node.text.toLowerCase().indexOf(needle) !== -1) ||
+            (typeof node.children === 'string' &&
+              node.children.toLowerCase().indexOf(needle) !== -1)
           );
         });
       } else {
-        this.searchRoots = Object.keys(this.nodesById).filter((key) => nodeMatchesText(this.nodesById[key], needle, key, this));
+        this.searchRoots = Object.keys(this.nodesById).filter((key) =>
+          nodeMatchesText(this.nodesById[key], needle, key, this),
+        );
       }
       this.searchRoots.forEach((id) => {
         if (this.hasBottom(id)) {
@@ -202,9 +204,9 @@ export default class TreeExplorerStore extends AbstractStore {
           this.nodeParentsById[childId] = data.id;
           const childNode = this.nodesById[childId];
           if (
-            this.searchRoots
-            && childNode // fixme
-            && nodeMatchesText(childNode, this.searchText.toLowerCase(), childId, this)
+            this.searchRoots &&
+            childNode && // fixme
+            nodeMatchesText(childNode, this.searchText.toLowerCase(), childId, this)
           ) {
             this.searchRoots = this.searchRoots.push(childId);
             this.emit('searchRoots');
@@ -289,7 +291,8 @@ export default class TreeExplorerStore extends AbstractStore {
   }
 
   selectBottom(id) {
-    this.isBottomTagSelected = !this.nodesById[id].collapsed && this.nodesById[id].children.length > 0;
+    this.isBottomTagSelected =
+      !this.nodesById[id].collapsed && this.nodesById[id].children.length > 0;
     this.select(id);
   }
 

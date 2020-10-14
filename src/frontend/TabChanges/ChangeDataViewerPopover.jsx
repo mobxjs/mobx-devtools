@@ -28,11 +28,11 @@ export default function ChangeDataViewerPopover({
   const value = getValueByPath(path);
   const otype = typeof value;
   if (
-    otype === 'number'
-    || otype === 'string'
-    || value === null
-    || value === undefined
-    || otype === 'boolean'
+    otype === 'number' ||
+    otype === 'string' ||
+    value === null ||
+    value === undefined ||
+    otype === 'boolean'
   ) {
     return <PreviewValue data={value} className={className} path={path} />;
   }
@@ -61,7 +61,8 @@ export default function ChangeDataViewerPopover({
     >
       <span
         className={`${css(styles.trigger)} ${className}`}
-        onContextMenu={(e) => { // eslint-disable-line react/jsx-no-bind
+        // eslint-disable-next-line react/jsx-no-bind
+        onContextMenu={(e) => {
           if (typeof showMenu === 'function') {
             showMenu(e, undefined, path);
           }

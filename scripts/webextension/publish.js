@@ -22,31 +22,38 @@ switch (TARGET_BROWSER) {
 function publishFirefox() {
   const { MOZ_API_JWT_ISSUER, MOZ_API_JWT_SECRET } = process.env;
   const issuedAt = Math.floor(Date.now() / 1000);
-  const token = jwt.sign({
-    iss: MOZ_API_JWT_ISSUER,
-    jti: Math.random().toString(),
-    iat: issuedAt,
-    exp: issuedAt + 60,
-  }, MOZ_API_JWT_SECRET, { algorithm: 'HS256' });
+  const token = jwt.sign(
+    {
+      iss: MOZ_API_JWT_ISSUER,
+      jti: Math.random().toString(),
+      iat: issuedAt,
+      exp: issuedAt + 60,
+    },
+    MOZ_API_JWT_SECRET,
+    { algorithm: 'HS256' },
+  );
 
   const { id } = manifest.applications.gecko;
   const { version } = manifest;
 
-  request({
-    url: `https://addons.mozilla.org/api/v3/addons/${id}/versions/${version}/`,
-    method: 'PUT',
-    headers: { Authorization: `JWT ${token}` },
-    formData: { upload: fs.createReadStream(`./lib/${TARGET_BROWSER}.zip`) },
-  }, (error, response, body) => {
-    if (error) {
-      throw error;
-    }
-    const r = JSON.parse(body);
-    if (r.error) {
-      throw r.error;
-    }
-    console.log('Firefox published', JSON.stringify(r)); // eslint-disable-line no-console
-  });
+  request(
+    {
+      url: `https://addons.mozilla.org/api/v3/addons/${id}/versions/${version}/`,
+      method: 'PUT',
+      headers: { Authorization: `JWT ${token}` },
+      formData: { upload: fs.createReadStream(`./lib/${TARGET_BROWSER}.zip`) },
+    },
+    (error, response, body) => {
+      if (error) {
+        throw error;
+      }
+      const r = JSON.parse(body);
+      if (r.error) {
+        throw r.error;
+      }
+      console.log('Firefox published', JSON.stringify(r)); // eslint-disable-line no-console
+    },
+  );
 }
 
 function publishCrhome(target = 'default') {
@@ -80,13 +87,17 @@ function publishCrhome(target = 'default') {
     if (error) {
       throw error;
     }
-    if (uploadState !== 'SUCCESS') throw new Error(`uploadState: \`${uploadState}\` !== SUCCESS ${body}`);
+    if (uploadState !== 'SUCCESS')
+      throw new Error(`uploadState: \`${uploadState}\` !== SUCCESS ${body}`);
 
-    request({
-      url: `https://www.googleapis.com/chromewebstore/v1.1/items/${id}/publish?publishTarget=${target}`,
-      method: 'POST',
-      headers,
-    }, handlePublishResponse);
+    request(
+      {
+        url: `https://www.googleapis.com/chromewebstore/v1.1/items/${id}/publish?publishTarget=${target}`,
+        method: 'POST',
+        headers,
+      },
+      handlePublishResponse,
+    );
   };
 
   const handleAuthResponse = (err, response, body) => {
@@ -100,24 +111,31 @@ function publishCrhome(target = 'default') {
 
     headers = { Authorization: `${token_type} ${access_token}`, 'x-goog-api-version': '2' };
 
-    fs.createReadStream(`./lib/${TARGET_BROWSER}.zip`).pipe(request({
-      url: `https://www.googleapis.com/upload/chromewebstore/v1.1/items/${id}`,
-      method: 'PUT',
-      headers,
-    }, handleUploadResponse));
+    fs.createReadStream(`./lib/${TARGET_BROWSER}.zip`).pipe(
+      request(
+        {
+          url: `https://www.googleapis.com/upload/chromewebstore/v1.1/items/${id}`,
+          method: 'PUT',
+          headers,
+        },
+        handleUploadResponse,
+      ),
+    );
   };
 
-  request({
-    url: 'https://www.googleapis.com/oauth2/v4/token',
-    method: 'POST',
-    form: {
-
-      client_id: GAPI_MOBX_EXTENSION_CLIENT_ID,
-      client_secret: GAPI_MOBX_EXTENSION_CLIENT_SECRET,
-      refresh_token: GAPI_MOBX_EXTENSION_REFRESH_TOKEN,
-      grant_type: 'refresh_token',
+  request(
+    {
+      url: 'https://www.googleapis.com/oauth2/v4/token',
+      method: 'POST',
+      form: {
+        client_id: GAPI_MOBX_EXTENSION_CLIENT_ID,
+        client_secret: GAPI_MOBX_EXTENSION_CLIENT_SECRET,
+        refresh_token: GAPI_MOBX_EXTENSION_REFRESH_TOKEN,
+        grant_type: 'refresh_token',
+      },
     },
-  }, handleAuthResponse);
+    handleAuthResponse,
+  );
 }
 
 // request({

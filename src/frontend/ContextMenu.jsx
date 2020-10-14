@@ -78,13 +78,16 @@ export default class ContextMenu extends React.Component {
           this.el = el;
         }}
       >
-        {contextMenu.items.map((item) => item && (
-          <div className={css(styles.item)} key={item.key} onClick={item.action}>
-            {item.title}
-          </div>
-        ))}
+        {contextMenu.items.map(
+          (item) =>
+            item && (
+              <div className={css(styles.item)} key={item.key} onClick={item.action}>
+                {item.title}
+              </div>
+            ),
+        )}
       </div>,
-      this.portalHtmlEl
+      this.portalHtmlEl,
     );
   }
 }

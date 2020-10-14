@@ -6,7 +6,7 @@ import { css, StyleSheet } from 'aphrodite';
 import ContextProvider from '../utils/ContextProvider';
 import theme from './theme';
 
-export const availablePlacements = ['top', 'bottom'/* , 'right' */];
+export const availablePlacements = ['top', 'bottom' /* , 'right' */];
 const between = (v, min, max) => Math.max(Math.min(v, max), min);
 const rectFromEl = (el) => {
   const rect = el.getBoundingClientRect();
@@ -83,8 +83,8 @@ class PopoverBubble extends Component {
     const htmlWidth = window.innerWidth;
     const htmlHeight = window.innerHeight;
     const notLast = nextPlacementsToTry.length > 0;
-    const maxHeight = htmlHeight - (2 * GUTTER);
-    const maxWidth = htmlWidth - (2 * GUTTER);
+    const maxHeight = htmlHeight - 2 * GUTTER;
+    const maxWidth = htmlWidth - 2 * GUTTER;
     const assumedHeight = Math.min(maxHeight, selfRect.height);
     // const assumedWidth = between(selfRect.width, MIN_WIDTH, maxWidth);
 
@@ -118,14 +118,14 @@ class PopoverBubble extends Component {
         }
         return {
           arrowCoordinates: !hOverlap && {
-            left: triggerRect.left + (triggerRect.width / 2),
+            left: triggerRect.left + triggerRect.width / 2,
             top: triggerRect.top - ARROW_SIZE,
           },
           bodyCoordinates: {
             left: between(
-              triggerRect.left + ((triggerRect.width / 2) - (selfRect.width / 2)),
+              triggerRect.left + (triggerRect.width / 2 - selfRect.width / 2),
               GUTTER,
-              htmlWidth - GUTTER - selfRect.width
+              htmlWidth - GUTTER - selfRect.width,
             ),
             top: hOverlap
               ? htmlHeight - assumedHeight - GUTTER
@@ -143,18 +143,16 @@ class PopoverBubble extends Component {
         }
         return {
           arrowCoordinates: !hOverlap && {
-            left: triggerRect.left + (triggerRect.width / 2),
+            left: triggerRect.left + triggerRect.width / 2,
             top: triggerRect.bottom + ARROW_SIZE,
           },
           bodyCoordinates: {
             left: between(
-              triggerRect.left + ((triggerRect.width / 2) - (selfRect.width / 2)),
+              triggerRect.left + (triggerRect.width / 2 - selfRect.width / 2),
               GUTTER,
-              htmlWidth - GUTTER - selfRect.width
+              htmlWidth - GUTTER - selfRect.width,
             ),
-            top: hOverlap
-              ? htmlHeight - assumedHeight - GUTTER
-              : triggerRect.bottom + ARROW_SIZE,
+            top: hOverlap ? htmlHeight - assumedHeight - GUTTER : triggerRect.bottom + ARROW_SIZE,
           },
           maxWidth,
           maxHeight,
@@ -172,8 +170,8 @@ class PopoverBubble extends Component {
     const selfRect = rectFromEl(this.el);
     const triggerRect = rectFromEl(triggerHtmlElement);
     if (
-      shallowequal(triggerRect, this.$previousTriggerRect)
-      && shallowequal(selfRect, this.$previousSelfRect)
+      shallowequal(triggerRect, this.$previousTriggerRect) &&
+      shallowequal(selfRect, this.$previousSelfRect)
     ) {
       return;
     }
@@ -184,13 +182,9 @@ class PopoverBubble extends Component {
   };
 
   render() {
-    const {
-      withArrow, onMouseEnter, onMouseLeave, onTouchStart,
-    } = this.props;
+    const { withArrow, onMouseEnter, onMouseLeave, onTouchStart } = this.props;
     const { content } = this.state;
-    const {
-      arrowCoordinates, bodyCoordinates, maxWidth, maxHeight, placement,
-    } = this.state;
+    const { arrowCoordinates, bodyCoordinates, maxWidth, maxHeight, placement } = this.state;
 
     return (
       <div className={css(theme.default)}>
@@ -203,7 +197,10 @@ class PopoverBubble extends Component {
         <div
           className={css(styles.popover, popoverStyleForPlacement(placement))}
           style={{
-            top: bodyCoordinates.top, left: bodyCoordinates.left, maxWidth, maxHeight,
+            top: bodyCoordinates.top,
+            left: bodyCoordinates.left,
+            maxWidth,
+            maxHeight,
           }}
           ref={(el) => {
             this.el = el;
@@ -253,17 +250,19 @@ export default class PopoverTrigger extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     if (
-      !nextState.shown
-      && !nextProps.requireClick
-      && (nextState.hovered || nextState.bubbleHovered || nextProps.shown)
+      !nextState.shown &&
+      !nextProps.requireClick &&
+      (nextState.hovered || nextState.bubbleHovered || nextProps.shown)
     ) {
       this.show(nextState);
     }
     setTimeout(() => {
       if (
-        this.state.shown
-        && !this.props.requireClick
-        && (!this.state.hovered && !this.state.bubbleHovered && !this.props.shown)
+        this.state.shown &&
+        !this.props.requireClick &&
+        !this.state.hovered &&
+        !this.state.bubbleHovered &&
+        !this.props.shown
       ) {
         this.hide();
       }
@@ -351,7 +350,7 @@ export default class PopoverTrigger extends Component {
             onTouchStart={this.handleBubbleMouseEnter}
           />
         </ContextProvider>,
-        this.htmlPortal
+        this.htmlPortal,
       );
 
       this.popup.setState({ content });

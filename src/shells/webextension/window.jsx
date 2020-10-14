@@ -20,54 +20,57 @@ const whenTabLoaded = (tabId, cb) => {
   });
 };
 
-const inject = (contentTabId, done) => whenTabLoaded(contentTabId, () => {
-  const code = `
+const inject = (contentTabId, done) =>
+  whenTabLoaded(contentTabId, () => {
+    const code = `
           // the prototype stuff is in case document.createElement has been modified
           var script = document.constructor.prototype.createElement.call(document, 'script');
           script.src = "${chrome.runtime.getURL('backend.js')}";
           document.documentElement.appendChild(script);
           script.parentNode.removeChild(script);
         `;
-  chrome.tabs.executeScript(contentTabId, { code }, () => {
-    let disconnected = false;
+    chrome.tabs.executeScript(contentTabId, { code }, () => {
+      let disconnected = false;
 
-    const port = chrome.runtime.connect({
-      name: `${contentTabId}`,
+      const port = chrome.runtime.connect({
+        name: `${contentTabId}`,
+      });
+
+      port.onDisconnect.addListener(() => {
+        debugConnection('[background -x FRONTEND]');
+        disconnected = true;
+        if (onDisconnect) {
+          onDisconnect();
+        }
+      });
+
+      const wall = {
+        listen(fn) {
+          port.onMessage.addListener((message) => {
+            debugConnection('[background -> FRONTEND]', message);
+            fn(message);
+          });
+        },
+        send(data) {
+          if (disconnected) return;
+          debugConnection('[FRONTEND -> background]', data);
+          port.postMessage(data);
+        },
+      };
+      done(wall, () => port.disconnect());
     });
-
-    port.onDisconnect.addListener(() => {
-      debugConnection('[background -x FRONTEND]');
-      disconnected = true;
-      if (onDisconnect) {
-        onDisconnect();
-      }
-    });
-
-    const wall = {
-      listen(fn) {
-        port.onMessage.addListener((message) => {
-          debugConnection('[background -> FRONTEND]', message);
-          fn(message);
-        });
-      },
-      send(data) {
-        if (disconnected) return;
-        debugConnection('[FRONTEND -> background]', data);
-        port.postMessage(data);
-      },
-    };
-    done(wall, () => port.disconnect());
   });
-});
 
-chrome.runtime.getBackgroundPage(({ contentTabId }) => initFrontend({
-  node: document.getElementById('container'),
-  debugName: 'Window UI',
-  reloadSubscribe: (reloadFn) => {
-    onDisconnect = () => reloadFn();
-    return () => {
-      onDisconnect = undefined;
-    };
-  },
-  inject: (done) => inject(contentTabId, done),
-}));
+chrome.runtime.getBackgroundPage(({ contentTabId }) =>
+  initFrontend({
+    node: document.getElementById('container'),
+    debugName: 'Window UI',
+    reloadSubscribe: (reloadFn) => {
+      onDisconnect = () => reloadFn();
+      return () => {
+        onDisconnect = undefined;
+      };
+    },
+    inject: (done) => inject(contentTabId, done),
+  }),
+);

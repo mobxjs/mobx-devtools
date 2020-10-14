@@ -35,7 +35,9 @@ export default class Draggable extends React.Component {
   render() {
     return (
       <div
-        ref={(el) => { this.el = el; }}
+        ref={(el) => {
+          this.el = el;
+        }}
         style={this.props.style}
         className={this.props.className}
         onMouseDown={this.startDragging}

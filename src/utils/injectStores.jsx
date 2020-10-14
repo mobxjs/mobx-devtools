@@ -3,15 +3,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => (TargetComponent) => class StoreInjectorHOC extends React.Component {
+export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => (TargetComponent) =>
+  class StoreInjectorHOC extends React.Component {
     static contextTypes = {
       stores: PropTypes.object.isRequired,
     };
 
     componentWillMount() {
-      const eventsByStore = typeof subscribe === 'function'
-        ? subscribe(this.context.stores, this.props)
-        : subscribe;
+      const eventsByStore =
+        typeof subscribe === 'function' ? subscribe(this.context.stores, this.props) : subscribe;
       for (const s in eventsByStore) {
         if (Object.prototype.hasOwnProperty.call(eventsByStore, s)) {
           eventsByStore[s].forEach((event) => {
@@ -60,7 +60,9 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => (TargetC
       this.$isMounted = false;
       this.disposables.forEach((fn) => fn());
       Object.keys(this.eventsByStore).forEach((s) => {
-        this.eventsByStore[s].forEach((name) => this.context.stores[s].off(name, this.scheduleUpdate));
+        this.eventsByStore[s].forEach((name) =>
+          this.context.stores[s].off(name, this.scheduleUpdate),
+        );
       });
     }
 
@@ -84,7 +86,7 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => (TargetC
     render() {
       return <TargetComponent {...injectProps(this.context.stores, this.props)} {...this.props} />;
     }
-};
+  };
 
 function arrayDiff(array, oldArray) {
   const names = new Set();

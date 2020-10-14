@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-import {
-  ChangesIcon, ComponentIcon, TimerIcon, MSTIcon,
-} from './icons';
+import { ChangesIcon, ComponentIcon, TimerIcon, MSTIcon } from './icons';
 
 export default class Tab extends React.PureComponent {
   static propTypes = {
@@ -30,9 +28,7 @@ export default class Tab extends React.PureComponent {
   }
 
   render() {
-    const {
-      children, active, onClick, processing,
-    } = this.props;
+    const { children, active, onClick, processing } = this.props;
     return (
       <span
         className={css(styles.tab, active && styles.active, processing && styles.processing)}
@@ -40,10 +36,7 @@ export default class Tab extends React.PureComponent {
         data-test={`MainMenu-Tab-${this.props.type}`}
       >
         <div className={css(styles.icon)}>{this.getIcon()}</div>
-        <span className={css(styles.tabLabel)}>
-          {' '}
-          {children}
-        </span>
+        <span className={css(styles.tabLabel)}> {children}</span>
       </span>
     );
   }

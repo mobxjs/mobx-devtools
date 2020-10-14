@@ -41,7 +41,7 @@ export default class App extends React.PureComponent {
         }),
         bridge.sub('content-script-installation-error', () => {
           this.setState({ contentScriptInstallationError: true });
-        })
+        }),
       );
 
       bridge.send('backend:ping');

@@ -10,12 +10,13 @@ export default (onResult) => {
   const PARENT = Symbol('PARENT');
   const KEY = Symbol('KEY');
 
-  const getNodeForPath = (path) => path.reduce((acc, next) => {
-    if (!acc[next]) {
-      acc[next] = { [KEY]: next, [PARENT]: acc, [PATH]: (acc[PATH] || []).concat(next) };
-    }
-    return acc[next];
-  }, inspectionTree);
+  const getNodeForPath = (path) =>
+    path.reduce((acc, next) => {
+      if (!acc[next]) {
+        acc[next] = { [KEY]: next, [PARENT]: acc, [PATH]: (acc[PATH] || []).concat(next) };
+      }
+      return acc[next];
+    }, inspectionTree);
 
   const getInvalidatedParentForNode = (node) => {
     let current = node[PARENT];
@@ -28,10 +29,11 @@ export default (onResult) => {
 
   const getPathsForObject = (object) => (nodesByObject.get(object) || []).map((node) => node[PATH]);
 
-  const getObjectForPath = (path) => path.reduce(
-    (acc, next) => acc && acc[next === symbols.proto ? '__proto__' : next],
-    inspectedObject
-  );
+  const getObjectForPath = (path) =>
+    path.reduce(
+      (acc, next) => acc && acc[next === symbols.proto ? '__proto__' : next],
+      inspectedObject,
+    );
 
   const rememberPath = (path, object) => {
     const node = getNodeForPath(path);

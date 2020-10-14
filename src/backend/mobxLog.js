@@ -100,7 +100,7 @@ export default (bridge) => {
             if (logEnabled || consoleLogEnabled) {
               changesProcessor.push(change, collection.mobx);
             }
-          })
+          }),
         );
       }
     },

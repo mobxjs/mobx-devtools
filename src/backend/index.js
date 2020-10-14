@@ -32,10 +32,12 @@ export default (bridge, hook) => {
     bridge.sub('backend:ping', () => bridge.send('frontend:pong')),
     hook.sub('instances-injected', (mobxid) => {
       backends.forEach((p) => p.setup(mobxid, hook.collections[mobxid]));
-    })
+    }),
   );
 
   return function dispose() {
-    disposables.forEach((fn) => { fn(); });
+    disposables.forEach((fn) => {
+      fn();
+    });
   };
 };

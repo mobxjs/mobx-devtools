@@ -1,8 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import React from 'react';
-import {
-  observable, action, computed, configure,
-} from 'mobx';
+import { observable, action, computed, configure } from 'mobx';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { render } from 'react-dom';
@@ -51,11 +49,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        time:
-        {' '}
-        {tick.data}
-        s
-        {this.props.children}
+        time: {tick.data}s{this.props.children}
       </div>
     );
   }
@@ -79,12 +73,15 @@ class Counter extends React.Component {
           {store.count}
           <button onClick={this.manuallyIncrease}>+</button>
         </div>
-        <div>
-          {autoCounter.computedData}
-        </div>
+        <div>{autoCounter.computedData}</div>
       </div>
     );
   }
 }
 
-render(<App><Counter /></App>, document.querySelector('#root'));
+render(
+  <App>
+    <Counter />
+  </App>,
+  document.querySelector('#root'),
+);

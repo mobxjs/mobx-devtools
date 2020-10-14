@@ -9,9 +9,7 @@
 
 import debugConnection from '../../utils/debugConnection';
 
-const contentScriptId = Math.random()
-  .toString(32)
-  .slice(2);
+const contentScriptId = Math.random().toString(32).slice(2);
 
 // proxy from main page to devtools (via the background page)
 const port = chrome.runtime.connect({ name: 'content-script' });
@@ -21,9 +19,12 @@ const handshake = (backendId) => {
     debugConnection('[backgrond -> CONTENTSCRIPT -> backend]', payload);
     window.postMessage(
       {
-        source: 'mobx-devtools-content-script', payload, contentScriptId, backendId,
+        source: 'mobx-devtools-content-script',
+        payload,
+        contentScriptId,
+        backendId,
       },
-      '*'
+      '*',
     );
   }
 
@@ -33,9 +34,9 @@ const handshake = (backendId) => {
 
   function handleMessageFromPage(evt) {
     if (
-      evt.data.source === 'mobx-devtools-backend'
-      && evt.data.contentScriptId === contentScriptId
-      && evt.data.backendId === backendId
+      evt.data.source === 'mobx-devtools-backend' &&
+      evt.data.contentScriptId === contentScriptId &&
+      evt.data.backendId === backendId
     ) {
       debugConnection('[backend -> CONTENTSCRIPT -> backgrond]', evt);
       evt.data.payload.contentScriptId = contentScriptId;
@@ -79,9 +80,9 @@ let connected = false;
 
 window.addEventListener('message', function listener(message) {
   if (
-    message.data.source === 'mobx-devtools-backend'
-    && message.data.payload === 'contentScript:pong'
-    && message.data.contentScriptId === contentScriptId
+    message.data.source === 'mobx-devtools-backend' &&
+    message.data.payload === 'contentScript:pong' &&
+    message.data.contentScriptId === contentScriptId
   ) {
     debugConnection('[backend -> CONTENTSCRIPT]', message);
     const { backendId } = message.data;
@@ -95,7 +96,7 @@ window.addEventListener('message', function listener(message) {
         contentScriptId,
         backendId,
       },
-      '*'
+      '*',
     );
 
     if (!connected) {

@@ -150,7 +150,7 @@ export default class TreeView extends React.Component {
     if (top > rel - margin) {
       this.node.scrollTop = rel - margin;
     } else if (top + this.node.offsetHeight < rel + height + margin) {
-      this.node.scrollTop = (rel - this.node.offsetHeight) + height + margin;
+      this.node.scrollTop = rel - this.node.offsetHeight + height + margin;
     }
   }
 
@@ -183,11 +183,16 @@ export default class TreeView extends React.Component {
     if (this.props.searching && this.props.roots.length > MAX_SEARCH_ROOTS) {
       return (
         <div className={css(styles.container)}>
-          <div ref={(n) => { this.node = n; }} className={css(styles.scroll)}>
+          <div
+            ref={(n) => {
+              this.node = n;
+            }}
+            className={css(styles.scroll)}
+          >
             <div className={css(styles.scrollContents)}>
-              {this.props.roots
-                .slice(0, MAX_SEARCH_ROOTS)
-                .map((id) => <Node depth={0} id={id} key={id} searchRegExp={searchRegExp} />)}
+              {this.props.roots.slice(0, MAX_SEARCH_ROOTS).map((id) => (
+                <Node depth={0} id={id} key={id} searchRegExp={searchRegExp} />
+              ))}
               <span>Some results not shown. Narrow your search criteria to find them</span>
             </div>
           </div>
@@ -197,7 +202,12 @@ export default class TreeView extends React.Component {
 
     return (
       <div className={css(styles.container)}>
-        <div ref={(n) => { this.node = n; }} className={css(styles.scroll)}>
+        <div
+          ref={(n) => {
+            this.node = n;
+          }}
+          className={css(styles.scroll)}
+        >
           <div className={css(styles.scrollContents)}>
             {this.props.roots.map((id) => (
               <Node depth={0} id={id} key={id} searchRegExp={searchRegExp} />

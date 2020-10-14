@@ -35,7 +35,10 @@ describe('Global Hook', () => {
   describe('mobxId comparator', () => {
     const foo = {};
     const instanceA = {
-      a: 1, b: {}, foo, c: [],
+      a: 1,
+      b: {},
+      foo,
+      c: [],
     };
     const instanceAA = { foo, bar: {} };
     const instanceB = { c: {} };

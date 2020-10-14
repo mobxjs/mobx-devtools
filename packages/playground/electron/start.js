@@ -32,10 +32,8 @@ const watching = compiler.watch({}, (err, stats) => {
   }
   if (!err && !stats.hasErrors() && !electronStarted) {
     electronStarted = true;
-    childProcess
-      .spawn(electron, ['.'], { stdio: 'inherit' })
-      .on('close', () => {
-        watching.close();
-      });
+    childProcess.spawn(electron, ['.'], { stdio: 'inherit' }).on('close', () => {
+      watching.close();
+    });
   }
 });

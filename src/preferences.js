@@ -25,7 +25,10 @@ export default {
         const settings = getLSSettings();
         resolve(keys.reduce((acc, key) => ({ ...acc, [key]: settings[key] }), {}));
       } else {
-        resolve(keys.reduce((acc, key) => ({ ...acc, [key]: memoryStorage[key] })), {});
+        resolve(
+          keys.reduce((acc, key) => ({ ...acc, [key]: memoryStorage[key] })),
+          {},
+        );
       }
     });
   },

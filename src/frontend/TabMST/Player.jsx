@@ -46,11 +46,7 @@ export default class Player extends React.Component {
           <IconLeft />
         </span>
         <span className={css(styles.progress)}>
-          {currentIndex + 1}
-          {' '}
-          /
-          {' '}
-          {length}
+          {currentIndex + 1} / {length}
         </span>
         <span
           className={css(styles.lrButton, nextDisabled && styles.lrButtonDisabled)}
@@ -59,7 +55,9 @@ export default class Player extends React.Component {
           <IconRight />
         </span>
         <span
-          ref={(el) => { this.seekBar = el; }}
+          ref={(el) => {
+            this.seekBar = el;
+          }}
           className={css(styles.seekBar, disabled && styles.seekBarDisabled)}
         >
           <span className={css(styles.filledBar)} style={{ width: `${percent}%` }} />

@@ -9,9 +9,7 @@ TreeItem.propTypes = {
   name: PropTypes.string,
 };
 
-function TreeItem({
-  dependencies, isLast, isRoot, name,
-}) {
+function TreeItem({ dependencies, isLast, isRoot, name }) {
   return (
     <div className={css(styles.item)}>
       <span className={css(styles.box, isRoot && styles.box.root)}>{name}</span>

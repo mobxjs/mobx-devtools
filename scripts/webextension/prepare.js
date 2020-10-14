@@ -15,9 +15,13 @@ if (!TARGET_BROWSER) {
 
 // Prepare folder
 
-del.sync([path.join(rootDir, `lib/${TARGET_BROWSER}.zip`), path.join(rootDir, `lib/${TARGET_BROWSER}/**`)]);
+del.sync([
+  path.join(rootDir, `lib/${TARGET_BROWSER}.zip`),
+  path.join(rootDir, `lib/${TARGET_BROWSER}/**`),
+]);
 if (!fs.existsSync(path.join(rootDir, 'lib'))) fs.mkdirSync(path.join(rootDir, 'lib'));
-if (!fs.existsSync(path.join(rootDir, `lib/${TARGET_BROWSER}`))) fs.mkdirSync(path.join(rootDir, `lib/${TARGET_BROWSER}`));
+if (!fs.existsSync(path.join(rootDir, `lib/${TARGET_BROWSER}`)))
+  fs.mkdirSync(path.join(rootDir, `lib/${TARGET_BROWSER}`));
 
 // Generate manifest.json
 
@@ -31,5 +35,5 @@ if (TARGET_BROWSER === 'chrome') {
 
 fs.writeFileSync(
   path.join(rootDir, `lib/${TARGET_BROWSER}/manifest.json`),
-  JSON.stringify(manifest)
+  JSON.stringify(manifest),
 );

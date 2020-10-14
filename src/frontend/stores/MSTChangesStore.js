@@ -53,7 +53,7 @@ export default class MSTChangesStore extends AbstractStore {
         delete this.rootNamesById[rootId];
         delete this.itemsDataByRootId[rootId];
         this.emit('mstRootsUpdated');
-      })
+      }),
     );
 
     preferences.get('mstLogEnabled').then(({ mstLogEnabled = true }) => {

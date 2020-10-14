@@ -31,11 +31,12 @@ const getServerAddr = () => {
 
 const getCapabilities = () => {
   switch (TARGET_BROWSER) {
-    case 'chrome': return {
-      chromeOptions: {
-        args: [`load-extension=${path.join(__dirname, '../lib/chrome')}`],
-      },
-    };
+    case 'chrome':
+      return {
+        chromeOptions: {
+          args: [`load-extension=${path.join(__dirname, '../lib/chrome')}`],
+        },
+      };
     // TODO: Run unsigned extension in ff
     // case 'firefox': return {
     //   'moz:firefoxOptions': {},
@@ -62,12 +63,12 @@ module.exports = async ({ initialUrl, openDevtool = true }) => {
 
   if (openDevtool) {
     await driver.executeScript(
-      'window.dispatchEvent(new Event(\'test-open-mobx-devtools-window\'));'
+      "window.dispatchEvent(new Event('test-open-mobx-devtools-window'));",
     );
     await driver.wait(
       async () => (await driver.getAllWindowHandles()).length > 1,
       5000,
-      'Devtools wasn\'t open'
+      "Devtools wasn't open",
     );
     devtoolWindowHandle = (await driver.getAllWindowHandles()).find((h) => h !== mainWindowHandle);
 
@@ -80,6 +81,9 @@ module.exports = async ({ initialUrl, openDevtool = true }) => {
   };
 
   return {
-    driver, mainWindowHandle, devtoolWindowHandle, teardown,
+    driver,
+    mainWindowHandle,
+    devtoolWindowHandle,
+    teardown,
   };
 };

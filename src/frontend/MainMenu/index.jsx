@@ -25,9 +25,7 @@ MainMenu.propTypes = {
   processingTabs: PropTypes.array.isRequired,
 };
 
-export default function MainMenu({
-  availableTabs, activeTab, onTabChange, processingTabs,
-}) {
+export default function MainMenu({ availableTabs, activeTab, onTabChange, processingTabs }) {
   return (
     <div className={css(styles.container)} data-test="MainMenu">
       {availableTabs.map((type) => (

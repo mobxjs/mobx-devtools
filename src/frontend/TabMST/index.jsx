@@ -105,9 +105,7 @@ export default class TabMST extends React.PureComponent {
     if (!this.props.mstFound) return null;
 
     if (this.props.rootsIds.length === 0) {
-      return (
-        <div className={css(styles.emptyState)}>No roots</div>
-      );
+      return <div className={css(styles.emptyState)}>No roots</div>;
     }
 
     const tabs = this.props.rootsIds.map((id) => ({

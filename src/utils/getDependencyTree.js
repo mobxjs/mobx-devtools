@@ -9,7 +9,7 @@ const deduplicateDependencies = (depTree) => {
       if (depTree.dependencies[i2].name === name) {
         depTree.dependencies[i2].dependencies = [].concat(
           depTree.dependencies[i2].dependencies || [],
-          depTree.dependencies[i].dependencies || []
+          depTree.dependencies[i].dependencies || [],
         );
         depTree.dependencies.splice(i, 1);
         break;

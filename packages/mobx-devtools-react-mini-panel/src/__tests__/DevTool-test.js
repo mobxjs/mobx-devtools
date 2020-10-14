@@ -6,10 +6,7 @@ jsdomHelper();
 const unexpected = require('unexpected');
 const unexpectedReact = require('unexpected-react');
 const unexpectedSinon = require('unexpected-sinon');
-const expect = unexpected
-  .clone()
-  .installPlugin(unexpectedReact)
-  .installPlugin(unexpectedSinon);
+const expect = unexpected.clone().installPlugin(unexpectedReact).installPlugin(unexpectedSinon);
 const React = require('react');
 const ReactDOM = require('react-dom');
 const TestUtils = require('react-addons-test-utils');
@@ -26,7 +23,7 @@ const {
   configureDevtool,
   setLogEnabled,
   setUpdatesEnabled,
-  setGraphEnabled
+  setGraphEnabled,
 } = require('../../lib/index');
 const ContextProvider = require('../../../utils/ContextProvider').default;
 const Graph = require('../../../frontend/Graph').default;
@@ -78,7 +75,7 @@ describe('DevTool', () => {
     expect(
       devtoolInstance,
       'to contain',
-      <button data-id="buttonUpdates" title="Visualize component re-renders" data-active={false} />
+      <button data-id="buttonUpdates" title="Visualize component re-renders" data-active={false} />,
     );
 
     expect(
@@ -88,7 +85,7 @@ describe('DevTool', () => {
         data-id="buttonGraph"
         title="Select a component and show its dependency tree"
         data-active={false}
-      />
+      />,
     );
 
     expect(
@@ -98,7 +95,7 @@ describe('DevTool', () => {
         data-id="buttonConsoleLog"
         title="Log state changes to the browser console"
         data-active={false}
-      />
+      />,
     );
   });
 });
@@ -109,32 +106,32 @@ describe('configureDevtool', () => {
     const customInstance = TestUtils.renderIntoDocument(<CustomDevTool />);
     const bothInstances = [devtoolInstance, customInstance];
 
-    bothInstances.forEach(i =>
-      expect(i, 'not to contain', <button data-id="buttonConsoleLog" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'not to contain', <button data-id="buttonConsoleLog" data-active />),
     );
 
     configureDevtool({ logEnabled: true });
 
-    bothInstances.forEach(i =>
-      expect(i, 'to contain', <button data-id="buttonConsoleLog" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'to contain', <button data-id="buttonConsoleLog" data-active />),
     );
 
     configureDevtool({ logEnabled: false });
 
-    bothInstances.forEach(i =>
-      expect(i, 'not to contain', <button data-id="buttonConsoleLog" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'not to contain', <button data-id="buttonConsoleLog" data-active />),
     );
 
     setLogEnabled(true);
 
-    bothInstances.forEach(i =>
-      expect(i, 'to contain', <button data-id="buttonConsoleLog" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'to contain', <button data-id="buttonConsoleLog" data-active />),
     );
 
     setLogEnabled(false);
 
-    bothInstances.forEach(i =>
-      expect(i, 'not to contain', <button data-id="buttonConsoleLog" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'not to contain', <button data-id="buttonConsoleLog" data-active />),
     );
   });
 
@@ -143,32 +140,32 @@ describe('configureDevtool', () => {
     const customInstance = TestUtils.renderIntoDocument(<CustomDevTool />);
     const bothInstances = [devtoolInstance, customInstance];
 
-    bothInstances.forEach(i =>
-      expect(i, 'not to contain', <button data-id="buttonGraph" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'not to contain', <button data-id="buttonGraph" data-active />),
     );
 
     configureDevtool({ graphEnabled: true });
 
-    bothInstances.forEach(i =>
-      expect(i, 'to contain', <button data-id="buttonGraph" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'to contain', <button data-id="buttonGraph" data-active />),
     );
 
     configureDevtool({ graphEnabled: false });
 
-    bothInstances.forEach(i =>
-      expect(i, 'not to contain', <button data-id="buttonGraph" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'not to contain', <button data-id="buttonGraph" data-active />),
     );
 
     setGraphEnabled(true);
 
-    bothInstances.forEach(i =>
-      expect(i, 'to contain', <button data-id="buttonGraph" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'to contain', <button data-id="buttonGraph" data-active />),
     );
 
     setGraphEnabled(false);
 
-    bothInstances.forEach(i =>
-      expect(i, 'not to contain', <button data-id="buttonGraph" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'not to contain', <button data-id="buttonGraph" data-active />),
     );
   });
 
@@ -177,32 +174,32 @@ describe('configureDevtool', () => {
     const customInstance = TestUtils.renderIntoDocument(<CustomDevTool />);
     const bothInstances = [devtoolInstance, customInstance];
 
-    bothInstances.forEach(i =>
-      expect(i, 'not to contain', <button data-id="buttonUpdates" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'not to contain', <button data-id="buttonUpdates" data-active />),
     );
 
     configureDevtool({ updatesEnabled: true });
 
-    bothInstances.forEach(i =>
-      expect(i, 'to contain', <button data-id="buttonUpdates" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'to contain', <button data-id="buttonUpdates" data-active />),
     );
 
     configureDevtool({ updatesEnabled: false });
 
-    bothInstances.forEach(i =>
-      expect(i, 'not to contain', <button data-id="buttonUpdates" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'not to contain', <button data-id="buttonUpdates" data-active />),
     );
 
     setUpdatesEnabled(true);
 
-    bothInstances.forEach(i =>
-      expect(i, 'to contain', <button data-id="buttonUpdates" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'to contain', <button data-id="buttonUpdates" data-active />),
     );
 
     setUpdatesEnabled(false);
 
-    bothInstances.forEach(i =>
-      expect(i, 'not to contain', <button data-id="buttonUpdates" data-active />)
+    bothInstances.forEach((i) =>
+      expect(i, 'not to contain', <button data-id="buttonUpdates" data-active />),
     );
   });
 

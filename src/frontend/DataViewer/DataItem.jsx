@@ -66,12 +66,12 @@ export default class DataItem extends React.Component {
     const { value } = this;
     const otype = typeof value;
     return (
-      value instanceof Date
-      || otype === 'number'
-      || otype === 'string'
-      || value === null
-      || value === undefined
-      || otype === 'boolean'
+      value instanceof Date ||
+      otype === 'number' ||
+      otype === 'string' ||
+      value === null ||
+      value === undefined ||
+      otype === 'boolean'
     );
   }
 
@@ -124,8 +124,7 @@ export default class DataItem extends React.Component {
             className={css([styles.name, complex && styles.nameComplex])}
             onClick={this.toggleOpen}
           >
-            {truncate(this.props.name)}
-            :
+            {truncate(this.props.name)}:
           </div>
           <div onContextMenu={this.handleContextMenu} className={css(styles.preview)}>
             <PreviewValue
@@ -136,21 +135,20 @@ export default class DataItem extends React.Component {
             />
           </div>
         </div>
-        {complex
-          && this.state.open && (
-            <div className={css(styles.children)}>
-              <this.props.ChildDataView
-                value={value}
-                path={this.props.path}
-                getValueByPath={this.props.getValueByPath}
-                inspect={this.props.inspect}
-                stopInspecting={this.props.stopInspecting}
-                change={this.props.change}
-                showMenu={this.props.showMenu}
-                ChildDataView={this.props.ChildDataView}
-                ChildDataItem={this.props.ChildDataItem}
-              />
-            </div>
+        {complex && this.state.open && (
+          <div className={css(styles.children)}>
+            <this.props.ChildDataView
+              value={value}
+              path={this.props.path}
+              getValueByPath={this.props.getValueByPath}
+              inspect={this.props.inspect}
+              stopInspecting={this.props.stopInspecting}
+              change={this.props.change}
+              showMenu={this.props.showMenu}
+              ChildDataView={this.props.ChildDataView}
+              ChildDataItem={this.props.ChildDataItem}
+            />
+          </div>
         )}
       </li>
     );

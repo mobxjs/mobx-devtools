@@ -64,7 +64,8 @@ export default (bridge) => {
   const getComponentName = function getComponentName(node) {
     if (node.constructor.displayName) {
       return node.constructor.displayName;
-    } if (node.constructor.name) {
+    }
+    if (node.constructor.name) {
       return node.constructor.name;
     }
     return 'div';
@@ -162,13 +163,13 @@ export default (bridge) => {
       if (isTracking) {
         bridge.send(
           'frontend:mobx-react-components',
-          Object.keys(componentsById).map((id) => componentsById[id])
+          Object.keys(componentsById).map((id) => componentsById[id]),
         );
       }
       traverse(document);
       bridge.send(
         'frontend:mobx-react-components',
-        Object.keys(componentsById).map((id) => componentsById[id])
+        Object.keys(componentsById).map((id) => componentsById[id]),
       );
       isTracking = true;
     }),
@@ -270,7 +271,7 @@ export default (bridge) => {
                   break;
               }
             }
-          })
+          }),
         );
       }
     },

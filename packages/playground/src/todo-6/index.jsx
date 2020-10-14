@@ -1,12 +1,16 @@
 /* eslint-disable react/prop-types */
 import React, { useCallback } from 'react';
-import {
-  makeObservable, observable, computed, action,
-} from 'mobx';
+import { makeObservable, observable, computed, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { render } from 'react-dom';
 
-const getId = (() => { let i = 1; return () => { i += 1; return i; }; })();
+const getId = (() => {
+  let i = 1;
+  return () => {
+    i += 1;
+    return i;
+  };
+})();
 
 class TodoStore {
   todos = [{ title: 'Get biscuit', id: getId() }];
@@ -35,10 +39,7 @@ const storeInstance = new TodoStore();
 
 const TodoComponent = observer(({ id, title }) => (
   <div>
-    #
-    {id}
-    {' '}
-    <strong>{title}</strong>
+    #{id} <strong>{title}</strong>
   </div>
 ));
 
@@ -52,13 +53,12 @@ const TodoAppComponent = observer(() => {
 
   return (
     <div>
-      {storeInstance.todos.map((t) => <TodoComponent key={t.id} {...t} />)}
+      {storeInstance.todos.map((t) => (
+        <TodoComponent key={t.id} {...t} />
+      ))}
       <input type="test" onKeyDown={handleInputKeydown} />
     </div>
   );
 });
 
-render(
-  <TodoAppComponent />,
-  document.querySelector('#root')
-);
+render(<TodoAppComponent />, document.querySelector('#root'));

@@ -3,11 +3,12 @@ export default (bridge) => {
   let mobxReactFound = false;
   let mstFound = false;
 
-  const sendCapabilities = () => bridge.send('capabilities', {
-    mobxFound,
-    mobxReactFound,
-    mstFound,
-  });
+  const sendCapabilities = () =>
+    bridge.send('capabilities', {
+      mobxFound,
+      mobxReactFound,
+      mstFound,
+    });
 
   sendCapabilities();
 

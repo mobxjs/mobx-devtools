@@ -22,7 +22,7 @@ export default (config) => {
       >
         <RichPanel />
       </App>,
-      config.node
+      config.node,
     );
   };
 

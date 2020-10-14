@@ -8,18 +8,17 @@ import { render } from 'react-dom';
 
 const store = observable({ count: 0 });
 
-const App = observer((props) => (
-  <div>
-    {props.children}
-  </div>
-));
+const App = observer((props) => <div>{props.children}</div>);
 
 App.propTypes = {
   children: PropTypes.node,
 };
 
 const Counter = observer(() => {
-  const map = new Map([['a', '1'], ['b', 2]]);
+  const map = new Map([
+    ['a', '1'],
+    ['b', 2],
+  ]);
   const omap = observable.map({ a: '1', b: 2 });
   const set = new Set([['a', 2]]);
   const oset = observable.set(['a', 2]);
@@ -30,11 +29,28 @@ const Counter = observer(() => {
   const number = 5;
   return (
     <div>
-      <button onClick={() => { store.count -= 1; }}>–</button>
+      <button
+        onClick={() => {
+          store.count -= 1;
+        }}
+      >
+        –
+      </button>
       {store.count}
-      <button onClick={() => { store.count += 1; }}>+</button>
+      <button
+        onClick={() => {
+          store.count += 1;
+        }}
+      >
+        +
+      </button>
     </div>
   );
 });
 
-render(<App><Counter /></App>, document.querySelector('#root'));
+render(
+  <App>
+    <Counter />
+  </App>,
+  document.querySelector('#root'),
+);

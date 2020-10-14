@@ -14,9 +14,9 @@ export default class PreviewValue extends React.PureComponent {
 
   render() {
     if (
-      !this.props.data
-      || this.props.data instanceof Date
-      || typeof this.props.data !== 'object'
+      !this.props.data ||
+      this.props.data instanceof Date ||
+      typeof this.props.data !== 'object'
     ) {
       return <PreviewSimpleValue {...this.props} />;
     }
@@ -24,7 +24,8 @@ export default class PreviewValue extends React.PureComponent {
   }
 }
 
-class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line react/no-multi-comp
+class PreviewSimpleValue extends React.PureComponent {
+  // eslint-disable-line react/no-multi-comp
   static propTypes = {
     change: PropTypes.func,
     data: PropTypes.any,
@@ -121,7 +122,9 @@ class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line re
       return (
         <input
           autoFocus
-          ref={(i) => { this.input = i; }}
+          ref={(i) => {
+            this.input = i;
+          }}
           className={css(styles.input)}
           onChange={this.handleChange}
           onBlur={this.handleSubmit}
@@ -144,7 +147,7 @@ class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line re
           styles.simple,
           editable && styles.simpleEditable,
           typeof data === 'string' && styles.simpleString,
-          typeof data === 'undefined' && styles.simpleUndefined
+          typeof data === 'undefined' && styles.simpleUndefined,
         )}
       >
         {valueToText(data)}
@@ -153,7 +156,8 @@ class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line re
   }
 }
 
-class PreviewComplexValue extends React.PureComponent { // eslint-disable-line react/no-multi-comp
+class PreviewComplexValue extends React.PureComponent {
+  // eslint-disable-line react/no-multi-comp
   static propTypes = {
     data: PropTypes.any,
     displayName: PropTypes.string,
@@ -165,10 +169,7 @@ class PreviewComplexValue extends React.PureComponent { // eslint-disable-line r
     if (Array.isArray(data)) {
       return (
         <span className={css(styles.previewComplex)}>
-          {this.props.displayName || 'Array'}
-          [
-          {data.length}
-          ]
+          {this.props.displayName || 'Array'}[{data.length}]
         </span>
       );
     }
@@ -251,9 +252,11 @@ function textToValue(txt) {
 function valueToText(value) {
   if (value === undefined) {
     return 'undefined';
-  } if (typeof value === 'number') {
+  }
+  if (typeof value === 'number') {
     return value.toString();
-  } if (value instanceof Date) {
+  }
+  if (value instanceof Date) {
     return value.toString();
   }
   return JSON.stringify(value);

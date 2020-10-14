@@ -4,7 +4,7 @@
 // Evaling so that webpack doesn't complain about using require.extensions.
 const requireExtensions = eval("typeof require === 'function' && require.extensions");
 if (module.webpackPolyfill === undefined && requireExtensions) {
-  requireExtensions['.svg'] = module => `SKIPPED_SVG<${module.filename}>`;
+  requireExtensions['.svg'] = (module) => `SKIPPED_SVG<${module.filename}>`;
 }
 
 export const panel = {

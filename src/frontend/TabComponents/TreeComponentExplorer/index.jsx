@@ -22,7 +22,7 @@ import Collapsible from '../../Collapsible';
           treeExplorerStore.selectedNodeId,
           node,
           val,
-          path
+          path,
         );
       },
       inspect(path) {
@@ -37,7 +37,7 @@ import Collapsible from '../../Collapsible';
       getValueByPath(path) {
         return path.reduce(
           (acc, next) => acc && acc[next],
-          treeExplorerStore.nodesById[treeExplorerStore.selectedNodeId]
+          treeExplorerStore.nodesById[treeExplorerStore.selectedNodeId],
         );
       },
     };
@@ -82,13 +82,11 @@ export default class TreeComponentExplorer extends React.Component {
         {node.dependencyTree && (
           <Collapsible
             startOpen={false}
-            head={(
+            head={
               <div className={css(styles.subheading)}>
-                Dependencies (
-                {node.dependencyTree.dependencies.length}
-                )
+                Dependencies ({node.dependencyTree.dependencies.length})
               </div>
-            )}
+            }
           >
             <div className={css(styles.block)}>
               <DataViewer

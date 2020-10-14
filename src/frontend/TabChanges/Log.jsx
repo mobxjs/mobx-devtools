@@ -24,7 +24,7 @@ const ITEM_HEIGHT = 24;
     getValueByPath(changeId, path) {
       return path.reduce(
         (acc, next) => acc && acc[next],
-        actionsLoggerStore.logItemsById[changeId]
+        actionsLoggerStore.logItemsById[changeId],
       );
     },
     showMenu(e, changeId, path) {
@@ -118,11 +118,13 @@ export default class Log extends React.Component {
           onScroll={this.handleScroll}
           style={{ width: 'auto', padding, boxSizing: 'content-box' }}
           containerStyle={{ width: 'auto', maxWidth: 'none' }}
-          width={this.state.listWidth - (padding * 2)}
-          height={this.state.listHeight - (padding * 2)}
+          width={this.state.listWidth - padding * 2}
+          height={this.state.listHeight - padding * 2}
           rowCount={rowCount}
           scrollToIndex={this.state.autoScroll && rowCount > 0 ? rowCount - 1 : undefined}
-          rowHeight={({ index }) => this.props.logItemsById[this.props.logItemsIds[index]].height || ITEM_HEIGHT}
+          rowHeight={({ index }) =>
+            this.props.logItemsById[this.props.logItemsIds[index]].height || ITEM_HEIGHT
+          }
           overscanCount={1}
           rowRenderer={this.renderItem}
         />
