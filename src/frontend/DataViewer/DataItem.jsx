@@ -137,20 +137,20 @@ export default class DataItem extends React.Component {
         </div>
         {complex &&
           this.state.open && (
-          <div className={css(styles.children)}>
-            <this.props.ChildDataView
-              value={value}
-              path={this.props.path}
-              getValueByPath={this.props.getValueByPath}
-              inspect={this.props.inspect}
-              stopInspecting={this.props.stopInspecting}
-              change={this.props.change}
-              showMenu={this.props.showMenu}
-              ChildDataView={this.props.ChildDataView}
-              ChildDataItem={this.props.ChildDataItem}
-            />
-          </div>
-        )}
+            <div className={css(styles.children)}>
+              <this.props.ChildDataView
+                value={value}
+                path={this.props.path}
+                getValueByPath={this.props.getValueByPath}
+                inspect={this.props.inspect}
+                stopInspecting={this.props.stopInspecting}
+                change={this.props.change}
+                showMenu={this.props.showMenu}
+                ChildDataView={this.props.ChildDataView}
+                ChildDataItem={this.props.ChildDataItem}
+              />
+            </div>
+          )}
       </li>
     );
   }
