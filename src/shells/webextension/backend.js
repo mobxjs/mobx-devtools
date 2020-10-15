@@ -32,8 +32,11 @@ function handshake(hook, contentScriptId) {
     },
     send(data) {
       debugConnection('[BACKEND -> contentScript]', data);
+      
+      const payload = JSON.parse(JSON.stringify(data));
+      
       window.postMessage(
-        { source: 'mobx-devtools-backend', payload: data, contentScriptId, backendId },
+        { source: 'mobx-devtools-backend', payload, contentScriptId, backendId },
         '*'
       );
     },
