@@ -61,7 +61,8 @@ export default function ChangeDataViewerPopover({
     >
       <span
         className={`${css(styles.trigger)} ${className}`}
-        onContextMenu={(e) => { // eslint-disable-line react/jsx-no-bind
+        // eslint-disable-next-line react/jsx-no-bind
+        onContextMenu={e => {
           if (typeof showMenu === 'function') {
             showMenu(e, undefined, path);
           }

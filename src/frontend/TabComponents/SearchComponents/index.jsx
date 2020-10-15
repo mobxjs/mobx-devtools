@@ -23,7 +23,7 @@ export default class SearchComponents extends React.PureComponent {
         type="search"
         value={this.props.searchText}
         onChange={this.props.changeSearch}
-        placeholder={'Search (string/regex)'}
+        placeholder="Search (string/regex)"
         style={{
           border: '1px solid rgba(0, 0, 0, 0.12)',
           padding: 3,

@@ -9,12 +9,7 @@ const ITEM_HEIGHT = 30;
 
 @injectStores({
   subscribe: {
-    mstLoggerStore: [
-      'mstLogItems',
-      'activeRootId',
-      'selectedLogItemId',
-      'activeLogItemId',
-    ],
+    mstLoggerStore: ['mstLogItems', 'activeRootId', 'selectedLogItemId', 'activeLogItemId'],
   },
   injectProps: ({ mstLoggerStore }) => {
     const itemData = mstLoggerStore.itemsDataByRootId[mstLoggerStore.activeRootId];
@@ -69,7 +64,9 @@ export default class Log extends React.PureComponent {
 
   handleResize = () => {
     if (this.resizeTimeout) return;
-    this.resizeTimeout = setTimeout(() => { this.updateSize(); }, 200);
+    this.resizeTimeout = setTimeout(() => {
+      this.updateSize();
+    }, 200);
   };
 
   updateSize() {
@@ -114,19 +111,19 @@ export default class Log extends React.PureComponent {
     return (
       <div
         className={css(styles.logItems)}
-        ref={(el) => {
+        ref={el => {
           this.containerEl = el;
         }}
       >
         <List
-          ref={(list) => {
+          ref={list => {
             this.list = list;
           }}
           onScroll={this.handleScroll}
           style={{ width: 'auto', padding, boxSizing: 'content-box' }}
           containerStyle={{ width: 'auto', maxWidth: 'none' }}
-          width={this.state.listWidth - (padding * 2)}
-          height={this.state.listHeight - (padding * 2)}
+          width={this.state.listWidth - padding * 2}
+          height={this.state.listHeight - padding * 2}
           rowCount={rowCount}
           scrollToIndex={this.state.autoScroll && rowCount > 0 ? rowCount - 1 : undefined}
           rowHeight={ITEM_HEIGHT}

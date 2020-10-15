@@ -48,7 +48,13 @@ function previewProp(val, nested) {
   }
   if (Array.isArray(val)) {
     if (nested) {
-      return <span className={css(styles.previewPropArray)}>[({val.length})]</span>;
+      return (
+        <span className={css(styles.previewPropArray)}>
+          [(
+          {val.length}
+          )]
+        </span>
+      );
     }
     return previewArray(val);
   }
@@ -64,20 +70,31 @@ function previewProp(val, nested) {
       return <span className={css(styles.previewProp)}>{val[consts.name]}</span>;
     }
     case 'function': {
-      return <span className={css(styles.previewPropFn)}>{val[consts.name] || 'fn'}()</span>;
+      return (
+        <span className={css(styles.previewPropFn)}>
+          {val[consts.name] || 'fn'}
+          ()
+        </span>
+      );
     }
     case 'object': {
       return <span className={css(styles.previewPropFn)}>{`${val[consts.name]}{…}`}</span>;
     }
     case 'array': {
-      return <span className={css(styles.previewPropArray)}>Array[{val[consts.meta].length}]</span>;
+      return (
+        <span className={css(styles.previewPropArray)}>
+          Array[
+          {val[consts.meta].length}]
+        </span>
+      );
     }
     case 'typed_array':
     case 'array_buffer':
     case 'data_view': {
       return (
-        <span className={css(styles.previewPropArray)}>{`${val[consts.name]}[${val[consts.meta]
-          .length}]`}</span>
+        <span className={css(styles.previewPropArray)}>
+          {`${val[consts.name]}[${val[consts.meta].length}]`}
+        </span>
       );
     }
     case 'iterator': {

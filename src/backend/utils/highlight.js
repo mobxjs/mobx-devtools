@@ -27,7 +27,7 @@ const showNodeAroundNode = (node, targetNode, outlineColor, backgroundColor) => 
   }
 };
 
-const removeHoverNode = (hoverNode) => {
+const removeHoverNode = hoverNode => {
   if (hoverNode) {
     if (hoverNode.parentNode) {
       hoverNode.parentNode.removeChild(hoverNode);
@@ -87,7 +87,7 @@ export const hightlight = (node, { delay, content, borderColor, backgroundColor 
   }
 };
 
-export const stopHighlighting = (node) => {
+export const stopHighlighting = node => {
   const hoverNode = hoverNodesMap.get(node);
   if (hoverNode) {
     removeHoverNode(hoverNode);

@@ -2,6 +2,7 @@ import AbstractStore from './AbstractStore';
 
 export default class UpdatesHighlighterStore extends AbstractStore {
   updatesEnabled = false;
+
   updatesFilterByDuration = { slow: false, medium: false, fast: false };
 
   constructor(bridge) {
@@ -20,9 +21,10 @@ export default class UpdatesHighlighterStore extends AbstractStore {
     this.updatesFilterByDuration = { slow, medium, fast };
     this.emit('updatesFilterByDuration');
     this.bridge.send('backend-mobx-react:set-displaying-updates-enabled', updatesEnabled);
-    this.bridge.send(
-      'backend-mobx-react:set-displaying-updates-filter-by-duration',
-      { slow, medium, fast }
-    );
+    this.bridge.send('backend-mobx-react:set-displaying-updates-filter-by-duration', {
+      slow,
+      medium,
+      fast,
+    });
   }
 }

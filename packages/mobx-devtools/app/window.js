@@ -1,8 +1,9 @@
+const ip = require('ip');
+
 const startServer = require('./startServer');
 
 const port = process.env.PORT || 8098;
 const initFrontend = require('../lib/frontend').default; // eslint-disable-line
-const ip = require('ip');
 
 const node = document.getElementById('container');
 
@@ -14,16 +15,12 @@ global.chrome = {};
 document.getElementById('localhost').value = `<script src="//localhost:${port}"></script>`;
 document.getElementById('byip').value = `<script src="//${ip.address()}:${port}"></script>`;
 
-[
-  document.getElementById('localhost'),
-  document.getElementById('byip'),
-].forEach((el) => {
-  el.onclick = function () {
+[document.getElementById('localhost'), document.getElementById('byip')].forEach(el => {
+  el.onclick = function onClick() {
     this.selectionStart = 0;
     this.selectionEnd = this.value.length;
   };
 });
-
 
 startServer({
   port,
@@ -32,7 +29,7 @@ startServer({
   },
   onConnect(socket) {
     const listeners = [];
-    socket.onmessage = (evt) => {
+    socket.onmessage = evt => {
       const data = JSON.parse(evt.data);
       listeners.forEach(fn => fn(data));
     };
@@ -49,7 +46,7 @@ startServer({
     };
     deinitFrontend = initFrontend({
       node,
-      reloadSubscribe: (reloadFn) => {
+      reloadSubscribe: reloadFn => {
         onDisconnect = () => reloadFn();
         return () => {
           onDisconnect = undefined;
@@ -77,4 +74,3 @@ startServer({
     }, 10);
   },
 });
-

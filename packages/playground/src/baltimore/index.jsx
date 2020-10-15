@@ -11,14 +11,10 @@ const store = observable({ count: 0 });
 class App extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-  }
+  };
 
   render() {
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    );
+    return <div>{this.props.children}</div>;
   }
 }
 
@@ -26,7 +22,10 @@ class App extends React.Component {
 class Counter extends React.Component {
   constructor(...args) {
     super(...args);
-    this.map = new Map([['a', '1'], ['b', 2]]);
+    this.map = new Map([
+      ['a', '1'],
+      ['b', 2],
+    ]);
     this.omap = observable.map({ a: '1', b: 2 });
     this.set = new Set([['a', 2]]);
     this.oset = observable.set(['a', 2]);
@@ -56,4 +55,9 @@ class Counter extends React.Component {
   }
 }
 
-render(<App><Counter /></App>, document.querySelector('#root'));
+render(
+  <App>
+    <Counter />
+  </App>,
+  document.querySelector('#root'),
+);

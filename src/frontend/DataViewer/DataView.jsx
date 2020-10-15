@@ -8,7 +8,7 @@ import Spinner from '../Spinner';
 const renderSparseArrayHole = (count, key) => (
   <li key={key}>
     <div className={css(styles.head)}>
-      <div className={css(styles.sparseArrayHole)}>undefined × {count}</div>
+      <div className={css(styles.sparseArrayHole)}>undefined ×{count}</div>
     </div>
   </li>
 );
@@ -93,20 +93,24 @@ export default class DataView extends React.Component {
             editable={editable}
             ChildDataView={this.props.ChildDataView}
             ChildDataItem={this.props.ChildDataItem}
-          />
+          />,
         );
       });
     } else if (isMap) {
       if (value[symbols.entries]) {
-        value[symbols.entries].forEach(([key], i) => elements.push(
-          this.renderItem(key, key, editable, this.props.path.concat([symbols.entries, i, 1]))
-        ));
+        value[symbols.entries].forEach(([key], i) =>
+          elements.push(
+            this.renderItem(key, key, editable, this.props.path.concat([symbols.entries, i, 1])),
+          ),
+        );
       }
     } else if (isSet) {
       if (value[symbols.entries]) {
-        value[symbols.entries].forEach(([key], i) => elements.push(
-          this.renderItem(key, key, editable, this.props.path.concat([symbols.entries, i, 1]))
-        ));
+        value[symbols.entries].forEach(([key], i) =>
+          elements.push(
+            this.renderItem(key, key, editable, this.props.path.concat([symbols.entries, i, 1])),
+          ),
+        );
       }
     } else {
       // Iterate over a regular object

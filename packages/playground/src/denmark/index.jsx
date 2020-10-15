@@ -49,8 +49,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        time: {tick.data}s
-        {this.props.children}
+        time: {tick.data}s{this.props.children}
       </div>
     );
   }
@@ -74,12 +73,15 @@ class Counter extends React.Component {
           {store.count}
           <button onClick={this.manuallyIncrease}>+</button>
         </div>
-        <div>
-          {autoCounter.computedData}
-        </div>
+        <div>{autoCounter.computedData}</div>
       </div>
     );
   }
 }
 
-render(<App><Counter /></App>, document.querySelector('#root'));
+render(
+  <App>
+    <Counter />
+  </App>,
+  document.querySelector('#root'),
+);

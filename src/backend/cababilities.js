@@ -1,4 +1,4 @@
-export default (bridge) => {
+export default bridge => {
   let mobxFound = false;
   let mobxReactFound = false;
   let mstFound = false;

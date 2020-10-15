@@ -7,7 +7,7 @@ import installGlobalHook from '../../../src/backend/utils/installGlobalHook';
 installGlobalHook(window);
 const hook = window.__MOBX_DEVTOOLS_GLOBAL_HOOK__; // eslint-disable-line no-underscore-dangle
 
-const connectToDevTools = (options) => {
+const connectToDevTools = options => {
   const { host = 'localhost', port = 8098 } = options;
   const messageListeners = [];
   const uri = `ws://${host}:${port}`;
@@ -55,7 +55,7 @@ const connectToDevTools = (options) => {
       }
       return;
     }
-    messageListeners.forEach((fn) => {
+    messageListeners.forEach(fn => {
       try {
         fn(data);
       } catch (e) {

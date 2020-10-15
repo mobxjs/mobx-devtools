@@ -22,7 +22,7 @@ import Collapsible from '../../Collapsible';
           treeExplorerStore.selectedNodeId,
           node,
           val,
-          path
+          path,
         );
       },
       inspect(path) {
@@ -37,7 +37,7 @@ import Collapsible from '../../Collapsible';
       getValueByPath(path) {
         return path.reduce(
           (acc, next) => acc && acc[next],
-          treeExplorerStore.nodesById[treeExplorerStore.selectedNodeId]
+          treeExplorerStore.nodesById[treeExplorerStore.selectedNodeId],
         );
       },
     };

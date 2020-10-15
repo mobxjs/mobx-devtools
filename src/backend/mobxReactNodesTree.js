@@ -6,7 +6,7 @@ import makeInspector from './utils/inspector';
 import storaTempValueInGlobalScope from './utils/storaTempValueInGlobalScope';
 import { symbols } from '../Bridge';
 
-export default (bridge) => {
+export default bridge => {
   const collections = {};
 
   const mobxIdsByComponent = new WeakMap();
@@ -20,16 +20,17 @@ export default (bridge) => {
     bridge.send('inspect-component-result', { componentId: inspectedObject.id, path, data });
   });
 
-  const getComponentForNode = (node) => {
+  const getComponentForNode = node => {
     for (const mobxid in collections) {
       if (Object.prototype.hasOwnProperty.call(collections, mobxid)) {
         const { mobxReact } = collections[mobxid];
         let component = mobxReact && mobxReact.componentByNodeRegistery.get(node);
         if (component) {
-          component = Object.assign({
+          component = {
             props: component.props,
             state: component.state,
-          }, component);
+            ...component,
+          };
           mobxIdsByComponent.set(component, mobxid);
           return component;
         }
@@ -63,7 +64,8 @@ export default (bridge) => {
   const getComponentName = function getComponentName(node) {
     if (node.constructor.displayName) {
       return node.constructor.displayName;
-    } else if (node.constructor.name) {
+    }
+    if (node.constructor.name) {
       return node.constructor.name;
     }
     return 'div';
@@ -161,17 +163,17 @@ export default (bridge) => {
       if (isTracking) {
         bridge.send(
           'frontend:mobx-react-components',
-          Object.keys(componentsById).map(id => componentsById[id])
+          Object.keys(componentsById).map(id => componentsById[id]),
         );
       }
       traverse(document);
       bridge.send(
         'frontend:mobx-react-components',
-        Object.keys(componentsById).map(id => componentsById[id])
+        Object.keys(componentsById).map(id => componentsById[id]),
       );
       isTracking = true;
     }),
-    bridge.sub('highlight', (id) => {
+    bridge.sub('highlight', id => {
       stopHighlightingAll();
       hightlight(nodesById[id], { backgroundColor: 'rgba(0, 144, 255, 0.35)' });
     }),
@@ -214,7 +216,7 @@ export default (bridge) => {
       const value = path.reduce((acc, next) => acc && acc[next], componentInfo);
       storaTempValueInGlobalScope(value);
     }),
-    bridge.sub('selectedNodeId', (id) => {
+    bridge.sub('selectedNodeId', id => {
       const componentInfo = componentsById[id];
       window.$m = componentInfo && componentInfo.component;
     }),
@@ -252,10 +254,10 @@ export default (bridge) => {
       if (collection.mobxReact) {
         collection.mobxReact.trackComponents();
         disposables.push(
-          collection.mobx.spy((report) => {
+          collection.mobx.spy(report => {
             inspector.handleUpdate(report.object);
           }),
-          collection.mobxReact.renderReporter.on((report) => {
+          collection.mobxReact.renderReporter.on(report => {
             if (isTracking) {
               switch (report.event) {
                 case 'destroy':
@@ -269,7 +271,7 @@ export default (bridge) => {
                   break;
               }
             }
-          })
+          }),
         );
       }
     },

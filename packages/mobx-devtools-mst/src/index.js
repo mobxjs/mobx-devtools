@@ -1,7 +1,7 @@
 import * as mobx from 'mobx'; // eslint-disable-line
 import * as libmst from 'mobx-state-tree'; // eslint-disable-line
 
-const track = (root) => {
+const track = root => {
   const hook = global.__MOBX_DEVTOOLS_GLOBAL_HOOK__; // eslint-disable-line no-underscore-dangle
   if (hook && hook.inject) hook.inject({ mobx, mst: libmst });
 
@@ -19,7 +19,7 @@ const track = (root) => {
   }
 };
 
-export default (root) => {
+export default root => {
   track(root);
   return root;
 };

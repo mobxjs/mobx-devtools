@@ -71,7 +71,7 @@ export default class RichPanel extends React.Component {
     ].filter(t => t);
   }
 
-  handleTabChage = (tab) => {
+  handleTabChage = tab => {
     this.setState({ activeTab: tab, preferredTab: tab });
     preferences.set({ lastTab: tab });
   };
@@ -95,7 +95,14 @@ export default class RichPanel extends React.Component {
     const availableTabs = this.getAvailableTabs();
 
     return (
-      <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <MainMenu
           availableTabs={availableTabs}
           activeTab={this.state.activeTab}

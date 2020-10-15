@@ -4,9 +4,5 @@ const { spawnSync } = require('child_process');
 
 const argv = process.argv.slice(2);
 
-const result = spawnSync(
-  electron,
-  [require.resolve('./app')].concat(argv),
-  { stdio: 'ignore' }
-);
+const result = spawnSync(electron, [require.resolve('./app')].concat(argv), { stdio: 'ignore' });
 process.exit(result.status);

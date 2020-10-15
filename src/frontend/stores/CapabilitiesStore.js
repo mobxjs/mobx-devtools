@@ -6,15 +6,15 @@ export default class CapabilitiesStore extends AbstractStore {
     this.bridge = bridge;
 
     this.addDisposer(
-      bridge.sub('capabilities', (capabilities) => {
+      bridge.sub('capabilities', capabilities => {
         this.capabilities = capabilities;
-        Object.keys(capabilities).forEach((key) => {
+        Object.keys(capabilities).forEach(key => {
           if (this[key] !== capabilities[key]) {
             this[key] = capabilities[key];
             this.emit(key);
           }
         });
-      })
+      }),
     );
 
     bridge.send('get-capabilities');

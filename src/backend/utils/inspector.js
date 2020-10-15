@@ -1,6 +1,6 @@
 import { symbols, allowedComplexObjects } from '../../Bridge';
 
-export default (onResult) => {
+export default onResult => {
   let inspectedObject;
   const inspectionTree = {};
   const nodesByObject = new Map();
@@ -10,14 +10,15 @@ export default (onResult) => {
   const PARENT = Symbol('PARENT');
   const KEY = Symbol('KEY');
 
-  const getNodeForPath = path => path.reduce((acc, next) => {
-    if (!acc[next]) {
-      acc[next] = { [KEY]: next, [PARENT]: acc, [PATH]: (acc[PATH] || []).concat(next) };
-    }
-    return acc[next];
-  }, inspectionTree);
+  const getNodeForPath = path =>
+    path.reduce((acc, next) => {
+      if (!acc[next]) {
+        acc[next] = { [KEY]: next, [PARENT]: acc, [PATH]: (acc[PATH] || []).concat(next) };
+      }
+      return acc[next];
+    }, inspectionTree);
 
-  const getInvalidatedParentForNode = (node) => {
+  const getInvalidatedParentForNode = node => {
     let current = node[PARENT];
     while (current) {
       if (invalidatedNodes.has(current)) return true;
@@ -28,10 +29,11 @@ export default (onResult) => {
 
   const getPathsForObject = object => (nodesByObject.get(object) || []).map(node => node[PATH]);
 
-  const getObjectForPath = path => path.reduce(
-    (acc, next) => acc && acc[next === symbols.proto ? '__proto__' : next],
-    inspectedObject
-  );
+  const getObjectForPath = path =>
+    path.reduce(
+      (acc, next) => acc && acc[next === symbols.proto ? '__proto__' : next],
+      inspectedObject,
+    );
 
   const rememberPath = (path, object) => {
     const node = getNodeForPath(path);
@@ -41,7 +43,7 @@ export default (onResult) => {
     }
   };
 
-  const forgetPath = (path) => {
+  const forgetPath = path => {
     if (path.length === 0) {
       for (const p in inspectionTree) {
         if (Object.prototype.hasOwnProperty.call(inspectionTree, p)) {
@@ -74,7 +76,7 @@ export default (onResult) => {
     }
   };
 
-  const allowChildren = (node) => {
+  const allowChildren = node => {
     for (const p in node) {
       if (Object.prototype.hasOwnProperty.call(node, p)) {
         const obj = getObjectForPath(node[p][PATH]);
@@ -86,13 +88,13 @@ export default (onResult) => {
 
   const flush = () => {
     if (invalidatedNodes.length === 0) return;
-    invalidatedNodes.forEach((node) => {
+    invalidatedNodes.forEach(node => {
       const invalidatedParent = getInvalidatedParentForNode(node);
       if (invalidatedParent) {
         invalidatedNodes.delete(node);
       }
     });
-    invalidatedNodes.forEach((node) => {
+    invalidatedNodes.forEach(node => {
       allowChildren(node);
       fireResult(node[PATH], getObjectForPath(node[PATH]));
     });
@@ -117,7 +119,7 @@ export default (onResult) => {
 
   return {
     handleUpdate(object) {
-      getPathsForObject(object).forEach((path) => {
+      getPathsForObject(object).forEach(path => {
         const node = path.reduce((acc, next) => {
           if (!acc[next]) {
             acc[next] = {};

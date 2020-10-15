@@ -5,6 +5,7 @@ export default class MSTChangesStore extends AbstractStore {
   mstLogEnabled = false;
 
   itemsDataByRootId = {};
+
   rootNamesById = {};
 
   constructor(bridge) {
@@ -12,8 +13,8 @@ export default class MSTChangesStore extends AbstractStore {
     this.bridge = bridge;
 
     this.addDisposer(
-      bridge.sub('frontend:append-mst-log-items', (newLogItem) => {
-        const rootId = newLogItem.rootId;
+      bridge.sub('frontend:append-mst-log-items', newLogItem => {
+        const { rootId } = newLogItem;
         if (!this.itemsDataByRootId[rootId]) {
           if (!this.activeRootId) {
             this.activeRootId = rootId;
@@ -36,23 +37,23 @@ export default class MSTChangesStore extends AbstractStore {
         this.emit('mstLogItems');
         this.selectLogItemId(newLogItem.id);
       }),
-      bridge.sub('mst-log-item-details', (logItem) => {
+      bridge.sub('mst-log-item-details', logItem => {
         const itemData = this.itemsDataByRootId[logItem.rootId];
         if (!itemData) return;
         itemData.logItemsById[logItem.id] = logItem;
         this.emit(logItem.id);
       }),
-      bridge.sub('frontend:mst-roots', (roots) => {
+      bridge.sub('frontend:mst-roots', roots => {
         roots.forEach(({ id, name }) => {
           this.rootNamesById[id] = name;
         });
         this.emit('mstRootsUpdated');
       }),
-      bridge.sub('frontend:remove-mst-root', (rootId) => {
+      bridge.sub('frontend:remove-mst-root', rootId => {
         delete this.rootNamesById[rootId];
         delete this.itemsDataByRootId[rootId];
         this.emit('mstRootsUpdated');
-      })
+      }),
     );
 
     preferences.get('mstLogEnabled').then(({ mstLogEnabled = true }) => {
@@ -70,7 +71,7 @@ export default class MSTChangesStore extends AbstractStore {
   }
 
   commitAll() {
-    Object.keys(this.itemsDataByRootId).forEach((rootId) => {
+    Object.keys(this.itemsDataByRootId).forEach(rootId => {
       this.spliceLogItems(rootId, 0, this.itemsDataByRootId[rootId].logItemsIds.length - 1);
     });
     this.emit('mstLogItems');
@@ -79,9 +80,9 @@ export default class MSTChangesStore extends AbstractStore {
   spliceLogItems(rootId, startIndex = 0, endIndex = Infinity) {
     const itemData = this.itemsDataByRootId[rootId];
     if (!itemData) return;
-    const logItemsIds = itemData.logItemsIds;
+    const { logItemsIds } = itemData;
     const removedItemsIds = logItemsIds.splice(startIndex, endIndex);
-    removedItemsIds.forEach((id) => {
+    removedItemsIds.forEach(id => {
       delete itemData.logItemsById[id];
     });
     if (itemData.selectLogItemId && removedItemsIds.indexOf(itemData.selectedLogItemId) !== -1) {

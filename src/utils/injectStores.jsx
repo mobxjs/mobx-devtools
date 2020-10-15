@@ -10,12 +10,11 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => TargetCo
     };
 
     componentWillMount() {
-      const eventsByStore = typeof subscribe === 'function'
-        ? subscribe(this.context.stores, this.props)
-        : subscribe;
+      const eventsByStore =
+        typeof subscribe === 'function' ? subscribe(this.context.stores, this.props) : subscribe;
       for (const s in eventsByStore) {
         if (Object.prototype.hasOwnProperty.call(eventsByStore, s)) {
-          eventsByStore[s].forEach((event) => {
+          eventsByStore[s].forEach(event => {
             this.context.stores[s].subscribe(event, this.scheduleUpdate);
           });
         }
@@ -38,18 +37,18 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => TargetCo
     componentWillUpdate(nextProps) {
       if (typeof subscribe !== 'function') return;
       const nextEventsByStore = subscribe(this.context.stores, nextProps);
-      Object.keys(this.eventsByStore).forEach((s) => {
+      Object.keys(this.eventsByStore).forEach(s => {
         const diff = arrayDiff(nextEventsByStore[s], this.eventsByStore[s]);
-        diff.missing.forEach((name) => {
+        diff.missing.forEach(name => {
           this.context.stores[s].off(name, this.scheduleUpdate);
         });
-        diff.newItems.forEach((name) => {
+        diff.newItems.forEach(name => {
           this.context.stores[s].on(name, this.scheduleUpdate);
         });
       });
-      Object.keys(nextEventsByStore).forEach((s) => {
+      Object.keys(nextEventsByStore).forEach(s => {
         if (!Object.prototype.hasOwnProperty.call(this.eventsByStore, s)) {
-          nextEventsByStore[s].forEach((name) => {
+          nextEventsByStore[s].forEach(name => {
             this.context.stores[s].on(name, this.scheduleUpdate);
           });
         }
@@ -60,14 +59,15 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => TargetCo
     componentWillUnmount() {
       this.$isMounted = false;
       this.disposables.forEach(fn => fn());
-      Object.keys(this.eventsByStore).forEach((s) => {
+      Object.keys(this.eventsByStore).forEach(s => {
         this.eventsByStore[s].forEach(name =>
-          this.context.stores[s].off(name, this.scheduleUpdate)
+          this.context.stores[s].off(name, this.scheduleUpdate),
         );
       });
     }
 
     eventsByStore = {};
+
     disposables = [];
 
     scheduleUpdate = () => {

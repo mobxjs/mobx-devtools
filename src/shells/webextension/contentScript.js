@@ -9,19 +9,22 @@
 
 import debugConnection from '../../utils/debugConnection';
 
-const contentScriptId = Math.random()
-  .toString(32)
-  .slice(2);
+const contentScriptId = Math.random().toString(32).slice(2);
 
 // proxy from main page to devtools (via the background page)
 const port = chrome.runtime.connect({ name: 'content-script' });
 
-const handshake = (backendId) => {
+const handshake = backendId => {
   function sendMessageToBackend(payload) {
     debugConnection('[backgrond -> CONTENTSCRIPT -> backend]', payload);
     window.postMessage(
-      { source: 'mobx-devtools-content-script', payload, contentScriptId, backendId },
-      '*'
+      {
+        source: 'mobx-devtools-content-script',
+        payload,
+        contentScriptId,
+        backendId,
+      },
+      '*',
     );
   }
 
@@ -82,7 +85,7 @@ window.addEventListener('message', function listener(message) {
     message.data.contentScriptId === contentScriptId
   ) {
     debugConnection('[backend -> CONTENTSCRIPT]', message);
-    const backendId = message.data.backendId;
+    const { backendId } = message.data;
     clearTimeout(handshakeFailedTimeout);
     clearInterval(pingInterval);
     debugConnection('[CONTENTSCRIPT -> backend]', 'backend:hello');
@@ -93,7 +96,7 @@ window.addEventListener('message', function listener(message) {
         contentScriptId,
         backendId,
       },
-      '*'
+      '*',
     );
 
     if (!connected) {

@@ -17,12 +17,14 @@ export default function installGlobalHook(window) {
         if (a[name] && !a[name].getDebugName && a[name].extras) {
           // Support MobX < 4 API
           var fixedMobx = {};
-          for (let p in a[name]) if (Object.prototype.hasOwnProperty.call(a[name], p)) {
-            fixedMobx[p] = a[name][p];
-          }
-          for (let p in a[name].extras) if (Object.prototype.hasOwnProperty.call(a[name].extras, p)) {
-            fixedMobx[p] = a[name].extras[p];
-          }
+          for (let p in a[name])
+            if (Object.prototype.hasOwnProperty.call(a[name], p)) {
+              fixedMobx[p] = a[name][p];
+            }
+          for (let p in a[name].extras)
+            if (Object.prototype.hasOwnProperty.call(a[name].extras, p)) {
+              fixedMobx[p] = a[name].extras[p];
+            }
           a[name] = fixedMobx;
         }
         return Boolean(a[name] && a[name].spy);
@@ -81,9 +83,7 @@ export default function installGlobalHook(window) {
             }
           }
         if (!mobxid) {
-          mobxid = Math.random()
-            .toString(32)
-            .slice(2);
+          mobxid = Math.random().toString(32).slice(2);
           this.collections[mobxid] = {};
         }
         for (let prop in collection)
@@ -131,7 +131,7 @@ export default function installGlobalHook(window) {
         if (this._listeners[evt]) {
           this._listeners[evt].map(fn => fn(data));
         }
-      }
-    }
+      },
+    },
   });
 }

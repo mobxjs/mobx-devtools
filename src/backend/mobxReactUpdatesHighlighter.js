@@ -1,16 +1,16 @@
 import { hightlight, stopHighlighting } from './utils/highlight';
 
-export default (bridge) => {
+export default bridge => {
   let updatesEnabled = false;
   let updatesFilterByDuration = { slow: false, medium: false, fast: false };
 
   const collections = {};
 
   const disposables = [
-    bridge.sub('backend-mobx-react:set-displaying-updates-enabled', (value) => {
+    bridge.sub('backend-mobx-react:set-displaying-updates-enabled', value => {
       updatesEnabled = value;
     }),
-    bridge.sub('backend-mobx-react:set-displaying-updates-filter-by-duration', (filter) => {
+    bridge.sub('backend-mobx-react:set-displaying-updates-filter-by-duration', filter => {
       updatesFilterByDuration = filter;
     }),
   ];
@@ -21,7 +21,7 @@ export default (bridge) => {
       if (collection.mobxReact) {
         collection.mobxReact.trackComponents();
         disposables.push(
-          collection.mobxReact.renderReporter.on((report) => {
+          collection.mobxReact.renderReporter.on(report => {
             if (updatesEnabled) {
               if (report.event === 'render') {
                 const { slow, medium, fast } = updatesFilterByDuration;
@@ -55,7 +55,7 @@ export default (bridge) => {
                 stopHighlighting(report.node);
               }
             }
-          })
+          }),
         );
       }
     },

@@ -5,19 +5,17 @@
  */
 
 import initBackend from '../../backend';
-import Bridge from '../../../src/Bridge';
+import Bridge from '../../Bridge';
 import debugConnection from '../../utils/debugConnection';
 
-const backendId = Math.random()
-  .toString(32)
-  .slice(2);
+const backendId = Math.random().toString(32).slice(2);
 
 function handshake(hook, contentScriptId) {
   let listeners = [];
 
   const bridge = new Bridge({
     listen(fn) {
-      const listener = (evt) => {
+      const listener = evt => {
         if (
           evt.data.source === 'mobx-devtools-content-script' &&
           evt.data.contentScriptId === contentScriptId &&
@@ -33,8 +31,13 @@ function handshake(hook, contentScriptId) {
     send(data) {
       debugConnection('[BACKEND -> contentScript]', data);
       window.postMessage(
-        { source: 'mobx-devtools-backend', payload: data, contentScriptId, backendId },
-        '*'
+        {
+          source: 'mobx-devtools-backend',
+          payload: data,
+          contentScriptId,
+          backendId,
+        },
+        '*',
       );
     },
   });
@@ -63,7 +66,7 @@ function waitForPing() {
   function pingListener(evt) {
     if (evt.data.source === 'mobx-devtools-content-script' && evt.data.payload === 'backend:ping') {
       debugConnection('[contentScript -> BACKEND]', evt);
-      const contentScriptId = evt.data.contentScriptId;
+      const { contentScriptId } = evt.data;
 
       window.removeEventListener('message', pingListener);
       clearTimeout(handshakeFailedTimeout);
@@ -71,11 +74,16 @@ function waitForPing() {
       const payload = 'contentScript:pong';
       debugConnection('[contentScript -> BACKEND]', payload);
       window.postMessage(
-        { source: 'mobx-devtools-backend', payload, contentScriptId, backendId },
-        '*'
+        {
+          source: 'mobx-devtools-backend',
+          payload,
+          contentScriptId,
+          backendId,
+        },
+        '*',
       );
 
-      const helloListener = (e) => {
+      const helloListener = e => {
         if (
           e.data.source === 'mobx-devtools-content-script' &&
           e.data.payload === 'backend:hello' &&
@@ -90,7 +98,7 @@ function waitForPing() {
         }
       };
 
-      const failListener = (e) => {
+      const failListener = e => {
         if (
           e.data.source === 'mobx-devtools-content-script' &&
           e.data.payload === 'backend:connection-failed' &&

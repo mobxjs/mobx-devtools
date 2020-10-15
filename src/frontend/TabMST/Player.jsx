@@ -20,7 +20,7 @@ export default class Player extends React.Component {
 
   handleDraggableStart = () => {};
 
-  handleDraggableMove = (x) => {
+  handleDraggableMove = x => {
     const rect = this.seekBar.getBoundingClientRect();
     const percent = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
     const targetIndex = Math.round((this.props.length - 1) * percent);
@@ -45,7 +45,9 @@ export default class Player extends React.Component {
         >
           <IconLeft />
         </span>
-        <span className={css(styles.progress)}>{currentIndex + 1} / {length}</span>
+        <span className={css(styles.progress)}>
+          {currentIndex + 1} / {length}
+        </span>
         <span
           className={css(styles.lrButton, nextDisabled && styles.lrButtonDisabled)}
           onClick={this.handleNext}
@@ -53,7 +55,9 @@ export default class Player extends React.Component {
           <IconRight />
         </span>
         <span
-          ref={(el) => { this.seekBar = el; }}
+          ref={el => {
+            this.seekBar = el;
+          }}
           className={css(styles.seekBar, disabled && styles.seekBarDisabled)}
         >
           <span className={css(styles.filledBar)} style={{ width: `${percent}%` }} />

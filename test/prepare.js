@@ -3,7 +3,7 @@ const geckodriver = require('geckodriver');
 const webdriver = require('selenium-webdriver');
 const path = require('path');
 
-const TARGET_BROWSER = process.env.TARGET_BROWSER;
+const { TARGET_BROWSER } = process.env;
 
 const startBrowser = () => {
   switch (TARGET_BROWSER) {
@@ -31,11 +31,12 @@ const getServerAddr = () => {
 
 const getCapabilities = () => {
   switch (TARGET_BROWSER) {
-    case 'chrome': return {
-      chromeOptions: {
-        args: [`load-extension=${path.join(__dirname, '../lib/chrome')}`],
-      },
-    };
+    case 'chrome':
+      return {
+        chromeOptions: {
+          args: [`load-extension=${path.join(__dirname, '../lib/chrome')}`],
+        },
+      };
     // TODO: Run unsigned extension in ff
     // case 'firefox': return {
     //   'moz:firefoxOptions': {},
@@ -62,15 +63,14 @@ module.exports = async ({ initialUrl, openDevtool = true }) => {
 
   if (openDevtool) {
     await driver.executeScript(
-      'window.dispatchEvent(new Event(\'test-open-mobx-devtools-window\'));'
+      "window.dispatchEvent(new Event('test-open-mobx-devtools-window'));",
     );
     await driver.wait(
       async () => (await driver.getAllWindowHandles()).length > 1,
       5000,
-      'Devtools wasn\'t open'
+      "Devtools wasn't open",
     );
-    devtoolWindowHandle =
-      (await driver.getAllWindowHandles()).find(h => h !== mainWindowHandle);
+    devtoolWindowHandle = (await driver.getAllWindowHandles()).find(h => h !== mainWindowHandle);
 
     await driver.switchTo().window(devtoolWindowHandle);
   }
@@ -80,5 +80,10 @@ module.exports = async ({ initialUrl, openDevtool = true }) => {
     stopBrowser();
   };
 
-  return { driver, mainWindowHandle, devtoolWindowHandle, teardown };
+  return {
+    driver,
+    mainWindowHandle,
+    devtoolWindowHandle,
+    teardown,
+  };
 };

@@ -18,7 +18,7 @@ export default function ButtonRecord({ active, onClick, showTipStartRecoding }) 
           <div className={css(styles.tipStartRecodingIcon)}>
             <StartRecordingArrow />
           </div>
-            Click to start recording
+          Click to start recording
         </div>
       )}
     </div>

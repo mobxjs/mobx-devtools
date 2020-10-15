@@ -3,10 +3,15 @@ import preferences from '../../preferences';
 
 export default class ActionsStore extends AbstractStore {
   logEnabled = false;
+
   consoleLogEnabled = false;
+
   logFilter = undefined;
+
   logItemsById = {};
+
   logItemsIds = [];
+
   searchText = '';
 
   constructor(bridge) {
@@ -14,10 +19,10 @@ export default class ActionsStore extends AbstractStore {
     this.bridge = bridge;
 
     this.addDisposer(
-      bridge.sub('appended-log-item', (change) => {
+      bridge.sub('appended-log-item', change => {
         if (this.logItemsIds.length > 5000) {
           const removedIds = this.logItemsIds.splice(0, this.logItemsIds.length - 4900);
-          removedIds.forEach((id) => {
+          removedIds.forEach(id => {
             delete this.logItemsById[id];
           });
           this.bridge.send('remove-log-items', removedIds);
@@ -26,7 +31,7 @@ export default class ActionsStore extends AbstractStore {
         this.logItemsIds.push(change.id);
         this.emit('log');
       }),
-      bridge.sub('log-item-details', (item) => {
+      bridge.sub('log-item-details', item => {
         if (this.logItemsById[item.id]) {
           Object.assign(this.logItemsById[item.id], item);
           this.emit(item.id);
@@ -39,7 +44,7 @@ export default class ActionsStore extends AbstractStore {
         }
         // if (__DEV__) console.log(`inspected--${path.join('/')}`, data);
         this.emit(`inspected--${path.join('/')}`);
-      })
+      }),
     );
 
     preferences.get('logEnabled').then(({ logEnabled }) => {
@@ -129,7 +134,7 @@ export default class ActionsStore extends AbstractStore {
   }
 
   getFilteredLogItemsIds() {
-    return this.logItemsIds.filter((id) => {
+    return this.logItemsIds.filter(id => {
       const logItem = this.logItemsById[id];
       if (!logItem || !logItem.name) {
         return false;

@@ -4,10 +4,12 @@ import { StyleSheet, css } from 'aphrodite';
 
 export default class TabsMenu extends React.PureComponent {
   static propTypes = {
-    tabs: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.any,
-      title: PropTypes.string,
-    })).isRequired,
+    tabs: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.any,
+        title: PropTypes.string,
+      }),
+    ).isRequired,
     currentTabId: PropTypes.any,
     onChange: PropTypes.func.isRequired,
   };
@@ -25,11 +27,7 @@ export default class TabsMenu extends React.PureComponent {
   );
 
   render() {
-    return (
-      <div className={css(styles.tabs)}>
-        {this.props.tabs.map(this.tabRenderer)}
-      </div>
-    );
+    return <div className={css(styles.tabs)}>{this.props.tabs.map(this.tabRenderer)}</div>;
   }
 }
 

@@ -2,7 +2,7 @@
 
 let advicedToUseChrome = false;
 
-const formatChange = (change) => {
+const formatChange = change => {
   switch (change.type) {
     case 'action':
       // name, target, arguments, fn
@@ -69,7 +69,7 @@ const formatChange = (change) => {
   }
 };
 
-const getAdditionalMessages = (change) => {
+const getAdditionalMessages = change => {
   switch (change.type) {
     case 'action':
       return [

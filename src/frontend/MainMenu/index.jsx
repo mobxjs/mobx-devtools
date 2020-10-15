@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { css, StyleSheet } from 'aphrodite';
 import Tab from './MainMenuTab';
 
-const getTitle = (type) => {
+const getTitle = type => {
   switch (type) {
     case 'components':
       return 'Components';

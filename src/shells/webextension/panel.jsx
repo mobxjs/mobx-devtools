@@ -4,7 +4,7 @@ import initFrontend from '../../frontend';
 
 let disconnectListener;
 
-const inject = (done) => {
+const inject = done => {
   const code = `
       (function() {
         var inject = function() {
@@ -42,7 +42,7 @@ const inject = (done) => {
 
     const wall = {
       listen(fn) {
-        port.onMessage.addListener((message) => {
+        port.onMessage.addListener(message => {
           debugConnection('[background -> FRONTEND]', message);
           fn(message);
         });
@@ -62,7 +62,7 @@ initFrontend({
   node: document.getElementById('container'),
   debugName: 'Panel UI',
   inject,
-  reloadSubscribe: (reloadFn) => {
+  reloadSubscribe: reloadFn => {
     chrome.devtools.network.onNavigated.addListener(reloadFn);
     return () => {
       chrome.devtools.network.onNavigated.removeListener(reloadFn);

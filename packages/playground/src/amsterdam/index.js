@@ -12,7 +12,9 @@ const createButton = (title, onClick) => {
 
 class MyClass {
   @observable count = 0;
+
   @observable count2 = 0;
+
   @observable count3 = 0;
 }
 
@@ -27,29 +29,43 @@ const myClass = new MyClass();
 
 reaction(
   () => myClass.count2,
-  (c) => { myClass.count = c; },
-  { name: 'My reaction' }
+  c => {
+    myClass.count = c;
+  },
+  { name: 'My reaction' },
 );
 
 reaction(
   () => myClass.count3,
-  (c) => { myClass.count2 = c; }
+  c => {
+    myClass.count2 = c;
+  },
 );
 
-const actionIncrement = action(() => { myClass.count += 1; });
-const actionIncrement2 = action(() => { myClass.count2 += 1; });
-const actionIncrement3 = action(() => { myClass.count3 += 1; });
+const actionIncrement = action(() => {
+  myClass.count += 1;
+});
+const actionIncrement2 = action(() => {
+  myClass.count2 += 1;
+});
+const actionIncrement3 = action(() => {
+  myClass.count3 += 1;
+});
 const actionMapSet = action(() => {
   observableObject.map1 = new Map([['timestamp', Date.now()]]);
 });
 
-root.appendChild(createButton('Increment counter (object)', () => {
-  observableObject.count += 1;
-}));
+root.appendChild(
+  createButton('Increment counter (object)', () => {
+    observableObject.count += 1;
+  }),
+);
 
-root.appendChild(createButton('Increment counter (class)', () => {
-  myClass.count += 1;
-}));
+root.appendChild(
+  createButton('Increment counter (class)', () => {
+    myClass.count += 1;
+  }),
+);
 
 root.appendChild(createButton('actionIncrement', actionIncrement));
 root.appendChild(createButton('actionIncrement2', actionIncrement2));

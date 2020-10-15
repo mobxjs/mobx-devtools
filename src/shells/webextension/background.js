@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'test') {
 const orphansByTabId = {};
 
 function getActiveContentWindow(cb) {
-  chrome.tabs.query({ active: true, windowType: 'normal', currentWindow: true }, (d) => {
+  chrome.tabs.query({ active: true, windowType: 'normal', currentWindow: true }, d => {
     if (d.length > 0) {
       cb(d[0]);
     }
@@ -29,7 +29,7 @@ function getActiveContentWindow(cb) {
 function openWindow(contentTabId) {
   const devtoolWidth = window.screen.availWidth > 1366 ? 450 : 420;
   // Resize main window
-  chrome.windows.getCurrent((wind) => {
+  chrome.windows.getCurrent(wind => {
     if (wind.left + wind.width > window.screen.availWidth - devtoolWidth) {
       const newWidth = Math.min(window.screen.availWidth - devtoolWidth, wind.width);
       chrome.windows.update(wind.id, {
@@ -50,7 +50,7 @@ function openWindow(contentTabId) {
       top: 0,
       left: window.screen.availWidth - devtoolWidth,
     },
-    (win) => {
+    win => {
       function closeListener(tabId) {
         if (tabId === contentTabId || tabId === win.tabs[0].id) {
           chrome.tabs.onRemoved.removeListener(closeListener);
@@ -58,7 +58,7 @@ function openWindow(contentTabId) {
         }
       }
       chrome.tabs.onRemoved.addListener(closeListener);
-    }
+    },
   );
 }
 
@@ -75,11 +75,12 @@ function handleInstallError(tabId, error) {
 }
 
 const waitTabLoad = (tabId, cb) => {
-  if (!chrome.tabs.get) { // electron doesn't support this api
+  if (!chrome.tabs.get) {
+    // electron doesn't support this api
     cb();
     return;
   }
-  chrome.tabs.get(+tabId, (tab) => {
+  chrome.tabs.get(+tabId, tab => {
     if (chrome.runtime.lastError) {
       cb(chrome.runtime.lastError);
     } else if (tab.status === 'complete') {
@@ -94,12 +95,12 @@ const waitTabLoad = (tabId, cb) => {
   });
 };
 
-const installContentScript = (tabId) => {
-  waitTabLoad(+tabId, (err) => {
+const installContentScript = tabId => {
+  waitTabLoad(+tabId, err => {
     if (err) {
       handleInstallError(tabId, err);
     } else {
-      chrome.tabs.executeScript(tabId, { file: '/contentScript.js' }, (res) => {
+      chrome.tabs.executeScript(tabId, { file: '/contentScript.js' }, res => {
         const installError = chrome.runtime.lastError;
         if (err || !res) handleInstallError(tabId, installError);
       });
@@ -109,14 +110,10 @@ const installContentScript = (tabId) => {
 
 function doublePipe(one, two) {
   if (!one.$i) {
-    one.$i = Math.random()
-      .toString(32)
-      .slice(2);
+    one.$i = Math.random().toString(32).slice(2);
   }
   if (!two.$i) {
-    two.$i = Math.random()
-      .toString(32)
-      .slice(2);
+    two.$i = Math.random().toString(32).slice(2);
   }
 
   debugConnection(`BACKGORUND: connect ${one.name} <-> ${two.name} [${one.$i} <-> ${two.$i}]`);
@@ -152,16 +149,18 @@ function doublePipe(one, two) {
   two.onDisconnect.addListener(shutdown);
 }
 
-if (chrome.contextMenus) { // electron doesn't support this api
+if (chrome.contextMenus) {
+  // electron doesn't support this api
   chrome.contextMenus.onClicked.addListener((_, contentWindow) => {
     openWindow(contentWindow.id);
   });
 }
 
-if (chrome.commands) { // electron doesn't support this api
-  chrome.commands.onCommand.addListener((shortcut) => {
+if (chrome.commands) {
+  // electron doesn't support this api
+  chrome.commands.onCommand.addListener(shortcut => {
     if (shortcut === 'open-devtools-window') {
-      getActiveContentWindow((contentWindow) => {
+      getActiveContentWindow(contentWindow => {
         window.contentTabId = contentWindow.id;
         openWindow(contentWindow.id);
       });
@@ -169,8 +168,9 @@ if (chrome.commands) { // electron doesn't support this api
   });
 }
 
-if (chrome.browserAction) { // electron doesn't support this api
-  chrome.browserAction.onClicked.addListener((tab) => {
+if (chrome.browserAction) {
+  // electron doesn't support this api
+  chrome.browserAction.onClicked.addListener(tab => {
     window.contentTabId = tab.id;
     openWindow(tab.id);
   });
@@ -184,8 +184,7 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-
-chrome.runtime.onConnect.addListener((port) => {
+chrome.runtime.onConnect.addListener(port => {
   let tab = null;
   let name = null;
   if (isNumeric(port.name)) {

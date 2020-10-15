@@ -15,13 +15,13 @@ function TreeItem({ dependencies, isLast, isRoot, name }) {
       <span className={css(styles.box, isRoot && styles.box.root)}>{name}</span>
       {dependencies && (
         <div className={css(styles.tree)}>
-          {dependencies.map((d, i) =>
-            (<TreeItem
+          {dependencies.map((d, i) => (
+            <TreeItem
               key={d.name}
               dependencies={d.dependencies}
               isLast={i === dependencies.length - 1}
-            />)
-          )}
+            />
+          ))}
         </div>
       )}
       {!isRoot && <span className={css(styles.itemHorisontalDash)} />}

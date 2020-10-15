@@ -28,7 +28,7 @@ export default class Checkbox extends React.PureComponent {
       <input
         {...props}
         type="checkbox"
-        ref={(el) => {
+        ref={el => {
           this.el = el;
         }}
       />

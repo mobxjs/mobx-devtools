@@ -177,6 +177,7 @@ const requestIdleCallback =
 
 export default class Bridge {
   $listeners = [];
+
   $buffer = [];
 
   constructor(wall) {
@@ -308,7 +309,7 @@ export default class Bridge {
     }
 
     if (payload.type === 'many-events') {
-      payload.events.forEach((event) => {
+      payload.events.forEach(event => {
         const handlers = this.$listeners[event.eventName];
         const eventData = this.$deserialize(event.eventData);
         if (handlers) {

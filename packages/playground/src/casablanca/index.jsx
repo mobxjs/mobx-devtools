@@ -5,7 +5,13 @@ import { observer } from 'mobx-react';
 import { render } from 'react-dom';
 import inspectTree from 'mobx-devtools-mst'; // eslint-disable-line
 
-const getId = (() => { let i = 1; return () => { i += 1; return i; }; })();
+const getId = (() => {
+  let i = 1;
+  return () => {
+    i += 1;
+    return i;
+  };
+})();
 
 const Todo = types.model({
   id: types.number,
@@ -33,9 +39,11 @@ const TodoStore = types
     },
   }));
 
-const storeInstance = inspectTree(TodoStore.create({
-  todos: [{ title: 'Get biscuit', id: getId() }],
-}));
+const storeInstance = inspectTree(
+  TodoStore.create({
+    todos: [{ title: 'Get biscuit', id: getId() }],
+  }),
+);
 
 class TodoComponent extends React.Component {
   render() {
@@ -49,26 +57,26 @@ class TodoComponent extends React.Component {
 
 @observer
 class TodoAppComponent extends React.Component {
-  handleInputKeydown = (e) => {
+  handleInputKeydown = e => {
     if (e.keyCode === 13) {
       storeInstance.addTodo(e.target.value);
       e.target.value = '';
     }
   };
 
+  onDestroy = () => destroy(storeInstance);
+
   render() {
     return (
       <div>
-        {storeInstance.todos.map(t => <TodoComponent key={t.id} {...t} />)}
+        {storeInstance.todos.map(t => (
+          <TodoComponent key={t.id} {...t} />
+        ))}
         <input type="test" onKeyDown={this.handleInputKeydown} />
-        <button onClick={() => destroy(storeInstance)}>destroy</button>
+        <button onClick={this.onDestroy}>destroy</button>
       </div>
     );
   }
 }
 
-render(
-  <TodoAppComponent />,
-  document.querySelector('#root')
-);
-
+render(<TodoAppComponent />, document.querySelector('#root'));

@@ -98,4 +98,3 @@ export default class DevTool extends React.PureComponent {
     );
   }
 }
-

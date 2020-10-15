@@ -52,7 +52,7 @@ const createNode = () => {
 
 initFrontend({
   node: createNode(),
-  inject: (done) => {
+  inject: done => {
     const wall = {
       listen: fn => listenersB.push(fn),
       send: data => randomDelay(() => listenersA.forEach(fn => fn(data))),

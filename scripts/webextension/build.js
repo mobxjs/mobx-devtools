@@ -1,20 +1,20 @@
 const webpack = require('webpack');
 const path = require('path');
-const config = require('../../src/shells/webextension/webpack.config');
 const fs = require('fs');
 const archiver = require('archiver');
+const config = require('../../src/shells/webextension/webpack.config');
 
 const { TARGET_BROWSER } = process.env;
 const rootDir = path.join(__dirname, '../../');
 
 require('./prepare');
 
-
 webpack(config, (err, stats) => {
   // console.log(stats)
   if (err) throw err;
   if (stats.hasErrors()) {
     const errors = stats.toJson().errors.map(m => new Error(m));
+    // eslint-disable-next-line no-console
     console.error(...errors);
     throw errors[0];
   }

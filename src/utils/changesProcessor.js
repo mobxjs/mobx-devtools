@@ -26,11 +26,13 @@ function isPrimitive(value) {
 function getNameForThis(mobx, who) {
   if (who === null || who === undefined) {
     return '';
-  } else if (who && typeof who === 'object') {
+  }
+  if (who && typeof who === 'object') {
     const $mobx = mobx.$mobx || '$mobx';
     if (who && who[$mobx]) {
       return who[$mobx].name;
-    } else if (who.constructor) {
+    }
+    if (who.constructor) {
       return who.constructor.name || 'object';
     }
   }
@@ -47,7 +49,7 @@ function formatValue(mobx, value) {
   return `(${getNameForThis(mobx, value)})`;
 }
 
-export default (onChange) => {
+export default onChange => {
   let path = [];
 
   const push = (_change, mobx) => {

@@ -51,7 +51,5 @@ module.exports = {
     },
     mobx: 'mobx',
   },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
-  ],
+  plugins: [new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } })],
 };

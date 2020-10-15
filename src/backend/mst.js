@@ -1,13 +1,15 @@
 import getId from '../utils/getId';
 
-const summary = (logItem) => {
+const summary = logItem => {
   const sum = Object.create(null);
-  const patches = logItem.patches;
-  sum.patches = patches && patches.map(patch => ({
-    op: patch.op,
-    path: patch.path,
-    value: (patch.value && typeof patch.value === 'object') ? {} : patch.value,
-  }));
+  const { patches } = logItem;
+  sum.patches =
+    patches &&
+    patches.map(patch => ({
+      op: patch.op,
+      path: patch.path,
+      value: patch.value && typeof patch.value === 'object' ? {} : patch.value,
+    }));
   sum.id = logItem.id;
   sum.rootId = logItem.rootId;
   sum.timestamp = logItem.timestamp;
@@ -47,12 +49,12 @@ export default (bridge, hook) => {
       let patches = [];
 
       const rootDisposables = [
-        mst.onPatch(root, (patch) => {
+        mst.onPatch(root, patch => {
           if (trackingEnabled && !insideUntracked) {
             patches.push(patch);
           }
         }),
-        mst.onSnapshot(root, (snapshot) => {
+        mst.onSnapshot(root, snapshot => {
           if (trackingEnabled && !insideUntracked) {
             addLogItem(rootId, { snapshot, patches });
             patches = [];
@@ -75,7 +77,7 @@ export default (bridge, hook) => {
     }
   };
 
-  const removeRoot = (rootId) => {
+  const removeRoot = rootId => {
     const rootData = rootDataById[rootId];
     if (rootData) {
       rootData.dispose();
@@ -88,15 +90,18 @@ export default (bridge, hook) => {
     () => Object.keys(rootDataById).forEach(rootId => removeRoot(rootId)),
     hook.sub('mst-root', addRoot),
     hook.sub('mst-root-dispose', removeRoot),
-    bridge.sub('backend-mst:set-tracking-enabled', (val) => {
+    bridge.sub('backend-mst:set-tracking-enabled', val => {
       if (val === trackingEnabled) return;
       trackingEnabled = val;
       if (val) {
-        bridge.send('frontend:mst-roots', Object.keys(rootDataById).map(id => ({
-          id,
-          name: rootDataById[id].name,
-        })));
-        Object.keys(rootDataById).forEach((rootId) => {
+        bridge.send(
+          'frontend:mst-roots',
+          Object.keys(rootDataById).map(id => ({
+            id,
+            name: rootDataById[id].name,
+          })),
+        );
+        Object.keys(rootDataById).forEach(rootId => {
           const rootData = rootDataById[rootId];
           if (Object.keys(rootData.logItemsById).length === 0) {
             addLogItem(rootId, { isInitial: true });
@@ -117,7 +122,7 @@ export default (bridge, hook) => {
     bridge.sub('backend-mst:forget-mst-items', ({ rootId, itemsIds }) => {
       const rootDatum = rootDataById[rootId];
       if (!rootDatum) return;
-      itemsIds.forEach((id) => {
+      itemsIds.forEach(id => {
         delete rootDatum.logItemsById[id];
       });
     }),

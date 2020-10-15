@@ -18,13 +18,13 @@ export default class Props extends React.PureComponent {
 
     const items = [];
 
-    names.slice(0, 3).forEach((name) => {
+    names.slice(0, 3).forEach(name => {
       items.push(
         <span key={`prop-${name}`} className={css(styles.prop)}>
           <span className={css(styles.attributeName)}>{name}</span>
           =
           <PropVal val={props[name]} />
-        </span>
+        </span>,
       );
     });
 
@@ -32,7 +32,7 @@ export default class Props extends React.PureComponent {
       items.push(
         <span key="ellipsis" className={css(styles.ellipsis)}>
           …
-        </span>
+        </span>,
       );
     }
     return <span>{items}</span>;

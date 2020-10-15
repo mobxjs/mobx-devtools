@@ -4,14 +4,23 @@ import AbstractStore from './AbstractStore';
 
 export default class TreeExplorerStore extends AbstractStore {
   roots = [];
+
   loaded = false;
+
   selectedNodeId = undefined;
+
   hoveredNodeId = undefined;
+
   isBottomTagSelected = undefined;
+
   isBottomTagHovered = undefined;
+
   nodeParentsById = {};
+
   nodesById = {};
+
   searchText = '';
+
   pickingComponent = false;
 
   constructor(bridge) {
@@ -19,7 +28,7 @@ export default class TreeExplorerStore extends AbstractStore {
     this.bridge = bridge;
 
     this.addDisposer(
-      bridge.sub('frontend:mobx-react-components', (components) => {
+      bridge.sub('frontend:mobx-react-components', components => {
         components.forEach(c => this.addNode(c));
         if (this.prevSelectedNodeId && this.nodesById[this.prevSelectedNodeId]) {
           this.select(this.prevSelectedNodeId);
@@ -27,25 +36,25 @@ export default class TreeExplorerStore extends AbstractStore {
         }
         this.loaded = true;
         this.emit('loaded');
-      })
+      }),
     );
 
     this.addDisposer(
-      bridge.sub('frontend:mobx-react-component-updated', (component) => {
+      bridge.sub('frontend:mobx-react-component-updated', component => {
         this.updateNode(component);
-      })
+      }),
     );
 
     this.addDisposer(
-      bridge.sub('frontend:mobx-react-component-added', (component) => {
+      bridge.sub('frontend:mobx-react-component-added', component => {
         this.addNode(component);
-      })
+      }),
     );
 
     this.addDisposer(
-      bridge.sub('frontend:mobx-react-component-removed', (component) => {
+      bridge.sub('frontend:mobx-react-component-removed', component => {
         this.removeNode(component);
-      })
+      }),
     );
 
     this.addDisposer(
@@ -53,7 +62,7 @@ export default class TreeExplorerStore extends AbstractStore {
         this.select(componentId, true);
         this.uncollapseParents(componentId);
         this.stopPickingComponent();
-      })
+      }),
     );
 
     this.addDisposer(
@@ -64,7 +73,7 @@ export default class TreeExplorerStore extends AbstractStore {
         }
         // if (__DEV__) console.log(`inspected--${path.join('/')}`, data);
         this.emit(`inspected--${path.join('/')}`);
-      })
+      }),
     );
   }
 
@@ -99,7 +108,7 @@ export default class TreeExplorerStore extends AbstractStore {
         needle.indexOf(this.searchText.toLowerCase()) === 0 &&
         !SearchUtils.shouldSearchUseRegex(text)
       ) {
-        this.searchRoots = this.searchRoots.filter((item) => {
+        this.searchRoots = this.searchRoots.filter(item => {
           const node = this.nodesById[item];
           return (
             (node.name && node.name.toLowerCase().indexOf(needle) !== -1) ||
@@ -110,10 +119,10 @@ export default class TreeExplorerStore extends AbstractStore {
         });
       } else {
         this.searchRoots = Object.keys(this.nodesById).filter(key =>
-          nodeMatchesText(this.nodesById[key], needle, key, this)
+          nodeMatchesText(this.nodesById[key], needle, key, this),
         );
       }
-      this.searchRoots.forEach((id) => {
+      this.searchRoots.forEach(id => {
         if (this.hasBottom(id)) {
           this.nodesById[id].collapsed = true;
         }
@@ -137,7 +146,7 @@ export default class TreeExplorerStore extends AbstractStore {
 
   hasBottom(id) {
     const node = this.nodesById[id];
-    const children = node.children;
+    const { children } = node;
     if (typeof children === 'string' || !children || !children.length || node.collapsed) {
       return false;
     }
@@ -172,7 +181,7 @@ export default class TreeExplorerStore extends AbstractStore {
     node.collapsed = true;
     this.nodesById[node.id] = node;
     if (node.children) {
-      node.children.forEach((childId) => {
+      node.children.forEach(childId => {
         this.removeRootId(childId);
         this.nodeParentsById[childId] = node.id;
       });
@@ -185,7 +194,7 @@ export default class TreeExplorerStore extends AbstractStore {
 
   updateNode(data) {
     if (data.children) {
-      data.children.forEach((childId) => {
+      data.children.forEach(childId => {
         const ridx = this.roots.indexOf(childId);
         if (ridx !== -1) {
           this.roots.splice(ridx, 1);

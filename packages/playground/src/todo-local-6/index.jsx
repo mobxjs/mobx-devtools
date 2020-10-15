@@ -22,8 +22,4 @@ const Todo = () => {
   );
 };
 
-render(
-  <Todo />,
-  document.querySelector('#root')
-);
-
+render(<Todo />, document.querySelector('#root'));

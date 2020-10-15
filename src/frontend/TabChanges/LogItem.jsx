@@ -8,7 +8,7 @@ import injectStores from '../../utils/injectStores';
 import Popover from '../Popover';
 import ChangeDataViewerPopover from './ChangeDataViewerPopover';
 
-const getColor = (type) => {
+const getColor = type => {
   switch (type) {
     case 'action':
       return '#0486e2';
@@ -94,10 +94,8 @@ export default class LogItem extends React.Component {
             <span className={css(styles.headContentTitle)}>
               {change.name
                 ? change.name
-                : change.type.toUpperCase().slice(0, 1) + change.type.slice(1)
-              }
-            </span>
-            {' '}
+                : change.type.toUpperCase().slice(0, 1) + change.type.slice(1)}
+            </span>{' '}
             {change.object && (
               <ChangeDataViewerPopover
                 path={this.props.path.concat(['object'])}
@@ -155,7 +153,10 @@ export default class LogItem extends React.Component {
         return (
           <div className={css(styles.headContent, styles.headContentWithIcon)}>
             <IconComputed className={css(styles.headContentIcon)} />
-            <span className={css(styles.headContentTitle)}>Computed {change.targetName}</span>
+            <span className={css(styles.headContentTitle)}>
+              Computed
+              {change.targetName}
+            </span>
             {change.object && (
               <ChangeDataViewerPopover
                 path={this.props.path.concat(['object'])}
@@ -239,12 +240,12 @@ export default class LogItem extends React.Component {
   }
 
   render() {
-    const change = this.props.change;
-    const open = this.state.open;
+    const { change } = this.props;
+    const { open } = this.state;
     const openable = this.props.change.hasChildren || (this.props.change.children || []).length > 0;
     return (
       <div
-        ref={(el) => {
+        ref={el => {
           this.el = el;
         }}
         className={css(styles.container, open && styles.containerOpen)}

@@ -1,10 +1,9 @@
 /* eslint-disable camelcase */
 const del = require('del');
 const fs = require('fs');
-const manifest = require('../../src/shells/webextension/manifest.json');
 const path = require('path');
+const manifest = require('../../src/shells/webextension/manifest.json');
 const lernaJson = require('../../lerna.json');
-
 
 const { TARGET_BROWSER, NODE_ENV } = process.env;
 
@@ -16,9 +15,13 @@ if (!TARGET_BROWSER) {
 
 // Prepare folder
 
-del.sync([path.join(rootDir, `lib/${TARGET_BROWSER}.zip`), path.join(rootDir, `lib/${TARGET_BROWSER}/**`)]);
+del.sync([
+  path.join(rootDir, `lib/${TARGET_BROWSER}.zip`),
+  path.join(rootDir, `lib/${TARGET_BROWSER}/**`),
+]);
 if (!fs.existsSync(path.join(rootDir, 'lib'))) fs.mkdirSync(path.join(rootDir, 'lib'));
-if (!fs.existsSync(path.join(rootDir, `lib/${TARGET_BROWSER}`))) fs.mkdirSync(path.join(rootDir, `lib/${TARGET_BROWSER}`));
+if (!fs.existsSync(path.join(rootDir, `lib/${TARGET_BROWSER}`)))
+  fs.mkdirSync(path.join(rootDir, `lib/${TARGET_BROWSER}`));
 
 // Generate manifest.json
 
@@ -32,5 +35,5 @@ if (TARGET_BROWSER === 'chrome') {
 
 fs.writeFileSync(
   path.join(rootDir, `lib/${TARGET_BROWSER}/manifest.json`),
-  JSON.stringify(manifest)
+  JSON.stringify(manifest),
 );

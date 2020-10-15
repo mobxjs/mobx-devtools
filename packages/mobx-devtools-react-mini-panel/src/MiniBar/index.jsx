@@ -14,7 +14,7 @@ import injectStores from '../../../../src/utils/injectStores';
     graphEnabled: false,
     consoleLogEnabled: actionsLoggerStore.consoleLogEnabled,
     togglePickingDeptreeComponent() {
-      console.warn('This button doesn\'t work. Sorry.'); // eslint-disable-line no-console
+      console.warn("This button doesn't work. Sorry."); // eslint-disable-line no-console
     },
     toggleShowingUpdates() {
       updatesHighlighterStore.toggleShowingUpdates();
@@ -57,7 +57,7 @@ export default class MiniBar extends React.PureComponent {
     additionalMiniPanelStyles.left = position.left;
 
     return (
-      <div style={Object.assign({}, styles.panel, additionalMiniPanelStyles)}>
+      <div style={{ ...styles.panel, ...additionalMiniPanelStyles }}>
         <MiniBarButton
           id="buttonUpdates"
           onToggle={this.props.toggleShowingUpdates}

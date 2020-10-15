@@ -24,7 +24,8 @@ export default class PreviewValue extends React.PureComponent {
   }
 }
 
-class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line react/no-multi-comp
+class PreviewSimpleValue extends React.PureComponent {
+  // eslint-disable-line react/no-multi-comp
   static propTypes = {
     change: PropTypes.func,
     data: PropTypes.any,
@@ -50,13 +51,13 @@ class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line re
     }
   }
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       text: e.target.value,
     });
   };
 
-  handleKeyDown = (e) => {
+  handleKeyDown = e => {
     if (e.key === 'Enter') {
       this.submit(true);
       this.setState({
@@ -103,7 +104,7 @@ class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line re
   };
 
   selectAll() {
-    const input = this.input;
+    const { input } = this;
     if (this.state.text.match(/^".*"$/)) {
       input.selectionStart = 1;
       input.selectionEnd = input.value.length - 1;
@@ -121,7 +122,9 @@ class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line re
       return (
         <input
           autoFocus
-          ref={(i) => { this.input = i; }}
+          ref={i => {
+            this.input = i;
+          }}
           className={css(styles.input)}
           onChange={this.handleChange}
           onBlur={this.handleSubmit}
@@ -144,7 +147,7 @@ class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line re
           styles.simple,
           editable && styles.simpleEditable,
           typeof data === 'string' && styles.simpleString,
-          typeof data === 'undefined' && styles.simpleUndefined
+          typeof data === 'undefined' && styles.simpleUndefined,
         )}
       >
         {valueToText(data)}
@@ -153,7 +156,8 @@ class PreviewSimpleValue extends React.PureComponent { // eslint-disable-line re
   }
 }
 
-class PreviewComplexValue extends React.PureComponent { // eslint-disable-line react/no-multi-comp
+class PreviewComplexValue extends React.PureComponent {
+  // eslint-disable-line react/no-multi-comp
   static propTypes = {
     data: PropTypes.any,
     displayName: PropTypes.string,
@@ -179,7 +183,8 @@ class PreviewComplexValue extends React.PureComponent { // eslint-disable-line r
       case 'function':
         return (
           <span className={css(styles.previewComplex, mobxObject && styles.mobxObject)}>
-            {this.props.displayName || data[symbols.name] || 'fn'}()
+            {this.props.displayName || data[symbols.name] || 'fn'}
+            ()
           </span>
         );
       case 'object':
@@ -247,9 +252,11 @@ function textToValue(txt) {
 function valueToText(value) {
   if (value === undefined) {
     return 'undefined';
-  } else if (typeof value === 'number') {
+  }
+  if (typeof value === 'number') {
     return value.toString();
-  } else if (value instanceof Date) {
+  }
+  if (value instanceof Date) {
     return value.toString();
   }
   return JSON.stringify(value);

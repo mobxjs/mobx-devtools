@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import RichPanel from './RichPanel';
 
-export default (config) => {
+export default config => {
   const reload = () => {
     ReactDOM.unmountComponentAtNode(config.node);
     setTimeout(() => {
@@ -22,7 +22,7 @@ export default (config) => {
       >
         <RichPanel />
       </App>,
-      config.node
+      config.node,
     );
   };
 

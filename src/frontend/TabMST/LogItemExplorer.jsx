@@ -10,10 +10,7 @@ import PreviewValue from '../PreviewValue';
   subscribe: ({ mstLoggerStore }) => {
     const itemData = mstLoggerStore.itemsDataByRootId[mstLoggerStore.activeRootId];
     return {
-      mstLoggerStore: [
-        'selectedLogItemId',
-        itemData && itemData.selectedLogItemId,
-      ],
+      mstLoggerStore: ['selectedLogItemId', itemData && itemData.selectedLogItemId],
     };
   },
   injectProps: ({ mstLoggerStore }) => {
@@ -38,7 +35,7 @@ export default class LogItemExplorer extends React.PureComponent {
 
   state = {
     logExplorerHeight: 400,
-  }
+  };
 
   componentDidMount() {
     this.resizeTimeout = setTimeout(() => this.updateSize(), 0); // timeout for css applying
@@ -51,7 +48,9 @@ export default class LogItemExplorer extends React.PureComponent {
 
   handleResize = () => {
     if (this.resizeTimeout) return;
-    this.resizeTimeout = setTimeout(() => { this.updateSize(); }, 200);
+    this.resizeTimeout = setTimeout(() => {
+      this.updateSize();
+    }, 200);
   };
 
   updateSize() {
@@ -75,39 +74,41 @@ export default class LogItemExplorer extends React.PureComponent {
     return (
       <div
         className={css(styles.logExplorer)}
-        ref={(el) => {
+        ref={el => {
           this.containerEl = el;
         }}
-        style={
-          { padding, height: this.state.logExplorerHeight - (padding * 2) }
-        }
+        style={{ padding, height: this.state.logExplorerHeight - padding * 2 }}
       >
-        {this.props.logItem.snapshot &&
-          <Collapsible head={'State'} startOpen>
+        {this.props.logItem.snapshot && (
+          <Collapsible head="State" startOpen>
             <DataViewer
               path={['snapshot']}
               getValueByPath={this.props.getValueByPath}
               decorator={this.dataDecorator}
             />
           </Collapsible>
-        }
+        )}
         {this.props.logItem.patches && !this.props.initial && (
           <div className={css(styles.patches)}>
-            {this.props.logItem.patches.map((patch) => {
+            {this.props.logItem.patches.map(patch => {
               const path = patch.path.replace(/^\//, '').replace(/\//g, '.');
               switch (patch.op) {
                 case 'remove':
                   return (
-                    <div>{path} <span className={css(styles.removedLabel)}>Removed</span></div>
+                    <div>
+                      {path} <span className={css(styles.removedLabel)}>Removed</span>
+                    </div>
                   );
-                default: return (
-                  <div>{path} = <PreviewValue data={patch.value} /></div>
-                );
+                default:
+                  return (
+                    <div>
+                      {path} = <PreviewValue data={patch.value} />
+                    </div>
+                  );
               }
             })}
           </div>
-        )
-        }
+        )}
       </div>
     );
   }

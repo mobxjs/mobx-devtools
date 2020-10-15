@@ -35,8 +35,11 @@ export default class MstLogItem extends React.PureComponent {
   };
 
   handleSelect = () => this.props.onSelect(this.props.logItem.id);
+
   handleActivate = () => this.props.onActivate(this.props.logItem.id);
+
   handleCancel = () => this.props.onCancel(this.props.logItem.id);
+
   handleCommit = () => this.props.onCommit(this.props.logItem.id);
 
   render() {
@@ -52,24 +55,16 @@ export default class MstLogItem extends React.PureComponent {
         </div>
 
         <div className={css(styles.rightButtons, selected && styles.rightButtonsSelected)}>
-          {!initial &&
-            <div
-              onClick={this.handleCommit}
-              className={css(styles.button)}
-              title="Commit"
-            >
+          {!initial && (
+            <div onClick={this.handleCommit} className={css(styles.button)} title="Commit">
               <CommitIcon />
             </div>
-          }
-          {!initial &&
-            <div
-              onClick={this.handleCancel}
-              className={css(styles.button)}
-              title="Cancel"
-            >
+          )}
+          {!initial && (
+            <div onClick={this.handleCancel} className={css(styles.button)} title="Cancel">
               <CancelIcon />
             </div>
-          }
+          )}
           {!active && (
             <div
               onClick={this.handleActivate}
@@ -79,13 +74,9 @@ export default class MstLogItem extends React.PureComponent {
               <TravelIcon />
             </div>
           )}
-          {active && (
-            <div className={css(styles.activeIndicator)} />
-          )}
+          {active && <div className={css(styles.activeIndicator)} />}
         </div>
-        {active && (
-          <div className={css(styles.activeIndicator)} />
-        )}
+        {active && <div className={css(styles.activeIndicator)} />}
       </div>
     );
   }
@@ -99,7 +90,12 @@ const TravelIcon = () => (
     height="15"
     viewBox="0 0 15 15"
   >
-    <path fill="none" stroke="var(--log-item-buttons-color)" strokeWidth="1.2" d="M2.188 4.708a6 6 0 1 1 .115 5.792M7.5 7.5V3m0 4.5L10 10" />
+    <path
+      fill="none"
+      stroke="var(--log-item-buttons-color)"
+      strokeWidth="1.2"
+      d="M2.188 4.708a6 6 0 1 1 .115 5.792M7.5 7.5V3m0 4.5L10 10"
+    />
     <g fill="var(--log-item-buttons-color)">
       <path d="M.553 3.626L1.5 7.5l2.882-2.757L.553 3.626z" />
       <circle cx="7.5" cy="7.5" r=".75" />
@@ -115,7 +111,13 @@ const CancelIcon = () => (
     height="15"
     viewBox="0 0 15 15"
   >
-    <path fill="none" stroke="var(--log-item-buttons-color)" strokeWidth="1.4" strokeMiterlimit="10" d="M2 13L13 2M13 13L2 2" />
+    <path
+      fill="none"
+      stroke="var(--log-item-buttons-color)"
+      strokeWidth="1.4"
+      strokeMiterlimit="10"
+      d="M2 13L13 2M13 13L2 2"
+    />
   </svg>
 );
 
@@ -127,14 +129,18 @@ const CommitIcon = () => (
     height="15"
     viewBox="0 0 15 15"
   >
-    <path fill="none" stroke="var(--log-item-buttons-color)" strokeMiterlimit="10" d="M7.5 3.143v7.838" />
+    <path
+      fill="none"
+      stroke="var(--log-item-buttons-color)"
+      strokeMiterlimit="10"
+      d="M7.5 3.143v7.838"
+    />
     <g fill="var(--log-item-buttons-color)">
       <circle cx="7.5" cy="3.256" r="2.256" />
       <path d="M4.708 10.164L7.5 15l2.792-4.836z" />
     </g>
   </svg>
 );
-
 
 const styles = StyleSheet.create({
   logItem: {
