@@ -1,4 +1,5 @@
 const path = require('path');
+// eslint-disable-next-line import/no-unresolved
 const { app, BrowserWindow } = require('electron');
 
 app.on('window-all-closed', () => {
