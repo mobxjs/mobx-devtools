@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Remove components and performance tabs (#84)
 - Final fix vertical scroll in MST package (#73)
 - Remove destroyed mst roots from UI (#48)
 
