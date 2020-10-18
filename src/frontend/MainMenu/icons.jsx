@@ -18,25 +18,6 @@ export const ChangesIcon = () => (
   </svg>
 );
 
-export const ComponentIcon = () => (
-  <svg
-    baseProfile="basic"
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="14"
-    viewBox="0 0 16 14"
-    fill="none"
-    strokeWidth="1.6"
-  >
-    <path
-      stroke="var(--light-text-color)"
-      strokeLinecap="round"
-      d="M4 3L1 6.903 4 11M12 11l3-4.042L12 3"
-    />
-    <path stroke="var(--primary-color)" d="M9.5 1l-3 12" />
-  </svg>
-);
-
 export const TimerIcon = () => (
   <svg
     baseProfile="basic"

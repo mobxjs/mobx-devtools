@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { css, StyleSheet } from 'aphrodite';
 import { symbols } from '../Bridge';
-import flash from './TabComponents/TreeView/flash';
+import flash from './flash';
 
 const BAD_INPUT = Symbol('bad input');
 

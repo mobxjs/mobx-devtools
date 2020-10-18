@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TabChanges from './TabChanges';
-import TabComponents from './TabComponents';
 import TabPerformance from './TabPerformance';
 import TabMST from './TabMST';
 import MainMenu from './MainMenu';
@@ -40,7 +39,7 @@ export default class RichPanel extends React.Component {
 
   componentWillMount() {
     this.setState({ activeTab: this.getAvailableTabs()[0] });
-    preferences.get('lastTab').then(({ lastTab = 'components' }) => {
+    preferences.get('lastTab').then(({ lastTab = 'changes' }) => {
       if (lastTab) {
         if (this.getAvailableTabs().includes(lastTab)) {
           this.setState({ activeTab: lastTab });
@@ -63,12 +62,9 @@ export default class RichPanel extends React.Component {
   }
 
   getAvailableTabs(props = this.props) {
-    return [
-      props.mobxReactFound && 'components',
-      props.mstFound && 'mst',
-      'changes',
-      props.mobxReactFound && 'performance',
-    ].filter(t => t);
+    return [props.mstFound && 'mst', 'changes', props.mobxReactFound && 'performance'].filter(
+      t => t,
+    );
   }
 
   handleTabChage = tab => {
@@ -78,8 +74,6 @@ export default class RichPanel extends React.Component {
 
   renderContent() {
     switch (this.state.activeTab) {
-      case 'components':
-        return <TabComponents />;
       case 'changes':
         return <TabChanges />;
       case 'mst':
