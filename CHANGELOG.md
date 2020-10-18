@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Final fix vertical scroll in MST package (#73)
 - Remove destroyed mst roots from UI (#48)
 
 ## [0.9.21] - 2019-3-9
