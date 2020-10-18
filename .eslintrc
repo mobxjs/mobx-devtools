@@ -4,7 +4,6 @@
   "rules": {
     "no-param-reassign": ["error", { "props": false }],
     "no-confusing-arrow": ["error", { "allowParens": true }],
-    "no-redeclare": "off",
     "no-unused-vars": "off",
     "no-use-before-define": "off",
     "max-classes-per-file": "off",
@@ -36,7 +35,7 @@
   "globals": {
     "__DEBUG_CONNECTION__": false,
     "__DEV__": false,
-    "chrome": false,
+    "chrome": "readonly",
     "window": false,
     "document": false,
     "self": false,

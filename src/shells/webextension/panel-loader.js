@@ -1,5 +1,3 @@
-/* global chrome */
-
 let panelCreated = false;
 let loadCheckInterval;
 function createPanelIfMobxLoaded() {

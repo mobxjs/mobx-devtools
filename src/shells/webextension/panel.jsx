@@ -1,4 +1,3 @@
-/* global chrome */
 import debugConnection from '../../utils/debugConnection';
 import initFrontend from '../../frontend';
 
