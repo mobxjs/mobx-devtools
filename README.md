@@ -8,8 +8,6 @@ This repository is home for:
 
 #### Features
 
-* Inspect mobx-react observers. Edit values in observable objects
-(Doesn't support editing react props/state, use react-devtools for that)
 * Track changes in MobX observables
 * MST support (see below).
 
