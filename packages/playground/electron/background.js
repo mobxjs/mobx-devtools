@@ -1,9 +1,9 @@
 import path from 'path';
 import url from 'url';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, session } from 'electron';
 
-app.on('ready', () => {
-  BrowserWindow.addDevToolsExtension(path.join(app.getAppPath(), '../../lib/chrome'));
+app.on('ready', async () => {
+  await session.defaultSession.loadExtension(path.join(app.getAppPath(), '../../lib/chrome'));
 
   new BrowserWindow({
     width: 800,
