@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TabChanges from './TabChanges';
-import TabPerformance from './TabPerformance';
 import TabMST from './TabMST';
 import MainMenu from './MainMenu';
 import injectStores from '../utils/injectStores';
@@ -10,30 +9,20 @@ import preferences from '../preferences';
 
 @injectStores({
   subscribe: {
-    updatesHighlighterStore: ['updatesEnabled'],
     actionsLoggerStore: ['logEnabled'],
-    capabilitiesStore: ['mstFound', 'mobxReactFound'],
+    capabilitiesStore: ['mstFound'],
     mstLoggerStore: ['mstLogEnabled'],
   },
-  injectProps: ({
-    actionsLoggerStore,
-    updatesHighlighterStore,
-    capabilitiesStore,
-    mstLoggerStore,
-  }) => ({
-    mobxReactFound: capabilitiesStore.mobxReactFound,
+  injectProps: ({ actionsLoggerStore, capabilitiesStore, mstLoggerStore }) => ({
     mstFound: capabilitiesStore.mstFound,
     recordingActions: actionsLoggerStore.logEnabled,
-    showingUpdates: updatesHighlighterStore.updatesEnabled,
     mstLogEnabled: mstLoggerStore.mstLogEnabled,
   }),
 })
 export default class RichPanel extends React.Component {
   static propTypes = {
-    mobxReactFound: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
     mstFound: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
     recordingActions: PropTypes.bool,
-    showingUpdates: PropTypes.bool,
     mstLogEnabled: PropTypes.bool,
   };
 
@@ -62,9 +51,7 @@ export default class RichPanel extends React.Component {
   }
 
   getAvailableTabs(props = this.props) {
-    return [props.mstFound && 'mst', 'changes', props.mobxReactFound && 'performance'].filter(
-      t => t,
-    );
+    return [props.mstFound && 'mst', 'changes'].filter(t => t);
   }
 
   handleTabChage = tab => {
@@ -78,8 +65,6 @@ export default class RichPanel extends React.Component {
         return <TabChanges />;
       case 'mst':
         return <TabMST />;
-      case 'performance':
-        return <TabPerformance />;
       default:
         return null;
     }
@@ -103,7 +88,6 @@ export default class RichPanel extends React.Component {
           onTabChange={this.handleTabChage}
           processingTabs={[
             this.props.recordingActions && 'changes',
-            this.props.showingUpdates && 'performance',
             this.props.mstLogEnabled && 'mst',
           ]}
         />

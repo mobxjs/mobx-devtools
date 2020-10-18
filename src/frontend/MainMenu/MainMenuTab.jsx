@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-import { ChangesIcon, TimerIcon, MSTIcon } from './icons';
+import { ChangesIcon, MSTIcon } from './icons';
 
 export default class Tab extends React.PureComponent {
   static propTypes = {
-    type: PropTypes.oneOf(['changes', 'performance', 'mst']),
+    type: PropTypes.oneOf(['changes', 'mst']),
     children: PropTypes.node,
     active: PropTypes.bool,
     processing: PropTypes.bool,
@@ -16,8 +16,6 @@ export default class Tab extends React.PureComponent {
     switch (this.props.type) {
       case 'changes':
         return <ChangesIcon />;
-      case 'performance':
-        return <TimerIcon />;
       case 'mst':
         return <MSTIcon />;
       default:
