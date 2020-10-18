@@ -1,3 +1,4 @@
 declare module 'mobx-devtools-mst' {
-  export default function makeInspectable(state: object): void;
+  type Root = object;
+  export default function makeInspectable(root: Root): Root;
 }
