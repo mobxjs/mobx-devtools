@@ -31,7 +31,8 @@
     "react/default-props-match-prop-types": "off",
     "react/state-in-constructor": "off",
     "react/no-this-in-sfc": "off",
-    "react/button-has-type": "off"
+    "react/button-has-type": "off",
+    "react/no-deprecated": "off"
   },
   "globals": {
     "__DEBUG_CONNECTION__": false,
