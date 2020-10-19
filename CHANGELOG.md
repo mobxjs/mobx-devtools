@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Type Definition for MST package (#81)
 
 ## [0.9.23] - 2020-10-19
 - Final fix vertical scroll in MST package (#73)
