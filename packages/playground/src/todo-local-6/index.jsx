@@ -3,14 +3,17 @@ import React from 'react';
 import { useLocalObservable, Observer } from 'mobx-react';
 import { render } from 'react-dom';
 
+const TodoModel = {
+  title: 'Test',
+  done: true,
+  toggle() {
+    this.done = !this.done;
+  },
+};
+
 const Todo = () => {
-  const todo = useLocalObservable(() => ({
-    title: 'Test',
-    done: true,
-    toggle() {
-      this.done = !this.done;
-    },
-  }));
+  const todo = useLocalObservable(() => TodoModel);
+
   return (
     <Observer>
       {() => (
