@@ -15,6 +15,7 @@ export const symbols = {
   editable: '@@editable',
   mobxObject: '@@mobxObject',
   serializationException: '@@serializationException',
+  
 };
 
 function serialize(data, path = [], seen = new Map(), propToExtract) {
