@@ -5,7 +5,7 @@ node_js:
 sudo: false
 
 install:
-  - npm bootstrap
+  - npm run bootstrap
 
 script:
   - npm run build
