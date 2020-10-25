@@ -69,7 +69,9 @@ class TodoAppComponent extends React.Component {
           <TodoComponent key={t.id} todo={t} />
         ))}
         <input type="test" onKeyDown={this.handleInputKeydown} />
-        <button onClick={this.onDestroy}>destroy</button>
+        <button onClick={this.onDestroy} type="button">
+          destroy
+        </button>
       </div>
     );
   }

@@ -19,9 +19,7 @@
     "react/forbid-prop-types": "off",
     "react/destructuring-assignment": "off",
     "react/static-property-placement": "off",
-    "react/sort-comp": "off",
-    "react/no-this-in-sfc": "off",
-    "react/button-has-type": "off"
+    "react/sort-comp": "off"
   },
   "globals": {
     "__DEBUG_CONNECTION__": false,
