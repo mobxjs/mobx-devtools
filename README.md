@@ -40,8 +40,8 @@ mobx-devtools
 ### It doesn't work
 Make sure that you are using [mobx](https://www.npmjs.com/package/mobx) 3.1.15 or higher and your app does not live inside an iframe. If that doesn't help, please [create an issue](https://github.com/mobxjs/mobx-devtools/issues/new) with detail about your environment.
 
-### Performance & Components tabs do not appear.
-They appear only when you are using [mobx-react](https://www.npmjs.com/package/mobx-react) 4.2.2 or higher;
+### Performance & Components tabs [DEPRECATED].
+Prefer use React Devtools extension for components tree and performance [discuss](https://github.com/mobxjs/mobx-devtools/issues/56#issuecomment-541896923)
 
 
 # Hacking

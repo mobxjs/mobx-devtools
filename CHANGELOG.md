@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 - Remove components and performance tabs (#84)
+- Type Definition for MST package (#81)
+
+## [0.9.23] - 2020-10-19
 - Final fix vertical scroll in MST package (#73)
 - Remove destroyed mst roots from UI (#48)
 
