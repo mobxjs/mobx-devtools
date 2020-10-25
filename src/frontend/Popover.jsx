@@ -65,7 +65,6 @@ class PopoverBubble extends Component {
     content: '',
     arrowCoordinates: { left: 0, top: 0 },
     bodyCoordinates: { left: 0, top: 0 },
-    resolvedPlacement: undefined,
   };
 
   componentDidMount() {

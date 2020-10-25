@@ -74,7 +74,7 @@ export default class App extends React.PureComponent {
   $disposables = [];
 
   reload() {
-    if (!this.$unMounted) this.setState({ loaded: false, store: undefined }, this.props.reload);
+    if (!this.$unMounted) this.setState({ loaded: false }, this.props.reload);
     this.teardown();
   }
 

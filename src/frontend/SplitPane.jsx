@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unused-state */
+
 import React from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
