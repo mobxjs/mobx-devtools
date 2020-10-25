@@ -15,9 +15,7 @@ before_deploy:
 
 deploy:
   provider: script
-  # script: "node scripts/publish && npm run publish:chrome && npm run publish:firefox"
-  script: "node scripts/publish"
+  script: "node scripts/publish && npm run publish:chrome && npm run publish:firefox"
   skip_cleanup: true
   on:
-    node: "10"
     branch: release
