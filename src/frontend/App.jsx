@@ -21,11 +21,15 @@ export default class App extends React.PureComponent {
     quiet: false,
   };
 
-  state = {
-    loaded: false,
-    connected: false,
-    mobxFound: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loaded: false,
+      connected: false,
+      mobxFound: false,
+    };
+  }
 
   componentWillMount() {
     if (this.props.reloadSubscribe) {

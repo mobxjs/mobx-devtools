@@ -61,11 +61,15 @@ class PopoverBubble extends Component {
     onTouchStart: PropTypes.func,
   };
 
-  state = {
-    content: '',
-    arrowCoordinates: { left: 0, top: 0 },
-    bodyCoordinates: { left: 0, top: 0 },
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      content: '',
+      arrowCoordinates: { left: 0, top: 0 },
+      bodyCoordinates: { left: 0, top: 0 },
+    };
+  }
 
   componentDidMount() {
     this.reposition();
@@ -237,9 +241,13 @@ export default class PopoverTrigger extends Component {
     stores: PropTypes.object.isRequired,
   };
 
-  state = {
-    shown: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      shown: false,
+    };
+  }
 
   componentDidMount() {
     if (this.props.shown) {
