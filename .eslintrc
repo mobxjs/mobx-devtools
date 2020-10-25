@@ -20,7 +20,6 @@
     "react/destructuring-assignment": "off",
     "react/static-property-placement": "off",
     "react/sort-comp": "off",
-    "react/default-props-match-prop-types": "off",
     "react/state-in-constructor": "off",
     "react/no-this-in-sfc": "off",
     "react/button-has-type": "off"

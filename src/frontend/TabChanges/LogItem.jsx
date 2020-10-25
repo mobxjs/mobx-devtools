@@ -32,7 +32,7 @@ const getColor = type => {
 export default class LogItem extends React.Component {
   static propTypes = {
     getDetails: PropTypes.func,
-    path: PropTypes.array.isRequired,
+    path: PropTypes.array,
     getValueByPath: PropTypes.func,
     inspect: PropTypes.func,
     stopInspecting: PropTypes.func,
