@@ -46,7 +46,7 @@ export default class RichPanel extends React.Component {
       this.getAvailableTabs(nextProps).includes(this.state.preferredTab)
     ) {
       // eslint-disable-next-line react/no-will-update-set-state
-      this.setState({ activeTab: this.state.preferredTab });
+      this.setState(state => ({ activeTab: state.preferredTab }));
     }
   }
 
