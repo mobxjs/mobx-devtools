@@ -1,4 +1,7 @@
 # mobx-devtools
+
+[![Build Status](https://travis-ci.org/mobxjs/mobx-devtools.svg?branch=master)](https://travis-ci.org/mobxjs/mobx-devtools)
+
 This repository is home for:
 * [MobX Developer Tools for **Chrome**](https://chrome.google.com/webstore/detail/mobx-developer-tools/pfgnfdagidkfgccljigdamigbcnndkod)
 * [MobX Developer Tools for **Firefox**](https://addons.mozilla.org/en-US/firefox/addon/mobx-devtools/)
