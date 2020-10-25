@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+  - 10
+
+sudo: false
+
+install:
+  - npm bootstrap
+
+script:
+  - npm run build
+
+before_deploy:
+  - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> $HOME/.npmrc 2> /dev/null
+
+deploy:
+  provider: script
+  # script: "node scripts/publish && npm run publish:chrome && npm run publish:firefox"
+  script: "node scripts/publish"
+  skip_cleanup: true
+  on:
+    node: "10"
+    branch: release

@@ -137,24 +137,3 @@ function publishCrhome(target = 'default') {
     handleAuthResponse,
   );
 }
-
-// request({
-//   url: `https://accounts.google.com/o/oauth2/token`,
-//   method: 'POST',
-//   form: {
-//     client_id: GAPI_MOBX_EXTENSION_CLIENT_ID,
-//     client_secret: GAPI_MOBX_EXTENSION_CLIENT_SECRET,
-//     code: GAPI_MOBX_EXTENSION_CLIENT_AUTH_CODE,
-//     grant_type: 'authorization_code',
-//     redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-//   }
-// }, (err, response, body) => {
-//   if (err) {
-//     throw err;
-//   }
-//   const {error, refresh_token, access_token, expires_in, token_type} = JSON.parse(body);
-//   if (error) {
-//     throw error;
-//   }
-//   console.log({error, refresh_token, access_token, expires_in, token_type})
-// });
