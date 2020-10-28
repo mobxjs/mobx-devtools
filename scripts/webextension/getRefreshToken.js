@@ -14,17 +14,19 @@ const form = {
   redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
 };
 
-request({
-  url: `https://accounts.google.com/o/oauth2/token`,
-  method: 'POST',
-  form,
-}, (err, response, body) => {
-  if (err) {
-    throw err;
-  }
-  const {error, refresh_token, access_token, expires_in, token_type} = JSON.parse(body);
-  if (error) {
-    throw error;
-  }
-  console.log({error, refresh_token, access_token, expires_in, token_type})
-});
+request(
+  {
+    url: `https://accounts.google.com/o/oauth2/token`,
+    method: 'POST',
+    form,
+  },
+  (err, response, body) => {
+    if (err) {
+      throw err;
+    }
+    const { error, refresh_token, access_token, expires_in, token_type } = JSON.parse(body);
+    if (error) {
+      throw error;
+    }
+  },
+);
