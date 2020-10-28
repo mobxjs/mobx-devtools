@@ -1,7 +1,7 @@
 {
     "scripts": {
         "bootstrap": "npm i && lerna bootstrap",
-        "publish-all": "npm bootstrap ; lerna run build && node scripts/bump-version-push-publish && npm run build:chrome && npm run build:firefox && npm run publish:chrome && npm run publish:firefox",
+        "publish-all": "npm run bootstrap ; lerna run build && node scripts/bump-version-push-publish && npm run build:chrome && npm run build:firefox && npm run publish:chrome && npm run publish:firefox",
         "build": "lerna run build && npm run build:chrome && npm run build:firefox",
         "start-playground": "cross-env NODE_ENV=development webpack-dev-server --config packages/playground/webpack.config.js",
         "start-playground-plain": "cross-env NODE_ENV=development cross-env PLAIN_DEVTOOL=true webpack-dev-server --config packages/playground/webpack.config.js",
