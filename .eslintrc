@@ -19,7 +19,8 @@
     "react/forbid-prop-types": "off",
     "react/destructuring-assignment": "off",
     "react/static-property-placement": "off",
-    "react/sort-comp": "off"
+    "react/sort-comp": "off",
+    "react/no-deprecated": "off"
   },
   "globals": {
     "__DEBUG_CONNECTION__": false,
