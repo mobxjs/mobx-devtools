@@ -5,6 +5,7 @@ import { ReloadIcon } from './icons';
 export default class ButtonReload extends React.PureComponent {
   render() {
     return (
+      // eslint-disable-next-line react/jsx-props-no-spreading
       <div className={css(styles.button)} {...this.props}>
         <ReloadIcon />
       </div>

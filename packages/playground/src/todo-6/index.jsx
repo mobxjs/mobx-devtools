@@ -37,9 +37,9 @@ class TodoStore {
 
 const storeInstance = new TodoStore();
 
-const TodoComponent = observer(({ id, title }) => (
+const TodoComponent = observer(({ todo }) => (
   <div>
-    #{id} <strong>{title}</strong>
+    #{todo.id} <strong>{todo.title}</strong>
   </div>
 ));
 
@@ -54,7 +54,7 @@ const TodoAppComponent = observer(() => {
   return (
     <div>
       {storeInstance.todos.map(t => (
-        <TodoComponent key={t.id} {...t} />
+        <TodoComponent key={t.id} todo={t} />
       ))}
       <input type="test" onKeyDown={handleInputKeydown} />
     </div>

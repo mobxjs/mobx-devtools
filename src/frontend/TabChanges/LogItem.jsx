@@ -32,7 +32,7 @@ const getColor = type => {
 export default class LogItem extends React.Component {
   static propTypes = {
     getDetails: PropTypes.func,
-    path: PropTypes.array.isRequired,
+    path: PropTypes.array,
     getValueByPath: PropTypes.func,
     inspect: PropTypes.func,
     stopInspecting: PropTypes.func,
@@ -63,12 +63,15 @@ export default class LogItem extends React.Component {
 
   toggleOpen = () => {
     const { change } = this.props;
-    const open = !this.state.open;
-    change.open = open;
-    if (open && change.summary) {
+    const isOpened = !this.state.open;
+    change.open = isOpened;
+    if (isOpened && change.summary) {
       if (this.props.getDetails) this.props.getDetails();
     }
-    this.setState({ open });
+
+    this.setState(state => ({
+      open: !state.open,
+    }));
   };
 
   recomputeHeight = () =>

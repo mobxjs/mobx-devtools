@@ -33,9 +33,13 @@ export default class LogItemExplorer extends React.PureComponent {
     getValueByPath: PropTypes.func.isRequired,
   };
 
-  state = {
-    logExplorerHeight: 400,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      logExplorerHeight: 400,
+    };
+  }
 
   componentDidMount() {
     this.resizeTimeout = setTimeout(() => this.updateSize(), 0); // timeout for css applying

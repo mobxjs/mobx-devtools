@@ -43,11 +43,15 @@ export default class Log extends React.Component {
     showMenu: PropTypes.func.isRequired,
   };
 
-  state = {
-    listHeight: 400,
-    listWidth: 400,
-    autoScroll: true,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      listHeight: 400,
+      listWidth: 400,
+      autoScroll: true,
+    };
+  }
 
   componentDidMount() {
     this.resizeTimeout = setTimeout(() => this.updateSize(), 0); // timeout for css applying

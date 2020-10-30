@@ -33,6 +33,7 @@ const Counter = observer(() => {
         onClick={() => {
           store.count -= 1;
         }}
+        type="button"
       >
         –
       </button>
@@ -41,6 +42,7 @@ const Counter = observer(() => {
         onClick={() => {
           store.count += 1;
         }}
+        type="button"
       >
         +
       </button>

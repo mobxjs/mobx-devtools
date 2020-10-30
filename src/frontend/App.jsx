@@ -21,11 +21,15 @@ export default class App extends React.PureComponent {
     quiet: false,
   };
 
-  state = {
-    loaded: false,
-    connected: false,
-    mobxFound: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loaded: false,
+      connected: false,
+      mobxFound: false,
+    };
+  }
 
   componentWillMount() {
     if (this.props.reloadSubscribe) {
@@ -74,7 +78,7 @@ export default class App extends React.PureComponent {
   $disposables = [];
 
   reload() {
-    if (!this.$unMounted) this.setState({ loaded: false, store: undefined }, this.props.reload);
+    if (!this.$unMounted) this.setState({ loaded: false }, this.props.reload);
     this.teardown();
   }
 

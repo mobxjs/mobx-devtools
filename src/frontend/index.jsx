@@ -17,7 +17,7 @@ export default config => {
   const render = () => {
     ReactDOM.render(
       <App
-        {...config}
+        {...config} // eslint-disable-line react/jsx-props-no-spreading
         reload={reload} // eslint-disable-line react/jsx-no-bind
       >
         <RichPanel />

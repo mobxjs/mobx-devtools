@@ -13,7 +13,7 @@ export default function DataViewer({ decorator, ...otherProps }) {
 
   return (
     <WrappedDataView
-      {...otherProps}
+      {...otherProps} //eslint-disable-line
       ChildDataItem={WrappedDataItem}
       ChildDataView={WrappedDataView}
     />

@@ -18,51 +18,6 @@ export const ChangesIcon = () => (
   </svg>
 );
 
-export const ComponentIcon = () => (
-  <svg
-    baseProfile="basic"
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="14"
-    viewBox="0 0 16 14"
-    fill="none"
-    strokeWidth="1.6"
-  >
-    <path
-      stroke="var(--light-text-color)"
-      strokeLinecap="round"
-      d="M4 3L1 6.903 4 11M12 11l3-4.042L12 3"
-    />
-    <path stroke="var(--primary-color)" d="M9.5 1l-3 12" />
-  </svg>
-);
-
-export const TimerIcon = () => (
-  <svg
-    baseProfile="basic"
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="-1.5 19.5 16 16"
-  >
-    <circle fill="var(--primary-color)" cx="6.5" cy="28" r="1.2" />
-    <path fill="none" stroke="var(--primary-color)" strokeWidth="1.4" d="M6.5 28v-6" />
-    <circle
-      fill="none"
-      stroke="var(--light-text-color)"
-      strokeWidth="1.6"
-      cx="6.5"
-      cy="28"
-      r="6.75"
-    />
-    <path
-      fill="var(--light-text-color)"
-      d="M5.375 19.5h2.25v1.688h-2.25zM12.55 20.175l-.788.788.338.337-.788.9.788.788.9-.787.337.34.788-.79"
-    />
-    <path fill="none" d="M-1.125 19.5h15.25v15.926h-15.25z" />
-  </svg>
-);
-
 export const MSTIcon = () => (
   <svg
     baseProfile="basic"

@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unused-state */
+
 import React from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
@@ -85,8 +87,8 @@ export default class SplitPane extends React.Component {
     const rect = this.el.getBoundingClientRect();
 
     this.setState(prevState => ({
-      width: this.state.isVertical ? prevState.width : Math.floor(rect.left + (rect.width - x)),
-      height: !this.state.isVertical ? prevState.height : Math.floor(rect.top + (rect.height - y)),
+      width: prevState.isVertical ? prevState.width : Math.floor(rect.left + (rect.width - x)),
+      height: !prevState.isVertical ? prevState.height : Math.floor(rect.top + (rect.height - y)),
     }));
   };
 
