@@ -23,7 +23,7 @@ export default class Collapsible extends React.PureComponent {
 
   toggleOpen = () => {
     this.setState(state => ({
-      open: state.open,
+      open: !state.open,
     }));
   };
 
