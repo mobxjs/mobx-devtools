@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.9.26] - 2020-10-30
 - Remove components and performance tabs (#87)
 - Type Definition for MST package (#81)
 
