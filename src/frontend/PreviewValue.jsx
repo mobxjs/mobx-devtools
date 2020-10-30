@@ -11,7 +11,7 @@ export default class PreviewValue extends React.PureComponent {
   static propTypes = {
     data: PropTypes.any,
     change: PropTypes.func,
-    path: PropTypes.string,
+    path: PropTypes.array.isRequired,
     editable: PropTypes.bool,
   };
 
