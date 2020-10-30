@@ -1,3 +1,1 @@
-type Root = Object;
-
-export default (root: Root): Root => {};
+export default (root: Object): Object => {};

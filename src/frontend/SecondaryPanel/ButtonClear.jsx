@@ -5,6 +5,7 @@ import { ClearIcon } from './icons';
 export default class ButtonClear extends React.PureComponent {
   render() {
     return (
+      // eslint-disable-next-line react/jsx-props-no-spreading
       <div className={css(styles.button)} {...this.props}>
         <ClearIcon />
       </div>

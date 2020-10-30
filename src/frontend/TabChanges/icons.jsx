@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const IconScheduledReaction = props => (
   <svg
@@ -7,7 +8,7 @@ export const IconScheduledReaction = props => (
     width="15"
     height="15"
     viewBox="0 0 15 15"
-    {...props}
+    className={props.className}
   >
     <g fill="none" stroke="#D57273" strokeMiterlimit="10">
       <path d="M12.697 10.5a6 6 0 1 1 .115-5.792" />
@@ -20,6 +21,8 @@ export const IconScheduledReaction = props => (
   </svg>
 );
 
+IconScheduledReaction.propTypes = PropTypes.string;
+
 export const IconComputed = props => (
   <svg
     baseProfile="basic"
@@ -27,7 +30,7 @@ export const IconComputed = props => (
     width="15"
     height="15"
     viewBox="0 0 15 15"
-    {...props}
+    className={props.className}
   >
     <g fill="#7B56A3">
       <circle cx="3.75" cy="11.83" r="2" />
@@ -42,6 +45,8 @@ export const IconComputed = props => (
   </svg>
 );
 
+IconComputed.propTypes = PropTypes.string;
+
 export const IconError = props => (
   <svg
     baseProfile="basic"
@@ -49,7 +54,7 @@ export const IconError = props => (
     width="15"
     height="15"
     viewBox="0 0 15 15"
-    {...props}
+    className={props.className}
   >
     <path
       fill="none"
@@ -64,3 +69,5 @@ export const IconError = props => (
     </g>
   </svg>
 );
+
+IconError.propTypes = PropTypes.string;

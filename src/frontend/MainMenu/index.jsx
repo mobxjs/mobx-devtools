@@ -5,12 +5,8 @@ import Tab from './MainMenuTab';
 
 const getTitle = type => {
   switch (type) {
-    case 'components':
-      return 'Components';
     case 'changes':
       return 'Changes';
-    case 'performance':
-      return 'Performance';
     case 'mst':
       return 'MST';
     default:

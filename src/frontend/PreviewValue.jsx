@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { css, StyleSheet } from 'aphrodite';
 import { symbols } from '../Bridge';
-import flash from './TabComponents/TreeView/flash';
+import flash from './flash';
 
 const BAD_INPUT = Symbol('bad input');
 
 export default class PreviewValue extends React.PureComponent {
   static propTypes = {
     data: PropTypes.any,
+    change: PropTypes.func,
+    path: PropTypes.array.isRequired,
+    editable: PropTypes.bool,
   };
 
   render() {
@@ -18,14 +21,27 @@ export default class PreviewValue extends React.PureComponent {
       this.props.data instanceof Date ||
       typeof this.props.data !== 'object'
     ) {
-      return <PreviewSimpleValue {...this.props} />;
+      return (
+        <PreviewSimpleValue
+          change={this.props.change}
+          data={this.props.data}
+          path={this.props.path}
+          editable={this.props.editable}
+        />
+      );
     }
-    return <PreviewComplexValue {...this.props} />;
+    return (
+      <PreviewComplexValue
+        change={this.props.change}
+        data={this.props.data}
+        path={this.props.path}
+        editable={this.props.editable}
+      />
+    );
   }
 }
 
 class PreviewSimpleValue extends React.PureComponent {
-  // eslint-disable-line react/no-multi-comp
   static propTypes = {
     change: PropTypes.func,
     data: PropTypes.any,
@@ -157,7 +173,6 @@ class PreviewSimpleValue extends React.PureComponent {
 }
 
 class PreviewComplexValue extends React.PureComponent {
-  // eslint-disable-line react/no-multi-comp
   static propTypes = {
     data: PropTypes.any,
     displayName: PropTypes.string,

@@ -1,27 +1,5 @@
 import React from 'react';
 
-export const PickComponentIcon = () => (
-  <svg
-    baseProfile="basic"
-    xmlns="http://www.w3.org/2000/svg"
-    width="13"
-    height="13"
-    viewBox="0 0 13 13"
-  >
-    <path
-      fill="none"
-      stroke="var(--light-text-color)"
-      strokeWidth="1.5"
-      strokeMiterlimit="10"
-      d="M4.09 11.25H1.626c-.483 0-.875-.392-.875-.875v-8.75c0-.483.392-.875.875-.875h8.75c.483 0 .875.392.875.875V4.12"
-    />
-    <path
-      fill="var(--light-text-color)"
-      d="M5.375 5.25L7 13l1.625-3.078 2.313 2.266 1.218-1.22-2.234-2.11L13 7.47"
-    />
-  </svg>
-);
-
 export const ClearIcon = () => (
   <svg
     baseProfile="basic"

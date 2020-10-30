@@ -24,9 +24,13 @@ export default class MiniBarButton extends React.PureComponent {
     hotkey: undefined,
   };
 
-  state = {
-    hovered: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      hovered: false,
+    };
+  }
 
   handleMouseOver = () => this.setState({ hovered: true });
 
