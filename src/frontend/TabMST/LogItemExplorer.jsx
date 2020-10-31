@@ -17,9 +17,11 @@ import PreviewValue from '../PreviewValue';
     const itemData = mstLoggerStore.itemsDataByRootId[mstLoggerStore.activeRootId];
     const logItem = itemData && itemData.logItemsById[itemData.selectedLogItemId];
     const initial = itemData && itemData.logItemsIds[0] === itemData.selectedLogItemId;
+    const initialData = mstLoggerStore.initialRootByRootId[mstLoggerStore.activeRootId];
     return {
       logItem,
       initial,
+      initialData,
       getValueByPath(path) {
         return path.reduce((acc, next) => acc && acc[next], logItem);
       },
@@ -30,6 +32,7 @@ export default class LogItemExplorer extends React.PureComponent {
   static propTypes = {
     logItem: PropTypes.object,
     initial: PropTypes.bool.isRequired,
+    initialData: PropTypes.object,
     getValueByPath: PropTypes.func.isRequired,
   };
 
@@ -83,6 +86,11 @@ export default class LogItemExplorer extends React.PureComponent {
         }}
         style={{ padding, height: this.state.logExplorerHeight - padding * 2 }}
       >
+        {this.props.initial && this.props.initialData && (
+          <Collapsible head="State" startOpen>
+            <div>{JSON.stringify(this.props.initialData)}</div>
+          </Collapsible>
+        )}
         {this.props.logItem.snapshot && (
           <Collapsible head="State" startOpen>
             <DataViewer

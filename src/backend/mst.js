@@ -19,6 +19,8 @@ const summary = logItem => {
 export default (bridge, hook) => {
   const collections = {};
   const rootDataById = {};
+  const rootInitDataById = {};
+  const rootInitialDataById = {};
 
   let trackingEnabled = false;
   let insideUntracked = false;
@@ -44,6 +46,7 @@ export default (bridge, hook) => {
     const { mst } = collections[mobxid] || {};
     if (mst) {
       const rootId = getId(root);
+
       if (rootDataById[rootId]) return;
 
       let patches = [];
@@ -129,7 +132,15 @@ export default (bridge, hook) => {
     bridge.sub('get-mst-log-item-details', ({ rootId, logItemId }) => {
       const rootDatum = rootDataById[rootId];
       if (!rootDatum) return;
-      bridge.send('mst-log-item-details', rootDatum.logItemsById[logItemId]);
+      if (!rootInitialDataById[rootId] && !rootInitDataById[rootId]) {
+        rootInitialDataById[rootId] = JSON.parse(JSON.stringify(rootDatum.root));
+        rootInitDataById[rootId] = true;
+      }
+
+      bridge.send('mst-log-item-details', {
+        logItem: rootDatum.logItemsById[logItemId],
+        initialRoot: rootInitialDataById[rootId],
+      });
     }),
   ];
 

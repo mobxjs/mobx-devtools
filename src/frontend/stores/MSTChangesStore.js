@@ -8,6 +8,8 @@ export default class MSTChangesStore extends AbstractStore {
 
   rootNamesById = {};
 
+  initialRootByRootId = {};
+
   constructor(bridge) {
     super();
     this.bridge = bridge;
@@ -37,7 +39,11 @@ export default class MSTChangesStore extends AbstractStore {
         this.emit('mstLogItems');
         this.selectLogItemId(newLogItem.id);
       }),
-      bridge.sub('mst-log-item-details', logItem => {
+      bridge.sub('mst-log-item-details', ({ logItem, initialRoot }) => {
+        if (initialRoot) {
+          this.initialRootByRootId[logItem.rootId] = initialRoot;
+          console.log('initialRootByRootId', this.initialRootByRootId);
+        }
         const itemData = this.itemsDataByRootId[logItem.rootId];
         if (!itemData) return;
         itemData.logItemsById[logItem.id] = logItem;
