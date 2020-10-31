@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
+import ReactJson from 'react-json-view';
 import injectStores from '../../utils/injectStores';
 import DataViewer from '../DataViewer';
 import Collapsible from '../Collapsible';
@@ -88,7 +89,14 @@ export default class LogItemExplorer extends React.PureComponent {
       >
         {this.props.initial && this.props.initialData && (
           <Collapsible head="State" startOpen>
-            <div>{JSON.stringify(this.props.initialData)}</div>
+            <ReactJson
+              src={this.props.initialData}
+              name={false}
+              collapsed={1}
+              displayDataTypes={false}
+              displayObjectSize={false}
+              enableClipboard={false}
+            />
           </Collapsible>
         )}
         {this.props.logItem.snapshot && (
