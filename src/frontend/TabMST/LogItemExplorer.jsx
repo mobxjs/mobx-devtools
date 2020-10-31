@@ -1,11 +1,32 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
-import ReactJson from 'react-json-view';
+import JSONTree from 'react-json-tree';
 import injectStores from '../../utils/injectStores';
 import DataViewer from '../DataViewer';
 import Collapsible from '../Collapsible';
 import PreviewValue from '../PreviewValue';
+
+const theme = {
+  scheme: 'google',
+  author: 'seth wright (http://sethawright.com)',
+  base00: '#1d1f21',
+  base01: '#282a2e',
+  base02: '#373b41',
+  base03: '#969896',
+  base04: '#b4b7b4',
+  base05: '#c5c8c6',
+  base06: '#e0e0e0',
+  base07: '#ffffff',
+  base08: '#CC342B',
+  base09: '#F96A38',
+  base0A: '#FBA922',
+  base0B: '#198844',
+  base0C: '#3971ED',
+  base0D: '#3971ED',
+  base0E: '#A36AC7',
+  base0F: '#3971ED',
+};
 
 @injectStores({
   subscribe: ({ mstLoggerStore }) => {
@@ -89,18 +110,12 @@ export default class LogItemExplorer extends React.PureComponent {
       >
         {this.props.initial && this.props.initialData && (
           <Collapsible head="State" startOpen>
-            <ReactJson
-              src={this.props.initialData}
-              name={false}
-              collapsed={1}
-              displayDataTypes={false}
-              displayObjectSize={false}
-              enableClipboard={false}
-            />
+            <JSONTree data={this.props.initialData} theme={theme} hideRoot />
           </Collapsible>
         )}
         {this.props.logItem.snapshot && (
           <Collapsible head="State" startOpen>
+            <JSONTree data={this.props.logItem.snapshot} theme="google" hideRoot />
             <DataViewer
               path={['snapshot']}
               getValueByPath={this.props.getValueByPath}
