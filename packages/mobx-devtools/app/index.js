@@ -12,7 +12,7 @@ app.on('ready', () => {
     height: 600,
     icon: path.join(__dirname, 'icons/icon128.png'),
     webPreferences: {
-			nodeIntegration: true,
-		},
+      nodeIntegration: true,
+    },
   }).loadURL(`file://${__dirname}/index.html`); // eslint-disable-line no-path-concat
 });
