@@ -1,1 +1,1 @@
-export default (root: Object): Object => {return root};;
+export default (root: object): object => {return root};
