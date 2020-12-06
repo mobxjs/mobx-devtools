@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.9.27] - 2020-10-30
+- Enable nodeIntegration in the standalone electron app (#92)
+- Fix Type Definition for MST package
+
 ## [0.9.26] - 2020-10-30
 - Remove components and performance tabs (#87)
 - Type Definition for MST package (#81)
