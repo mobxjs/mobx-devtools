@@ -1,7 +1,7 @@
 {
     "scripts": {
         "bootstrap": "npm i && lerna bootstrap",
-        "publish-all": "npm run bootstrap ; lerna run build && node scripts/bump-version-push-publish && npm run build:chrome && npm run build:firefox && npm run publish:chrome && npm run publish:firefox",
+        "publish-packages": "npm run bootstrap ; lerna run build && node scripts/bump-version-push-publish",
         "build": "lerna run build && npm run build:chrome && npm run build:firefox",
         "start-playground": "cross-env NODE_ENV=development webpack-dev-server --config packages/playground/webpack.config.js",
         "start-playground-plain": "cross-env NODE_ENV=development cross-env PLAIN_DEVTOOL=true webpack-dev-server --config packages/playground/webpack.config.js",
@@ -50,7 +50,6 @@
         "cross-env": "^5.0.1",
         "css-loader": "^0.28.7",
         "del": "^3.0.0",
-        "es6-object-assign": "^1.1.0",
         "eslint": "^7.11.0",
         "eslint-config-airbnb": "^18.2.0",
         "eslint-config-prettier": "^6.12.0",
