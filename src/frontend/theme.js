@@ -2,7 +2,6 @@ import { StyleSheet } from 'aphrodite';
 
 export default StyleSheet.create({
   default: {
-    // '--primary-color': '#f14748',
     '--primary-color': '#03a1ec',
     '--default-text-color': '#333',
     '--lighter-text-color': '#555',
