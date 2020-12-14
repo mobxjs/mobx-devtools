@@ -19,7 +19,7 @@ const track = root => {
   }
 };
 
-export default root => {
+export default function makeInspectable(root) {
   track(root);
   return root;
-};
+}
