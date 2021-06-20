@@ -1,1 +1,3 @@
-export default (root: Object): Object => {return root};;
+declare module "mobx-devtools-mst" {
+  export default function makeInspectable<T extends object>(root: T): T;
+}
