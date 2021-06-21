@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { css, StyleSheet } from 'aphrodite';
 import ChangeDataViewerPopover from './ChangeDataViewerPopover';
+import { changeDisplayName } from './utils';
 
 export default class LObjDiff extends React.PureComponent {
   static propTypes = {
@@ -19,16 +20,16 @@ export default class LObjDiff extends React.PureComponent {
     switch (change.type) {
       case 'add':
         return {
-          added: [{ name: change.name, value: change.newValue, path: ['newValue'] }],
+          added: [{ name: changeDisplayName(change), value: change.newValue, path: ['newValue'] }],
         };
       case 'delete':
         return {
-          removed: [{ name: change.name, value: change.oldValue, path: ['oldValue'] }],
+          removed: [{ name: changeDisplayName(change), value: change.oldValue, path: ['oldValue'] }],
         };
       case 'update':
         return {
-          added: [{ name: change.name, value: change.newValue, path: ['newValue'] }],
-          removed: [{ name: change.name, value: change.oldValue, path: ['oldValue'] }],
+          added: [{ name: changeDisplayName(change), value: change.newValue, path: ['newValue'] }],
+          removed: [{ name: changeDisplayName(change), value: change.oldValue, path: ['oldValue'] }],
         };
       case 'splice':
         return {
