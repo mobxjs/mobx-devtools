@@ -28,10 +28,12 @@ const handshake = backendId => {
     );
   }
 
+  // panel(devtools) -> content scripts -> background -> backend
   function handleMessageFromDevtools(message) {
     sendMessageToBackend(message);
   }
 
+  // backend -> content scripts -> background -> panel(devtools)
   function handleMessageFromPage(evt) {
     if (
       evt.data.source === 'mobx-devtools-backend' &&

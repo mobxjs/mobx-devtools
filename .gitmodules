@@ -1,9 +1,9 @@
-[submodule "mobx"]
-	path = vendor/mobx
-	url = https://github.com/mobxjs/mobx.git
-[submodule "mobx-react"]
-	path = vendor/mobx-react
-	url = https://github.com/mobxjs/mobx-react.git
-[submodule "mobx-state-tree"]
-	path = vendor/mobx-state-tree
-	url = https://github.com/andykog/mobx-state-tree.git
+#[submodule "mobx"]
+#	path = vendor/mobx
+#	url = https://github.com/mobxjs/mobx.git
+#[submodule "mobx-react"]
+#	path = vendor/mobx-react
+#	url = https://github.com/mobxjs/mobx-react.git
+#[submodule "mobx-state-tree"]
+#	path = vendor/mobx-state-tree
+#	url = https://github.com/andykog/mobx-state-tree.git

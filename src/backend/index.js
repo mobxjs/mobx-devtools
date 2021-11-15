@@ -16,9 +16,9 @@ export default (bridge, hook) => {
 
   const backends = [
     initCapabilitiesBackend(bridge, hook),
-    initMSTBackend(bridge, hook),
-    initMobxReactNodesTreeBackend(bridge, hook),
-    initMobxReactUpdatesHighlighter(bridge, hook),
+    // initMSTBackend(bridge, hook),
+    // initMobxReactNodesTreeBackend(bridge, hook),
+    // initMobxReactUpdatesHighlighter(bridge, hook),
     initMobxLogBackend(bridge, hook),
   ];
 
