@@ -10,13 +10,13 @@ export default class ActionsStore extends AbstractStore {
 
   logItemsById = {};
 
-  logItemsIds = [];
+  logItemsIds: any[] = [];
 
   searchText = '';
 
-  bridge = undefined;
+  bridge: any = undefined;
 
-  contextMenu = {};
+  contextMenu: any = {};
 
   constructor(bridge) {
     super();

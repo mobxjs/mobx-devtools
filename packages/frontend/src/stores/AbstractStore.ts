@@ -1,7 +1,7 @@
 export default class AbstractStore {
   $listeners = {};
 
-  $disposables = [];
+  $disposables: any[] = [];
 
   setValueAndEmit(key, value) {
     if (this[key] !== value) {

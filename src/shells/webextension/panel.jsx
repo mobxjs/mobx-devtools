@@ -1,5 +1,5 @@
 import debugConnection from '../../utils/debugConnection';
-import initFrontend from '../../frontend';
+import initFrontend from '../../../packages/frontend/lib/index';
 
 let disconnectListener;
 
