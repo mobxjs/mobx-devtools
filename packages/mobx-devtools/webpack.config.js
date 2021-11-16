@@ -6,8 +6,6 @@ module.exports = [
     devtool: false,
     entry: path.join(__dirname, 'src/mobxDevtoolsBackend'),
     output: {
-      libraryTarget: 'umd',
-      library: 'mobxDevtoolsBackend',
       path: path.join(__dirname, '/lib'),
       filename: 'mobxDevtoolsBackend.js',
     },

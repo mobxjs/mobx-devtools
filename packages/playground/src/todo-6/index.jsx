@@ -39,7 +39,7 @@ const storeInstance = new TodoStore();
 
 const TodoComponent = observer(({ todo }) => (
   <div>
-    #{todo.id} <strong>{todo.title}</strong>
+    #{todo.id} <strong>{todo.title}1</strong>
   </div>
 ));
 
