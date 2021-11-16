@@ -1,13 +1,22 @@
-import React, { ReactNode, createContext } from 'react';
+import { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 
-export const StoresContext = createContext<any>({});
+export default class ContextProvider extends PureComponent {
+  static propTypes = {
+    stores: PropTypes.object.isRequired,
+    children: PropTypes.node.isRequired,
+  };
 
-type StoresProviderProps = {
-  children: ReactNode;
-};
+  static childContextTypes = {
+    stores: PropTypes.object.isRequired,
+  };
 
-export const StoresProvider = (props: StoresProviderProps) => {
-  const { children } = props;
+  getChildContext() {
+    // @ts-ignore
+    return { stores: this.props.stores };
+  }
 
-  return <StoresContext.Provider value={{}}>{children}</StoresContext.Provider>;
-};
+  render() {
+    return this.props.children;
+  }
+}

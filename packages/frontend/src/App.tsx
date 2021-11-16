@@ -3,6 +3,7 @@ import { css, StyleSheet } from 'aphrodite';
 import Blocker from './Blocker';
 import Bridge from './Bridge';
 import { createStores } from './stores';
+import ContextProvider from './stores/ContextProvider';
 
 export type AppProps = {
   quiet?: boolean;
@@ -50,8 +51,6 @@ export const App = (props: AppProps) => {
         clearInterval(connectInterval);
         storesRef.current = createStores(bridge);
 
-        
-
         setConnected(true);
         bridge.send('get-capabilities');
       });
@@ -80,7 +79,11 @@ export const App = (props: AppProps) => {
     if (mobxFound !== true) {
       return !quiet && <Blocker>Looking for mobx...</Blocker>;
     }
-    return React.Children.only(children);
+    return (
+      <ContextProvider stores={storesRef.current}>
+        {React.Children.only(children)}
+      </ContextProvider>
+    );
   };
 
   return <div>{renderContent()}</div>;
