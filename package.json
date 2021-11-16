@@ -3,6 +3,8 @@
         "bootstrap": "npm i && lerna bootstrap",
         "publish-packages": "npm run bootstrap ; lerna run build && node scripts/bump-version-push-publish",
         "build": "lerna run build && npm run build:chrome && npm run build:firefox",
+        "build:frontend": "cd packages/frontend && npm run build",
+        "start-new": "npm run build:frontend && npm run start-playground-plain",
         "start-playground": "cross-env NODE_ENV=development webpack-dev-server --config packages/playground/webpack.config.js",
         "start-playground-plain": "cross-env NODE_ENV=development cross-env PLAIN_DEVTOOL=true webpack-dev-server --config packages/playground/webpack.config.js",
         "start-playground-electron": "cd packages/playground && npm run start-electron",

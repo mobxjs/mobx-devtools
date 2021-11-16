@@ -1,6 +1,6 @@
 import installGlobalHook from '../../backend/utils/installGlobalHook';
 import initBackend from '../../backend';
-import initFrontend from '../../frontend';
+import initFrontend from '../../../packages/frontend/lib';
 import Bridge from '../../Bridge';
 
 installGlobalHook(window);
