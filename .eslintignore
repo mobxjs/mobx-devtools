@@ -3,6 +3,5 @@
 /lib/**
 /packages/**/lib/**
 /packages/**/dist/**
-/packages/frontend/**
 /packages/**/node_modules/**
 /**/*.d.ts

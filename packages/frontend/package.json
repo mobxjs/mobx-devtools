@@ -10,7 +10,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --watch",
-    "build": "cross-env NODE_ENV=development webpack"
+    "build": "cross-env NODE_ENV=development webpack",
+    "lint": "eslint '**/*.@([jt]s?(x)|json)'",
+    "lint:fix": "eslint --fix '**/*.@([jt]s?(x)|json)'"
   },
   "dependencies": {
     "aphrodite": "^2.4.0",
@@ -25,6 +27,7 @@
     "@babel/preset-react": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
     "@types/react": "^17.0.34",
+    "@types/react-dom": "^17.0.11",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "babel-plugin-styled-components": "^1.13.3",
     "cross-env": "^7.0.3",
@@ -35,9 +38,9 @@
     "eslint-plugin-react": "^7.27.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "prettier": "^2.4.1",
+    "styled-components": "^5.3.3",
     "typescript": "^4.4.4",
     "webpack": "^5.64.0",
-    "webpack-cli": "^4.9.1",
-    "styled-components": "^5.3.3"
+    "webpack-cli": "^4.9.1"
   }
 }
