@@ -1,11 +1,14 @@
 import React from 'react';
-import { Tabs } from './Tabs';
 import { css, StyleSheet } from 'aphrodite';
+import { ActionList } from './ActionList/ActionList';
+import { Tabs } from './Tabs';
 
 export const Panel = () => {
   return (
     <div className={css(styles.container)}>
-      <div className={css(styles.actionListContainer)}></div>
+      <div className={css(styles.actionListContainer)}>
+        <ActionList />
+      </div>
       <div className={css(styles.tabsContainer)}>
         <Tabs></Tabs>
       </div>

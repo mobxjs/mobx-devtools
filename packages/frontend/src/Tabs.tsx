@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import classNames from 'classnames';
 import { StoresTree } from './StoresTree';
+import { PRIMARY_BG_COLOR } from './constant/color';
 
 export const Tabs = () => {
   const [tab, setTab] = useState('Action');
@@ -56,14 +57,14 @@ const styles = StyleSheet.create({
   container: {},
   header: {
     display: 'flex',
-    height: 42,
+    height: 50,
     padding: '0 16px',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottom: '1px solid #f4f4f4',
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
   },
   buttons: {},
   button: {
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: '0 2px 2px 0',
   },
   selectedButton: {
-    background: '#DB5A13',
+    background: PRIMARY_BG_COLOR,
     color: '#fff',
   },
   actionBody: {},

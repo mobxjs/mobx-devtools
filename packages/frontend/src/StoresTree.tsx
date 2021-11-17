@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import ReactJson from 'react-json-view';
-import injectStores from './utils/injectStores';
 import { Stores } from './stores/StoresStore';
+import injectStores from './utils/injectStores';
 
 export type StoresTreeProps = {
   stores: Stores;
