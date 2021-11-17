@@ -13,7 +13,6 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) => TargetCo
     $isMounted = false;
 
     componentWillMount() {
-      console.log('this.context:', this.context)
       const eventsByStore =
         typeof subscribe === 'function' ? subscribe(this.context.stores, this.props) : subscribe;
       for (const s in eventsByStore) {

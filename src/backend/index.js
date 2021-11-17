@@ -3,6 +3,7 @@ import initMSTBackend from './mst';
 import initMobxReactNodesTreeBackend from './mobxReactNodesTree';
 import initMobxReactUpdatesHighlighter from './mobxReactUpdatesHighlighter';
 import initMobxLogBackend from './mobxLog';
+import initMobxStoresBackend from './mobxStores';
 
 export default (bridge, hook) => {
   if (!hook) {
@@ -19,6 +20,7 @@ export default (bridge, hook) => {
     // initMSTBackend(bridge, hook),
     // initMobxReactNodesTreeBackend(bridge, hook),
     // initMobxReactUpdatesHighlighter(bridge, hook),
+    initMobxStoresBackend(bridge),
     initMobxLogBackend(bridge, hook),
   ];
 

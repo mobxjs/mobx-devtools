@@ -39,6 +39,7 @@ export const App = (props: AppProps) => {
         // @ts-ignore
         bridge.sub('capabilities', ({ mobxFound }) => {
           setMobxFound(mobxFound);
+          bridge.send('request-stores');
         }),
         bridge.sub('content-script-installation-error', () => {
           setContentScriptInstallationError(true);

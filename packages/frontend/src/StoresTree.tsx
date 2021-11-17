@@ -2,45 +2,42 @@ import React, { useEffect } from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import ReactJson from 'react-json-view';
 import injectStores from './utils/injectStores';
+import { Stores } from './stores/StoresStore';
 
-export type StoresTreeProps = {};
+export type StoresTreeProps = {
+  stores: Stores;
+};
 
 const StoresTreeBase = (props: StoresTreeProps) => {
+  const { stores } = props;
+
   return (
     <div className={css(styles.container)}>
-      <ReactJson
-        src={{ a: 1, b: 2 }}
-        indentWidth={2}
-        collapsed={false}
-        displayDataTypes={false}
-        displayObjectSize={false}
-      />
+      {Object.entries(stores).map(([storeName, store]) => {
+        return (
+          <ReactJson
+            name={storeName}
+            src={store}
+            indentWidth={2}
+            collapsed={false}
+            displayDataTypes={false}
+            displayObjectSize={false}
+          />
+        );
+      })}
     </div>
   );
 };
 
 export const StoresTree = injectStores({
   subscribe: {
-    actionsLoggerStore: ['logEnabled', 'log'],
+    storesStore: ['updateStores'],
   },
   // @ts-ignore
-  injectProps: ({ actionsLoggerStore }) => ({
-    searchText: actionsLoggerStore.searchText,
-    logEnabled: actionsLoggerStore.logEnabled,
-    logItemsIds: actionsLoggerStore.logItemsIds,
-    clearLog() {
-      actionsLoggerStore.clearLog();
-    },
-    toggleLogging() {
-      actionsLoggerStore.toggleLogging();
-    },
-    setSearchText(e) {
-      actionsLoggerStore.setSearchText(e.target.value);
-    },
-    shouldUpdated: true,
+  injectProps: ({ storesStore }) => ({
+    stores: storesStore.stores,
   }),
 })(StoresTreeBase);
-
 
 const styles = StyleSheet.create({
   container: {

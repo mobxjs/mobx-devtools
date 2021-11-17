@@ -6,7 +6,7 @@
         "build:frontend": "cd packages/frontend && npm run build",
         "tab:frontend": "cd packages/frontend && ttab -t 'Front End' npm run dev",
         "tab:playground": "ttab -t 'Play Ground' npm run start-playground-plain",
-        "open:playgroundPage":"open 'http://localhost:8082/'",
+        "open:playgroundPage": "open 'http://localhost:8082/'",
         "tab:start": "run-s tab:frontend tab:playground open:playgroundPage",
         "start-new": "npm run build:frontend && npm run start-playground-plain",
         "start-playground": "cross-env NODE_ENV=development webpack-dev-server --config packages/playground/webpack.config.js",
@@ -99,6 +99,7 @@
         "write-file-webpack-plugin": "^4.1.0"
     },
     "dependencies": {
-        "geckodriver": "^1.10.0"
+        "geckodriver": "^1.10.0",
+        "lodash": "^4.17.21"
     }
 }

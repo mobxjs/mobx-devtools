@@ -15,6 +15,7 @@ export default class StoresStore extends AbstractStore {
     this.addDisposer(
       bridge.sub('update-stores', (stores: Stores) => {
         this.stores = stores;
+        this.emit('updateStores')
       }),
     );
   }

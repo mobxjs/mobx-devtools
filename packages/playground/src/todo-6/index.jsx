@@ -35,7 +35,22 @@ class TodoStore {
   }
 }
 
+/**
+ * stores = {
+ *   storeA: { a: 1 },
+ *   storeB: { b: 2}
+ * }
+ */
+const injectStores = (stores) => {
+  // eslint-disable-next-line no-underscore-dangle
+  window.__MOBX_DEVTOOLS_GLOBAL_STORES_HOOK__ = {
+    stores,
+  };
+};
+
 const storeInstance = new TodoStore();
+
+injectStores({ TodoStore: storeInstance });
 
 const TodoComponent = observer(({ todo }) => (
   <div>

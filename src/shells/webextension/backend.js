@@ -93,6 +93,7 @@ function waitForPing() {
           debugConnection('[contentScript -> BACKEND]', e);
           window.removeEventListener('message', helloListener);
           window.removeEventListener('message', failListener);
+
           // eslint-disable-next-line no-underscore-dangle
           handshake(window.__MOBX_DEVTOOLS_GLOBAL_HOOK__, contentScriptId);
         }
