@@ -33,7 +33,7 @@ export const Tabs = () => {
         </div>
       </div>
 
-      <div>
+      <div className={css(styles.body)}>
         <div
           className={classNames(css(styles.actionBody), {
             [css(styles.hide)]: tab !== 'Action',
@@ -54,7 +54,12 @@ export const Tabs = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
   header: {
     display: 'flex',
     height: 50,
@@ -62,6 +67,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottom: '1px solid #f4f4f4',
+  },
+  body: {
+    flex: 1,
+    overflow: 'auto',
   },
   title: {
     fontSize: 18,

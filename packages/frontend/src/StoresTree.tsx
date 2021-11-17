@@ -13,9 +13,10 @@ const StoresTreeBase = (props: StoresTreeProps) => {
 
   return (
     <div className={css(styles.container)}>
-      {Object.entries(stores).map(([storeName, store]) => {
+      {Object.entries(stores).map(([storeName, store], index) => {
         return (
           <ReactJson
+            key={`${storeName}-${index}`}
             name={storeName}
             src={store}
             indentWidth={2}
@@ -40,7 +41,5 @@ export const StoresTree = injectStores({
 })(StoresTreeBase);
 
 const styles = StyleSheet.create({
-  container: {
-    
-  },
+  container: {},
 });

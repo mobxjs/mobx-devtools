@@ -18,6 +18,7 @@ export const Panel = () => {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     display: 'flex',
     height: '100%',
   },

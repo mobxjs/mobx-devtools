@@ -2,6 +2,7 @@ import makeChangesProcessor from '../utils/changesProcessor';
 import consoleLogChange from './utils/consoleLogChange';
 import makeInspector from './utils/inspector';
 import storaTempValueInGlobalScope from './utils/storaTempValueInGlobalScope';
+import getStoresFromHook from './utils/getStoresFromHook';
 
 const summary = change => {
   const sum = Object.create(null);
@@ -44,6 +45,7 @@ export default bridge => {
       if (change) {
         itemsById[change.id] = change;
         bridge.send('appended-log-item', summary(change));
+        bridge.send('update-stores', getStoresFromHook());
       }
     }
     if (consoleLogEnabled) {
