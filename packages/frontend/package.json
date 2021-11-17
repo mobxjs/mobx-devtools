@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "aphrodite": "^2.4.0",
+    "classnames": "^2.3.1",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",

@@ -28,8 +28,8 @@ const createNode = () => {
   node.style.position = 'fixed';
   node.style.right = '3px';
   node.style.bottom = '3px';
-  node.style.width = '450px';
-  node.style.height = '500px';
+  node.style.width = '900px';
+  node.style.height = '400px';
   node.style.maxHeight = '95vh';
   node.style.backgroundColor = '#fff';
   node.style.overflow = 'hidden';

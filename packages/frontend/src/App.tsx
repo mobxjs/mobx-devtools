@@ -81,13 +81,11 @@ export const App = (props: AppProps) => {
       return !quiet && <Blocker>Looking for mobx...</Blocker>;
     }
     return (
-      <ContextProvider stores={storesRef.current}>
-        {React.Children.only(children)}
-      </ContextProvider>
+      <ContextProvider stores={storesRef.current}>{React.Children.only(children)}</ContextProvider>
     );
   };
 
-  return <div>{renderContent()}</div>;
+  return renderContent();
 };
 
 const styles = StyleSheet.create({});
