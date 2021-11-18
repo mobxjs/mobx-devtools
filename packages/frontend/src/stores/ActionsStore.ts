@@ -8,6 +8,8 @@ export default class ActionsStore extends AbstractStore {
 
   logFilter = undefined;
 
+  selectedActionId: string = '';
+
   logItemsById = {};
 
   logItemsIds: any[] = [];
@@ -157,5 +159,10 @@ export default class ActionsStore extends AbstractStore {
         return false;
       }
     });
+  }
+
+  selectAction(id: string) {
+    this.selectedActionId = id;
+    this.emit("selectAction");
   }
 }
