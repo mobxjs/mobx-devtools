@@ -1,8 +1,22 @@
+import { format } from 'date-fns';
+import { cloneDeep } from 'lodash';
 import makeChangesProcessor from '../utils/changesProcessor';
 import consoleLogChange from './utils/consoleLogChange';
 import makeInspector from './utils/inspector';
 import storaTempValueInGlobalScope from './utils/storaTempValueInGlobalScope';
 import getStoresFromHook from './utils/getStoresFromHook';
+
+const getStoreDataFromChangeObj = obj => {
+  let storeData = {};
+  if (obj) {
+    try {
+      storeData = JSON.parse(JSON.stringify(cloneDeep(obj)));
+    } catch (err) {
+      storeData = { error: err.message };
+    }
+  }
+  return storeData;
+};
 
 const summary = change => {
   const sum = Object.create(null);
@@ -18,11 +32,19 @@ const summary = change => {
   sum.addedCount = change.addedCount;
   sum.removedCount = change.removedCount;
   sum.object = change.object;
+  // the newly added
+  sum.storeName = change.object.constructor && change.object.constructor.name;
+  sum.actionName = change.name;
+  sum.time = format(new Date(change.timestamp), 'HH:mm:ss');
+  sum.storeData = getStoreDataFromChangeObj(change.object);
+
   return sum;
 };
 
 export default bridge => {
-  let logEnabled = false;
+  // TODO: Added the ability to toggle log
+  // let logEnabled = false;
+  let logEnabled = true;
   let consoleLogEnabled = false;
   const logFilter = undefined;
 
@@ -42,7 +64,7 @@ export default bridge => {
       }
     }
     if (logEnabled) {
-      if (change) {
+      if (change && change.type === 'action') {
         itemsById[change.id] = change;
         bridge.send('appended-log-item', summary(change));
         bridge.send('update-stores', getStoresFromHook());

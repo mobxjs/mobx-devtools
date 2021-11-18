@@ -24,6 +24,8 @@ export default class ActionsStore extends AbstractStore {
 
     this.addDisposer(
       bridge.sub('appended-log-item', change => {
+        console.log('change:', change);
+
         if (this.logItemsIds.length > 5000) {
           const removedIds = this.logItemsIds.splice(0, this.logItemsIds.length - 4900);
           removedIds.forEach(id => {
