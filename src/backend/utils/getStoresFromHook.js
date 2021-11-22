@@ -1,4 +1,6 @@
 import { cloneDeep } from 'lodash';
+import stringify from 'json-stringify-safe';
+
 
 export default () => {
   // TODO: investigate how can computed be passed to frontend
@@ -8,5 +10,5 @@ export default () => {
   if (storesHook && storesHook.stores) {
     newStores = cloneDeep(storesHook.stores);
   }
-  return JSON.parse(JSON.stringify(newStores));
+  return JSON.parse(stringify(newStores));
 };

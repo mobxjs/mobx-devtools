@@ -3,37 +3,7 @@ import React, { useCallback } from 'react';
 import { makeObservable, observable, computed, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { render } from 'react-dom';
-
-const getId = (() => {
-  let i = 1;
-  return () => {
-    i += 1;
-    return i;
-  };
-})();
-
-class TodoStore {
-  todos = [{ title: 'Get biscuit', id: getId() }];
-
-  constructor() {
-    makeObservable(this, {
-      todos: observable,
-      completedTodos: computed,
-      addTodo: action,
-    });
-  }
-
-  get completedTodos() {
-    return this.todos.filter(t => t.done);
-  }
-
-  addTodo(title) {
-    this.todos.push({
-      id: getId(),
-      title,
-    });
-  }
-}
+import RootStore from './stores/RootStore';
 
 /**
  * stores = {
@@ -41,16 +11,16 @@ class TodoStore {
  *   storeB: { b: 2}
  * }
  */
-const injectStores = (stores) => {
+const injectStores = stores => {
   // eslint-disable-next-line no-underscore-dangle
   window.__MOBX_DEVTOOLS_GLOBAL_STORES_HOOK__ = {
     stores,
   };
 };
 
-const storeInstance = new TodoStore();
+const rootStore = new RootStore();
 
-injectStores({ TodoStore: storeInstance });
+injectStores({ rootStore });
 
 const TodoComponent = observer(({ todo }) => (
   <div>
@@ -59,16 +29,18 @@ const TodoComponent = observer(({ todo }) => (
 ));
 
 const TodoAppComponent = observer(() => {
+  const { todoStore } = rootStore;
+
   const handleInputKeydown = useCallback(e => {
     if (e.keyCode === 13) {
-      storeInstance.addTodo(e.target.value);
+      todoStore.addTodo(e.target.value);
       e.target.value = '';
     }
   }, []);
 
   return (
     <div>
-      {storeInstance.todos.map(t => (
+      {todoStore.todos.map(t => (
         <TodoComponent key={t.id} todo={t} />
       ))}
       <input type="test" onKeyDown={handleInputKeydown} />
