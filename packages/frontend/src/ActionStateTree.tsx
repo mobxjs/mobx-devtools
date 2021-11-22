@@ -16,7 +16,7 @@ const ActionStateTreeBase = (props: ActionStateTreeProps) => {
       name={changes?.storeName || 'Tip'}
       src={changes?.storeData || {'message': 'Please select an action!'}}
       indentWidth={2}
-      collapsed={false}
+      collapsed
       displayDataTypes={false}
       displayObjectSize={false}
     />

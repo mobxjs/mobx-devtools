@@ -20,7 +20,7 @@ const StoresTreeBase = (props: StoresTreeProps) => {
             name={storeName}
             src={store}
             indentWidth={2}
-            collapsed={false}
+            collapsed
             displayDataTypes={false}
             displayObjectSize={false}
           />
