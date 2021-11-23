@@ -1,0 +1,32 @@
+{
+  "name": "@mobx-devtools/tools",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./lib/index.js",
+  "scripts": {
+    "dev": "rollup --c rollup.config.ts --configPlugin typescript --watch --environment mode:development",
+    "build": "rollup --c rollup.config.ts --configPlugin typescript --environment mode:production -m"
+  },
+  "keywords": [
+    "mobx",
+    "devtools"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mobx-devtools/mobx-devtools.git/"
+  },
+  "author": "xichuan.liu@compass.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "@types/node": "^16.11.9",
+    "rollup": "^2.60.1",
+    "rollup-plugin-typescript": "^1.0.1",
+    "rollup-plugin-uglify": "^6.0.4",
+    "tslib": "^2.3.1"
+  },
+  "dependencies": {
+    "typescript": "^4.5.2"
+  }
+}
