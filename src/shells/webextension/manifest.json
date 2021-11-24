@@ -1,11 +1,11 @@
 {
   "manifest_version": 2,
-  "name": "MobX Developer Tools",
+  "name": "MobX Developer Tools Pro",
   "description": "Adds MobX debugging tools to the Chrome Developer Tools.",
   "minimum_chrome_version": "44",
   "applications": {
     "gecko": {
-      "id": "@mobx",
+      "id": "@mobxDevtoolsPro",
       "strict_min_version": "54.0"
     }
   },
@@ -27,20 +27,14 @@
   },
 
   "content_security_policy": "script-src 'self'; object-src 'self'",
-  "web_accessible_resources": [ "main.html", "panel.html", "backend.js"],
+  "web_accessible_resources": ["main.html", "panel.html", "backend.js"],
 
   "background": {
-    "scripts": [ "background.js" ],
+    "scripts": ["background.js"],
     "persistent": false
   },
 
-  "permissions": [
-    "contextMenus",
-    "storage",
-    "file:///*",
-    "http://*/*",
-    "https://*/*"
-  ],
+  "permissions": ["storage"],
 
   "browser_action": {
     "default_icon": {

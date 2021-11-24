@@ -25,7 +25,7 @@ if (!fs.existsSync(path.join(rootDir, `lib/${TARGET_BROWSER}`)))
 
 // Generate manifest.json
 
-manifest.description = 'Dev-tools for MobX and React';
+manifest.description = 'Dev-tools for MobX';
 manifest.version = lernaJson.version;
 manifest.version_name = lernaJson.version + (NODE_ENV === 'development' ? '-dev' : '');
 
