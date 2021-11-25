@@ -5,6 +5,7 @@
         "build": "lerna run build && npm run build:chrome && npm run build:firefox",
         "build:frontend": "cd packages/frontend && npm run build",
         "tab:frontend": "cd packages/frontend && ttab -t 'Front End' npm run dev",
+        "build:tools": "cd packages/tools && npm run build",
         "tab:playground": "ttab -t 'Play Ground' npm run start-playground-plain",
         "open:playgroundPage": "open 'http://localhost:8082/'",
         "tab:start": "run-s tab:frontend tab:playground open:playgroundPage",
