@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import { css, StyleSheet } from 'aphrodite';
+import { createGlobalStyle } from 'styled-components';
 import Blocker from './Blocker';
 import Bridge from './Bridge';
 import { createStores } from './stores';
@@ -81,11 +81,18 @@ export const App = (props: AppProps) => {
       return !quiet && <Blocker>Looking for mobx...</Blocker>;
     }
     return (
-      <ContextProvider stores={storesRef.current}>{React.Children.only(children)}</ContextProvider>
+      <ContextProvider stores={storesRef.current}>
+        <GlobalStyle />
+        {React.Children.only(children)}
+      </ContextProvider>
     );
   };
 
   return renderContent();
 };
 
-const styles = StyleSheet.create({});
+const GlobalStyle = createGlobalStyle`
+  * {
+    box-sizing: border-box;
+  }
+`;

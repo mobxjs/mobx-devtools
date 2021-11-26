@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { css, StyleSheet } from 'aphrodite';
-import classNames from 'classnames';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import { ActionStateTree } from './ActionStateTree';
 import { StoresTree } from './StoresTree';
 import { PRIMARY_BG_COLOR } from './constant/color';
@@ -9,99 +8,81 @@ export const Tabs = () => {
   const [tab, setTab] = useState('Action');
 
   return (
-    <div className={css(styles.container)}>
-      <div className={css(styles.header)}>
-        <div className={css(styles.title)}>{tab}</div>
-        <div className={css(styles.buttons)}>
-          <button
-            type="button"
-            className={classNames(css(styles.button), css(styles.actionButton), {
-              [css(styles.selectedButton)]: tab === 'Action',
-            })}
-            onClick={() => setTab('Action')}
-          >
+    <Container>
+      <Header>
+        <Title>{tab}</Title>
+        <div>
+          <ActionButton onClick={() => setTab('Action')} selected={tab === 'Action'}>
             Action
-          </button>
-          <button
-            type="button"
-            className={classNames(css(styles.button), css(styles.stateButton), {
-              [css(styles.selectedButton)]: tab === 'State',
-            })}
-            onClick={() => setTab('State')}
-          >
+          </ActionButton>
+          <StateButton onClick={() => setTab('State')} selected={tab === 'State'}>
             State
-          </button>
+          </StateButton>
         </div>
-      </div>
+      </Header>
 
-      <div className={css(styles.body)}>
-        <div
-          className={classNames(css(styles.actionBody), {
-            [css(styles.hide)]: tab !== 'Action',
-          })}
-        >
+      <Body>
+        <TreeContainer hide={tab !== 'Action'}>
           <ActionStateTree />
-        </div>
-        <div
-          className={classNames(css(styles.stateBody), {
-            [css(styles.hide)]: tab !== 'State',
-          })}
-        >
+        </TreeContainer>
+        <TreeContainer hide={tab !== 'State'}>
           <StoresTree></StoresTree>
-        </div>
-      </div>
-    </div>
+        </TreeContainer>
+      </Body>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  header: {
-    display: 'flex',
-    height: 50,
-    padding: '0 16px',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottom: '1px solid #f4f4f4',
-  },
-  body: {
-    flex: 1,
-    overflow: 'auto',
-  },
-  title: {
-    fontSize: 18,
-  },
-  buttons: {},
-  button: {
-    width: 60,
-    height: 30,
-    border: '1px solid #f4f4f4',
-    color: '#323D4C',
-    fontSize: 14,
-    cursor: 'pointer',
-  },
-  actionButton: {
-    borderRadius: '2px 0 0 2px',
-  },
-  stateButton: {
-    borderRadius: '0 2px 2px 0',
-  },
-  selectedButton: {
-    background: PRIMARY_BG_COLOR,
-    color: '#fff',
-  },
-  actionBody: {
-    padding: 16,
-  },
-  stateBody: {
-    padding: 16,
-  },
-  hide: {
-    display: 'none',
-  },
-});
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Header = styled.div`
+  display: flex;
+  height: 50px;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f4f4f4;
+`;
+
+const Body = styled.div`
+  flex: 1;
+  overflow: auto;
+`;
+
+const Title = styled.div`
+  font-size: 18;
+`;
+
+const Button = styled.button<{ selected: Boolean }>`
+  width: 60px;
+  height: 30px;
+  border: 1px solid #f4f4f4;
+  color: #323d4c;
+  font-size: 14px;
+  cursor: pointer;
+  ${({ selected }) =>
+    selected
+      ? `
+    background: ${PRIMARY_BG_COLOR};
+    color:#fff;
+    `
+      : ''}
+`;
+
+const ActionButton = styled(Button)`
+  border-radius: 2px 0 0 2px;
+`;
+
+const StateButton = styled(Button)`
+  border-radius: 0 2px 2px 0;
+`;
+
+const TreeContainer = styled.div<{ hide: Boolean }>`
+  padding: 16px;
+  ${({ hide }) => (hide ? `display: none;` : '')}
+`;

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { css, StyleSheet } from 'aphrodite';
+import styled from 'styled-components';
 import ActionsLoggerStore from '../stores/ActionsStore';
 import injectStores from '../utils/injectStores';
 import { FilterAction } from './FilterAction';
@@ -30,9 +30,9 @@ const ActionListBase = (props: ActionListProps) => {
   }, []);
 
   return (
-    <div className={css(styles.container)}>
+    <Container>
       <FilterAction keyword={keyword} setKeyword={setKeyword} />
-      <div className={css(styles.actionsContainer)}>
+      <ActionsContainer>
         {filteredList.map(({ id, storeName, actionName, time }) => (
           <ListItem
             key={id}
@@ -43,8 +43,8 @@ const ActionListBase = (props: ActionListProps) => {
             onSelected={onActionItemSelected}
           />
         ))}
-      </div>
-    </div>
+      </ActionsContainer>
+    </Container>
   );
 };
 
@@ -58,14 +58,13 @@ export const ActionList = injectStores({
   }),
 })(ActionListBase);
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-  },
-  actionsContainer: {
-    width: '100%',
-    height: 'calc(100% - 51px)',
-    overflow: 'auto',
-  },
-});
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const ActionsContainer = styled.div`
+  width: 100%;
+  height: calc(100% - 51px);
+  overflow: auto;
+`;

@@ -1,32 +1,32 @@
 import React from 'react';
-import { css, StyleSheet } from 'aphrodite';
+import styled from 'styled-components';
 import { ActionList } from './ActionList/ActionList';
 import { Tabs } from './Tabs';
 
 export const Panel = () => {
   return (
-    <div className={css(styles.container)}>
-      <div className={css(styles.actionListContainer)}>
+    <Container>
+      <ActionListContainer>
         <ActionList />
-      </div>
-      <div className={css(styles.tabsContainer)}>
+      </ActionListContainer>
+      <TabsContainer>
         <Tabs></Tabs>
-      </div>
-    </div>
+      </TabsContainer>
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    display: 'flex',
-    height: '100%',
-  },
-  actionListContainer: {
-    flex: 1,
-    borderRight: '1px solid #f4f4f4',
-  },
-  tabsContainer: {
-    flex: 1,
-  },
-});
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  height: 100%;
+`;
+
+const ActionListContainer = styled.div`
+  flex: 1;
+  border-right: 1px solid #f4f4f4;
+`;
+
+const TabsContainer = styled.div`
+  flex: 1;
+`;

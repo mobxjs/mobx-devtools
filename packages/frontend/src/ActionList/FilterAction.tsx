@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { css, StyleSheet } from 'aphrodite';
+import styled from 'styled-components';
 import { GREY_BORDER } from '../constant/color';
 
 export type FilterActionProps = {
@@ -15,25 +15,23 @@ export const FilterAction = memo((props: FilterActionProps) => {
   };
 
   return (
-    <div className={css(styles.container)}>
-      <input className={css(styles.input)} value={keyword} onChange={onKeywordChange} placeholder="Filter actions" />
-    </div>
+    <Container>
+      <Input value={keyword} onChange={onKeywordChange} placeholder="Filter actions" />
+    </Container>
   );
 });
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: 50,
-    borderBottom: GREY_BORDER + ' 1px solid',
-  },
-  input: {
-    boxSizing: 'border-box',
-    border: 'none',
-    outline: 'none',
-    width: '100%',
-    height: 50,
-    padding: '8px 16px',
-    fontSize: 18
-  },
-});
+const Container = styled.div`
+  width: 100%;
+  height: 50px;
+  border-bottom: ${GREY_BORDER} 1px solid;
+`;
+
+const Input = styled.input`
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 100%;
+  padding: 8px 16px;
+  font-size: 18px;
+`;

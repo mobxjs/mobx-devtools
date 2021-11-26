@@ -14,12 +14,13 @@ const ActionStateTreeBase = (props: ActionStateTreeProps) => {
   return (
     <ReactJson
       name={changes?.storeName || 'Tip'}
-      src={changes?.storeData || {'message': 'Please select an action!'}}
+      src={changes?.storeData || { message: 'Please select an action!' }}
       indentWidth={2}
       collapsed
       displayDataTypes={false}
       displayObjectSize={false}
       enableClipboard={false}
+      style={{ fontSize: 14 }}
       quotesOnKeys={false}
     />
   );

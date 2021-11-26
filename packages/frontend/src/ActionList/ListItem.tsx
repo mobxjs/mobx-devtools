@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { css, StyleSheet } from 'aphrodite';
+import styled from 'styled-components';
 import { PRIMARY_FONT_COLOR, PRIMARY_BG_COLOR, GREY_FONT, GREY_BORDER } from '../constant/color';
 
 export type ListItemProps = {
@@ -14,43 +14,36 @@ export const ListItem = memo((props: ListItemProps) => {
   const { selected, onSelected, id, name, time } = props;
 
   return (
-    <div
-      className={css(styles.container, selected && styles.containerSelected)}
-      onClick={() => onSelected(id)}
-    >
-      <div className={css(styles.name, selected && styles.selected)}>{name}</div>
-      <div className={css(styles.time, selected && styles.selected)}>{time}</div>
-    </div>
+    <Container onClick={() => onSelected(id)} selected={selected}>
+      <Name selected={selected}>{name}</Name>
+      <Time selected={selected}>{time}</Time>
+    </Container>
   );
 });
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    width: '100%',
-    height: '40px',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    cursor: 'pointer',
-    fontSize: '14px',
-    fontFamily: 'helvetica',
+const Container = styled.div<{ selected: Boolean }>`
+  display: flex;
+  width: 100%;
+  height: 40px;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'helvetica';
+  :not(:first-child) {
+    border-top: ${GREY_BORDER} 1px solid;
+  }
+  ${({ selected }) => (selected ? `background-color: ${PRIMARY_BG_COLOR};` : '')}
+`;
 
-    ':not(:first-child)': {
-      borderTop: GREY_BORDER + ' 1px solid',
-    },
-  },
-  containerSelected: {
-    backgroundColor: PRIMARY_BG_COLOR,
-  },
-  selected: {
-    color: '#FFF',
-  },
-  name: {
-    paddingLeft: 16,
-    color: PRIMARY_FONT_COLOR,
-  },
-  time: {
-    paddingRight: 16,
-    color: GREY_FONT,
-  },
-});
+const Name = styled.div<{ selected: Boolean }>`
+  padding-left: 16px;
+  color: ${PRIMARY_FONT_COLOR};
+  ${({ selected }) => (selected ? `color: #fff;` : '')}
+`;
+
+const Time = styled.div<{ selected: Boolean }>`
+  padding-right: 16px;
+  color: ${GREY_FONT};
+  ${({ selected }) => (selected ? `color: #fff;` : '')}
+`;

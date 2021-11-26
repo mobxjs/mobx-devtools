@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { css, StyleSheet } from 'aphrodite';
+import React from 'react';
 import ReactJson from 'react-json-view';
 import { Stores } from './stores/StoresStore';
 import injectStores from './utils/injectStores';
@@ -12,7 +11,7 @@ const StoresTreeBase = (props: StoresTreeProps) => {
   const { stores } = props;
 
   return (
-    <div className={css(styles.container)}>
+    <div>
       {Object.entries(stores).map(([storeName, store], index) => {
         return (
           <ReactJson
@@ -25,6 +24,7 @@ const StoresTreeBase = (props: StoresTreeProps) => {
             displayObjectSize={false}
             enableClipboard={false}
             quotesOnKeys={false}
+            style={{ fontSize: 14 }}
           />
         );
       })}
@@ -41,7 +41,3 @@ export const StoresTree = injectStores({
     stores: storesStore.stores,
   }),
 })(StoresTreeBase);
-
-const styles = StyleSheet.create({
-  container: {},
-});
