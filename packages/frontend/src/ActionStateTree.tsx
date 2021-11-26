@@ -19,6 +19,8 @@ const ActionStateTreeBase = (props: ActionStateTreeProps) => {
       collapsed
       displayDataTypes={false}
       displayObjectSize={false}
+      enableClipboard={false}
+      quotesOnKeys={false}
     />
   );
 };

@@ -23,6 +23,8 @@ const StoresTreeBase = (props: StoresTreeProps) => {
             collapsed
             displayDataTypes={false}
             displayObjectSize={false}
+            enableClipboard={false}
+            quotesOnKeys={false}
           />
         );
       })}
