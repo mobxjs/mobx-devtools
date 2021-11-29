@@ -1,17 +1,16 @@
 import { format } from 'date-fns';
-import { cloneDeep } from 'lodash';
-import stringify from 'json-stringify-safe';
 import makeChangesProcessor from '../utils/changesProcessor';
 import consoleLogChange from './utils/consoleLogChange';
 import makeInspector from './utils/inspector';
 import storaTempValueInGlobalScope from './utils/storaTempValueInGlobalScope';
 import getStoresFromHook from './utils/getStoresFromHook';
+import getComputed from './utils/getComputed';
 
 const getStoreDataFromChangeObj = obj => {
   let storeData = {};
   if (obj) {
     try {
-      storeData = JSON.parse(stringify(cloneDeep(obj)));
+      storeData = getComputed.mergeComputedIntoStores(obj);
     } catch (err) {
       storeData = { error: err.message };
     }
@@ -34,7 +33,8 @@ const summary = change => {
   sum.removedCount = change.removedCount;
   sum.object = change.object;
   // the newly added
-  sum.storeName = change && change.object && change.object.constructor && change.object.constructor.name;
+  sum.storeName =
+    change && change.object && change.object.constructor && change.object.constructor.name;
   sum.actionName = change.name;
   sum.time = format(new Date(change.timestamp), 'HH:mm:ss');
   sum.storeData = getStoreDataFromChangeObj(change.object);
@@ -68,7 +68,11 @@ export default bridge => {
       if (change && change.type === 'action') {
         itemsById[change.id] = change;
         bridge.send('appended-log-item', summary(change));
-        bridge.send('update-stores', getStoresFromHook());
+        const mergedStore = getComputed.mergeComputedIntoStores(
+          getStoresFromHook(true),
+          getStoresFromHook(),
+        );
+        bridge.send('update-stores', mergedStore);
       }
     }
     if (consoleLogEnabled) {

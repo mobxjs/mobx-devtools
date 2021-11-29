@@ -19,7 +19,7 @@ export default class TodoStore {
   }
 
   get completedTodos() {
-    return this.todos.filter(t => t.done);
+    return this.todos.filter(t => t.title.includes('123'));
   }
 
   addTodo(title) {

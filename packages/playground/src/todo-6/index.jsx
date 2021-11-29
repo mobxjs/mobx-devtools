@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useCallback } from 'react';
-import { makeObservable, observable, computed, action } from 'mobx';
+import { makeObservable, observable, computed, action, $mobx } from 'mobx';
 import { observer } from 'mobx-react';
 import { render } from 'react-dom';
 import RootStore from './stores/RootStore';
@@ -15,6 +15,7 @@ const injectStores = stores => {
   // eslint-disable-next-line no-underscore-dangle
   window.__MOBX_DEVTOOLS_GLOBAL_STORES_HOOK__ = {
     stores,
+    $mobx
   };
 };
 
