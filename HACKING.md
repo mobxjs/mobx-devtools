@@ -4,18 +4,21 @@
 
 - run `git submodule update --init`
 - run `npm run bootstrap`
+- run `cd package/frontend && npm i`
 
 ## Start the test project
 
+- run `npm run tab:start`
+
+  or
+
+- run `cd packages/frontend && npm run dev`
 - run `npm run start-playground-plain`
+
+And then open `http://localhost:8082/`.
 
 ## Chrome extension
 
 - run `npm run start:chrome-debug-connection`
 - Go to `chrome://extensions`, check "developer mode", and click "Load
   unpacked extension", and select directory `lib/chrome`
-
-## Firefox extension
-
-- run `yarn start:firefox`
-- Go to `about:debugging`, check "Enable add-on debugging", and click "Load Temporary Add-on", and select file `lib/firefox/manifest.json`
