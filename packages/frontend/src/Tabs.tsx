@@ -25,9 +25,9 @@ export const Tabs = () => {
         <TreeContainer hide={tab !== 'Action'}>
           <ActionStateTree />
         </TreeContainer>
-        <TreeContainer hide={tab !== 'State'}>
+        <StoresTreeContainer hide={tab !== 'State'}>
           <StoresTree></StoresTree>
-        </TreeContainer>
+        </StoresTreeContainer>
       </Body>
     </Container>
   );
@@ -83,6 +83,12 @@ const StateButton = styled(Button)`
 `;
 
 const TreeContainer = styled.div<{ hide: Boolean }>`
+  height: 100%;
   padding: 16px;
+  ${({ hide }) => (hide ? `display: none;` : '')}
+`;
+
+const StoresTreeContainer = styled.div<{ hide: Boolean }>`
+  height: 100%;
   ${({ hide }) => (hide ? `display: none;` : '')}
 `;

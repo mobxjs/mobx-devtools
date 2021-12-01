@@ -19,4 +19,8 @@ export default class StoresStore extends AbstractStore {
       }),
     );
   }
+
+  requestStores = () => {
+    this.bridge.send('request-stores')
+  }
 }

@@ -29,6 +29,7 @@
     "@babel/preset-typescript": "^7.16.0",
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
+    "@types/styled-components": "^5.1.16",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.4.0",
     "babel-loader": "^8.2.3",
