@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useCallback } from 'react';
-import { makeObservable, observable, computed, action, $mobx } from 'mobx';
+import { $mobx } from 'mobx';
 import { observer } from 'mobx-react';
 import { render } from 'react-dom';
 import RootStore from './stores/RootStore';
@@ -15,7 +15,7 @@ const injectStores = stores => {
   // eslint-disable-next-line no-underscore-dangle
   window.__MOBX_DEVTOOLS_GLOBAL_STORES_HOOK__ = {
     stores,
-    $mobx
+    $mobx,
   };
 };
 
@@ -23,13 +23,15 @@ const rootStore = new RootStore();
 
 injectStores({ rootStore });
 
-const TodoComponent = observer(({ todo }) => (
-  <div>
-    #{todo.id} <strong>{todo.title}</strong>
-  </div>
-));
+const TodoComponent = observer(function TodoComponent({ todo }) {
+  return (
+    <div>
+      #{todo.id} <strong>{todo.title}</strong>
+    </div>
+  );
+});
 
-const TodoAppComponent = observer(() => {
+const TodoAppComponent = () => {
   const { todoStore } = rootStore;
 
   const handleInputKeydown = useCallback(e => {
@@ -47,6 +49,8 @@ const TodoAppComponent = observer(() => {
       <input type="test" onKeyDown={handleInputKeydown} />
     </div>
   );
-});
+};
 
-render(<TodoAppComponent />, document.querySelector('#root'));
+const ObserverTodoAppComponent = observer(TodoAppComponent);
+
+render(<ObserverTodoAppComponent />, document.querySelector('#root'));

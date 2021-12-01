@@ -15,6 +15,11 @@ export type ActionListProps = {
   actionsLoggerStore: ActionsLoggerStore;
 };
 
+const getComponentReactionName = (name: string) => {
+  const componentName = name.replace(/^observer/, '') || '<anonymous>';
+  return componentName + ' render';
+}
+
 const ActionListBase = (props: ActionListProps) => {
   const { actionsLoggerStore } = props;
   const [keyword, setKeyword] = useState<string>('');
@@ -25,19 +30,23 @@ const ActionListBase = (props: ActionListProps) => {
     return list.filter(item => !keyword || item.name.includes(keyword));
   }, [keyword, list]);
 
-  const onActionItemSelected = useCallback((id: string) => {
-    actionsLoggerStore.selectAction(id);
-  }, []);
+  const onActionItemSelected = useCallback(
+    (id: string) => {
+      actionsLoggerStore.selectAction(id);
+    },
+    [actionsLoggerStore],
+  );
 
   return (
     <Container>
       <FilterAction keyword={keyword} setKeyword={setKeyword} />
       <ActionsContainer>
-        {filteredList.map(({ id, storeName, actionName, time }) => (
+        {filteredList.map(({ id, actionName, name, time, type }) => (
           <ListItem
             key={id}
             id={id}
-            name={storeName + '.' + actionName}
+            type={type}
+            name={type === 'action' ? actionName : getComponentReactionName(name)}
             time={time}
             selected={actionsLoggerStore.selectedActionId === id}
             onSelected={onActionItemSelected}

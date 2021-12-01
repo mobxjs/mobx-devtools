@@ -8,20 +8,26 @@ export type ListItemProps = {
   id: string;
   name: string;
   time: string;
+  type: string;
 };
 
 export const ListItem = memo((props: ListItemProps) => {
-  const { selected, onSelected, id, name, time } = props;
+  const { selected, onSelected, id, name, time, type } = props;
 
-  return (
+  return type === 'action' ? (
     <Container onClick={() => onSelected(id)} selected={selected}>
       <Name selected={selected}>{name}</Name>
       <Time selected={selected}>{time}</Time>
     </Container>
+  ) : (
+    <ReactionContainer>
+      <ReactionName>{name}</ReactionName>
+      <Time>{time}</Time>
+    </ReactionContainer>
   );
 });
 
-const Container = styled.div<{ selected: Boolean }>`
+const Container = styled.div<{ selected?: Boolean }>`
   display: flex;
   width: 100%;
   height: 40px;
@@ -36,13 +42,23 @@ const Container = styled.div<{ selected: Boolean }>`
   ${({ selected }) => (selected ? `background-color: ${PRIMARY_BG_COLOR};` : '')}
 `;
 
-const Name = styled.div<{ selected: Boolean }>`
+const ReactionContainer = styled(Container)`
+  cursor: default;
+`;
+
+const Name = styled.div<{ selected?: Boolean }>`
   padding-left: 16px;
   color: ${PRIMARY_FONT_COLOR};
   ${({ selected }) => (selected ? `color: #fff;` : '')}
 `;
 
-const Time = styled.div<{ selected: Boolean }>`
+const ReactionName = styled.div<{ selected?: Boolean }>`
+  padding-left: 16px;
+  color: ${GREY_FONT};
+  ${({ selected }) => (selected ? `color: #fff;` : '')}
+`;
+
+const Time = styled.div<{ selected?: Boolean }>`
   padding-right: 16px;
   color: ${GREY_FONT};
   ${({ selected }) => (selected ? `color: #fff;` : '')}

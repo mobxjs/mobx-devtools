@@ -35,9 +35,11 @@ const summary = change => {
   // the newly added
   sum.storeName =
     change && change.object && change.object.constructor && change.object.constructor.name;
-  sum.actionName = change.name;
+  sum.actionName = `${sum.storeName}.${change.name}`;
   sum.time = format(new Date(change.timestamp), 'HH:mm:ss');
-  sum.storeData = getStoreDataFromChangeObj(change.object);
+  if (change.type === 'action') {
+    sum.storeData = getStoreDataFromChangeObj(change.object);
+  }
 
   return sum;
 };
@@ -73,6 +75,10 @@ export default bridge => {
           getStoresFromHook(),
         );
         bridge.send('update-stores', mergedStore);
+      } else if (change && change.type === 'reaction' && change.name.match(/^observer/)) {
+        itemsById[change.id] = change;
+
+        bridge.send('appended-log-item', summary(change));
       }
     }
     if (consoleLogEnabled) {
