@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ActionsLoggerStore from '../stores/ActionsStore';
 import injectStores from '../utils/injectStores';
 import { FilterAction } from './FilterAction';
+import { FunctionBar } from './FunctionBar';
 import { ListItem } from './ListItem';
 
 export type ActionItem = {
@@ -18,7 +19,7 @@ export type ActionListProps = {
 const getComponentReactionName = (name: string) => {
   const componentName = name.replace(/^observer/, '') || '<anonymous>';
   return componentName + ' render';
-}
+};
 
 const ActionListBase = (props: ActionListProps) => {
   const { actionsLoggerStore } = props;
@@ -40,6 +41,7 @@ const ActionListBase = (props: ActionListProps) => {
   return (
     <Container>
       <FilterAction keyword={keyword} setKeyword={setKeyword} />
+      <FunctionBar />
       <ActionsContainer>
         {filteredList.map(({ id, actionName, name, time, type }) => (
           <ListItem
@@ -74,6 +76,6 @@ const Container = styled.div`
 
 const ActionsContainer = styled.div`
   width: 100%;
-  height: calc(100% - 51px);
+  height: calc(100% - 81px);
   overflow: auto;
 `;

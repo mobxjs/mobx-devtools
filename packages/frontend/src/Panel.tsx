@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ActionList } from './ActionList/ActionList';
+import { ActionList } from './ActionList';
 import { Tabs } from './Tabs';
 
 export const Panel = () => {
@@ -25,6 +25,7 @@ const Container = styled.div`
 const ActionListContainer = styled.div`
   flex: 1;
   border-right: 1px solid #f4f4f4;
+  flex-direction: column;
 `;
 
 const TabsContainer = styled.div`

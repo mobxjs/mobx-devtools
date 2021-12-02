@@ -1,8 +1,11 @@
 import AbstractStore from './AbstractStore';
 import preferences from './preferences';
 
+type ActionType = 'Action' | 'Reaction';
+const ActionsArray: ActionType[] = ['Action', 'Reaction'];
+
 export default class ActionsStore extends AbstractStore {
-  logEnabled = false;
+  logEnabled = true;
 
   consoleLogEnabled = false;
 
@@ -20,14 +23,14 @@ export default class ActionsStore extends AbstractStore {
 
   contextMenu: any = {};
 
+  logTypes: Set<ActionType> = new Set(ActionsArray);
+
   constructor(bridge) {
     super();
     this.bridge = bridge;
 
     this.addDisposer(
       bridge.sub('appended-log-item', change => {
-        console.log('change:', change);
-
         if (this.logItemsIds.length > 5000) {
           const removedIds = this.logItemsIds.splice(0, this.logItemsIds.length - 4900);
           removedIds.forEach(id => {
@@ -103,6 +106,15 @@ export default class ActionsStore extends AbstractStore {
     this.emit('logFilter');
   }
 
+  toggleLogTypes(logType: ActionType) {
+    if (this.logTypes.has(logType)) {
+      this.logTypes.delete(logType);
+    } else {
+      this.logTypes.add(logType);
+    }
+    this.emit('logTypes');
+  }
+
   showContextMenu(type, evt, ...args) {
     evt.preventDefault();
     this.contextMenu = {
@@ -163,6 +175,6 @@ export default class ActionsStore extends AbstractStore {
 
   selectAction(id: string) {
     this.selectedActionId = id;
-    this.emit("selectAction");
+    this.emit('selectAction');
   }
 }
