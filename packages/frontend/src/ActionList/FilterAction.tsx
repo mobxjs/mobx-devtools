@@ -16,7 +16,7 @@ export const FilterAction = memo((props: FilterActionProps) => {
 
   return (
     <Container>
-      <Input value={keyword} onChange={onKeywordChange} placeholder="Filter actions" />
+      <Input value={keyword} onChange={onKeywordChange} placeholder="Search logs" />
     </Container>
   );
 });

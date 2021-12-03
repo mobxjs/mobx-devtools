@@ -31,19 +31,19 @@ const FunctionBarBase = (props: FunctionBarProps) => {
       <ClearLog alt="Clear all logs" onClick={() => actionsLoggerStore.clearLog()}>
         {ClearLogo}
       </ClearLog>
-      {/* <VerticalDivider />
+      <VerticalDivider />
       <ActionPill
-        isActive={actionsLoggerStore.logTypes.has('Action')}
-        onClick={() => actionsLoggerStore.toggleLogTypes('Action')}
+        isActive={actionsLoggerStore.logTypes.has('action')}
+        onClick={() => actionsLoggerStore.toggleLogTypes('action')}
       >
         Action
       </ActionPill>
       <ObserverPill
-        isActive={actionsLoggerStore.logTypes.has('Reaction')}
-        onClick={() => actionsLoggerStore.toggleLogTypes('Reaction')}
+        isActive={actionsLoggerStore.logTypes.has('reaction')}
+        onClick={() => actionsLoggerStore.toggleLogTypes('reaction')}
       >
         Observer
-      </ObserverPill> */}
+      </ObserverPill>
     </FunctionBarContainer>
   );
 };

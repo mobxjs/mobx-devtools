@@ -1,6 +1,12 @@
 import React, { memo } from 'react';
 import styled from 'styled-components';
-import { PRIMARY_FONT_COLOR, PRIMARY_BG_COLOR, GREY_FONT, GREY_BORDER } from '../constant/color';
+import {
+  OBSERVER_COLOR,
+  PRIMARY_BG_COLOR,
+  GREY_FONT,
+  GREY_BORDER,
+  BLACK_FONT,
+} from '../constant/color';
 
 export type ListItemProps = {
   selected: boolean;
@@ -16,12 +22,18 @@ export const ListItem = memo((props: ListItemProps) => {
 
   return type === 'action' ? (
     <Container onClick={() => onSelected(id)} selected={selected}>
-      <Name selected={selected}>{name}</Name>
+      <Name selected={selected}>
+        <ActionLogo selected={selected}>A</ActionLogo>
+        {name}
+      </Name>
       <Time selected={selected}>{time}</Time>
     </Container>
   ) : (
     <ReactionContainer>
-      <ReactionName>{name}</ReactionName>
+      <Name>
+        <ObserverLogo>O</ObserverLogo>
+        {name}
+      </Name>
       <Time>{time}</Time>
     </ReactionContainer>
   );
@@ -36,30 +48,41 @@ const Container = styled.div<{ selected?: Boolean }>`
   cursor: pointer;
   font-size: 14px;
   font-family: 'helvetica';
-  :not(:first-child) {
-    border-top: ${GREY_BORDER} 1px solid;
-  }
-  ${({ selected }) => (selected ? `background-color: ${PRIMARY_BG_COLOR};` : '')}
+  border-bottom: ${GREY_BORDER} 1px solid;
+  ${({ selected }) => (selected ? `background-color: #F4F4F4;` : '')}
 `;
 
 const ReactionContainer = styled(Container)`
   cursor: default;
 `;
-
-const Name = styled.div<{ selected?: Boolean }>`
-  padding-left: 16px;
-  color: ${PRIMARY_FONT_COLOR};
-  ${({ selected }) => (selected ? `color: #fff;` : '')}
+const ItemLogo = styled.span`
+  display: inline-block;
+  width: 16px;
+  height: 14px;
+  font-size: 10px;
+  line-height: 14px;
+  color: #fff;
+  margin-right: 8px;
+  border-radius: 2px;
+  text-align: center;
 `;
 
-const ReactionName = styled.div<{ selected?: Boolean }>`
-  padding-left: 16px;
-  color: ${GREY_FONT};
-  ${({ selected }) => (selected ? `color: #fff;` : '')}
+const ObserverLogo = styled(ItemLogo)`
+  background-color: ${OBSERVER_COLOR};
 `;
 
-const Time = styled.div<{ selected?: Boolean }>`
+const ActionLogo = styled(ItemLogo)`
+  background-color: ${PRIMARY_BG_COLOR};
+`;
+
+const Name = styled.div`
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+  color: ${BLACK_FONT};
+`;
+
+const Time = styled.div`
   padding-right: 16px;
   color: ${GREY_FONT};
-  ${({ selected }) => (selected ? `color: #fff;` : '')}
 `;

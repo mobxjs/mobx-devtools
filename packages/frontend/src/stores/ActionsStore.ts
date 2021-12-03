@@ -1,8 +1,8 @@
 import AbstractStore from './AbstractStore';
 import preferences from './preferences';
 
-type ActionType = 'Action' | 'Reaction';
-const ActionsArray: ActionType[] = ['Action', 'Reaction'];
+type ActionType = 'action' | 'reaction';
+const ActionsArray: ActionType[] = ['action', 'reaction'];
 
 export default class ActionsStore extends AbstractStore {
   logEnabled = true;

@@ -18,6 +18,11 @@ const getStoreDataFromChangeObj = obj => {
   return storeData;
 };
 
+const getComponentReactionName = name => {
+  const componentName = name.replace(/^observer/, '') || '<anonymous>';
+  return `${componentName} render`;
+};
+
 const summary = change => {
   const sum = Object.create(null);
   sum.summary = true;
@@ -35,10 +40,12 @@ const summary = change => {
   // the newly added
   sum.storeName =
     change && change.object && change.object.constructor && change.object.constructor.name;
-  sum.actionName = `${sum.storeName}.${change.name}`;
   sum.time = format(new Date(change.timestamp), 'HH:mm:ss');
   if (change.type === 'action') {
+    sum.actionName = `${sum.storeName}.${change.name}`;
     sum.storeData = getStoreDataFromChangeObj(change.object);
+  } else if (change.type === 'reaction') {
+    sum.reactionName = getComponentReactionName(change.name);
   }
 
   return sum;
