@@ -44,6 +44,7 @@ const summary = change => {
   if (change.type === 'action') {
     sum.actionName = `${sum.storeName}.${change.name}`;
     sum.storeData = getStoreDataFromChangeObj(change.object);
+    sum.arguments = change.arguments;
   } else if (change.type === 'reaction') {
     sum.reactionName = getComponentReactionName(change.name);
   }
