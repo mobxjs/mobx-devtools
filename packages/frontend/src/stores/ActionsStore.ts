@@ -91,8 +91,10 @@ export default class ActionsStore extends AbstractStore {
   clearLog() {
     this.logItemsIds = [];
     this.logItemsById = {};
+    this.selectedActionId = '';
     this.bridge.send('remove-all-log-items');
     this.emit('log');
+    this.emit('selectAction');
   }
 
   setSearchText(text) {
