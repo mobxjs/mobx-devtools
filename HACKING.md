@@ -2,9 +2,7 @@
 
 ## Preparation
 
-- run `git submodule update --init`
 - run `npm run bootstrap`
-- run `cd package/frontend && npm i`
 
 ## Start the test project
 

@@ -10,7 +10,6 @@ exports.makeConfig = ({
     'amsterdam',
     'baltimore',
     'baltimore-hooks',
-    'casablanca',
     'denmark',
     'todo-6',
     'todo-local-6',
