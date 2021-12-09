@@ -15,9 +15,12 @@
     "lint:fix": "eslint --fix '**/*.@([jt]s?(x)|json)'"
   },
   "dependencies": {
+    "just-diff": "^5.0.1",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
+    "react-json-tree": "^0.15.1",
     "react-json-view": "^1.21.3"
   },
   "devDependencies": {

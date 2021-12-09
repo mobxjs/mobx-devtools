@@ -1,8 +1,54 @@
 import AbstractStore from './AbstractStore';
 import preferences from './preferences';
+import { diff } from 'just-diff';
+import { get, setWith } from 'lodash';
 
 type ActionType = 'action' | 'reaction';
 const ActionsArray: ActionType[] = ['action', 'reaction'];
+
+const PLACEHOLDER = 'placeholder';
+
+const getUpdatedPath = (path, storeName) => {
+  let updatedPath: any = [];
+  const index = path.findIndex(key => key.toLowerCase() === storeName.toLowerCase());
+  if (index !== -1) {
+    updatedPath = path.slice(index);
+  }
+
+  updatedPath = updatedPath.map(updatedPathItem => String(updatedPathItem))
+  
+  return updatedPath;
+}
+
+const getDiffData = (prevStores, currentStores, storeName) => {
+  const result = diff(prevStores, currentStores);
+  const diffData = {};
+  result.forEach(({ op, path, value }) => {
+    // when storeName is 'TestStore':
+    // ['rootStore', 'testStore', 'bar', 1] => ['testStore', 'bar', 1]
+    const updatedPath = getUpdatedPath(path, storeName);
+    let val: any[];
+    switch (op) {
+      case 'add': {
+        val = [value];
+        break;
+      }
+      case 'replace': {
+        const oldValue = get(prevStores, path)
+        const newValue = value;
+        val = [oldValue, newValue];
+        break;
+      }
+      case 'remove': {
+        const value = get(prevStores, path);
+        val = [value, PLACEHOLDER, PLACEHOLDER];
+        break;
+      }
+    }
+    setWith(diffData, updatedPath, val, Object)
+  });
+  return diffData;
+}
 
 export default class ActionsStore extends AbstractStore {
   logEnabled = true;
@@ -25,12 +71,15 @@ export default class ActionsStore extends AbstractStore {
 
   logTypes: Set<ActionType> = new Set(ActionsArray);
 
+  diffById = {};
+
   constructor(bridge) {
     super();
     this.bridge = bridge;
 
     this.addDisposer(
-      bridge.sub('appended-log-item', change => {
+      bridge.sub('appended-log-item', ({ change, prevStores,
+        currentStores, storeName }) => {
         if (this.logItemsIds.length > 5000) {
           const removedIds = this.logItemsIds.splice(0, this.logItemsIds.length - 4900);
           removedIds.forEach(id => {
@@ -38,6 +87,11 @@ export default class ActionsStore extends AbstractStore {
           });
           this.bridge.send('remove-log-items', removedIds);
         }
+
+        if (prevStores && currentStores) {
+          this.diffById[change.id] = getDiffData(prevStores, currentStores, storeName);
+        }
+
         this.logItemsById[change.id] = change;
         this.logItemsIds.push(change.id);
         this.emit('log');

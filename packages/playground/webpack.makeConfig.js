@@ -14,6 +14,7 @@ exports.makeConfig = ({
     'denmark',
     'todo-6',
     'todo-local-6',
+    'diff'
   ],
   plainDevtool = false,
 }) => ({

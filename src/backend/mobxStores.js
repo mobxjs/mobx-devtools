@@ -1,5 +1,7 @@
 import getStoresFromHook from './utils/getStoresFromHook';
 import getComputed from './utils/getComputed';
+import diff from './utils/diff';
+
 
 export default bridge => {
   const disposables = [
@@ -7,7 +9,7 @@ export default bridge => {
       const stores = getStoresFromHook(true);
       getComputed.getStoresComputedKeysMap(stores);
       const newStores = getComputed.mergeComputedIntoStores(stores);
-
+      diff.setPervStores(newStores);
       bridge.send('update-stores', newStores);
     }),
   ];

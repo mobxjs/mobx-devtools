@@ -1,31 +1,46 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ActionStateTree } from './ActionStateTree';
+import { DiffTree } from './DiffTree';
 import { StoresTree } from './StoresTree';
 import { PRIMARY_BG_COLOR } from './constant/color';
 
+export enum TabNames {
+  ACTION = 'Action',
+  DIFF = 'Diff',
+  STATE = 'State',
+}
+
 export const Tabs = () => {
-  const [tab, setTab] = useState('Action');
+  const [tab, setTab] = useState(TabNames.ACTION);
 
   return (
     <Container>
       <Header>
         <Title>{tab}</Title>
         <div>
-          <ActionButton onClick={() => setTab('Action')} selected={tab === 'Action'}>
+          <ActionButton onClick={() => setTab(TabNames.ACTION)} selected={tab === TabNames.ACTION}>
             Action
           </ActionButton>
-          <StateButton onClick={() => setTab('State')} selected={tab === 'State'}>
+          <Button onClick={() => setTab(TabNames.DIFF)} selected={tab === TabNames.DIFF}>
+            Diff
+          </Button>
+          <StateButton onClick={() => setTab(TabNames.STATE)} selected={tab === TabNames.STATE}>
             State
           </StateButton>
         </div>
       </Header>
 
       <Body>
-        <TreeContainer hide={tab !== 'Action'}>
+        <TreeContainer hide={tab !== TabNames.ACTION}>
           <ActionStateTree />
         </TreeContainer>
-        <StoresTreeContainer hide={tab !== 'State'}>
+
+        <DiffTreeContainer hide={tab !== TabNames.DIFF}>
+          <DiffTree></DiffTree>
+        </DiffTreeContainer>
+
+        <StoresTreeContainer hide={tab !== TabNames.STATE}>
           <StoresTree></StoresTree>
         </StoresTreeContainer>
       </Body>
@@ -83,6 +98,12 @@ const StateButton = styled(Button)`
 `;
 
 const TreeContainer = styled.div<{ hide: Boolean }>`
+  height: 100%;
+  padding: 16px;
+  ${({ hide }) => (hide ? `display: none;` : '')}
+`;
+
+const DiffTreeContainer = styled.div<{ hide: Boolean }>`
   height: 100%;
   padding: 16px;
   ${({ hide }) => (hide ? `display: none;` : '')}

@@ -5,6 +5,7 @@ import makeInspector from './utils/inspector';
 import storaTempValueInGlobalScope from './utils/storaTempValueInGlobalScope';
 import getStoresFromHook from './utils/getStoresFromHook';
 import getComputed from './utils/getComputed';
+import diff from './utils/diff';
 
 const getStoreDataFromChangeObj = obj => {
   let storeData = {};
@@ -77,16 +78,28 @@ export default bridge => {
     if (logEnabled) {
       if (change && change.type === 'action') {
         itemsById[change.id] = change;
-        bridge.send('appended-log-item', summary(change));
+        // State
         const mergedStore = getComputed.mergeComputedIntoStores(
           getStoresFromHook(true),
           getStoresFromHook(),
         );
         bridge.send('update-stores', mergedStore);
+
+        // Action and Diff
+        const prevStores = diff.getPrevStores();
+        diff.setPervStores(mergedStore);
+        const storeSummary = summary(change);
+
+        bridge.send('appended-log-item', {
+          change: storeSummary,
+          prevStores,
+          currentStores: mergedStore,
+          storeName: storeSummary.storeName
+        });
       } else if (change && change.type === 'reaction' && change.name.match(/^observer/)) {
         itemsById[change.id] = change;
 
-        bridge.send('appended-log-item', summary(change));
+        bridge.send('appended-log-item', {change: summary(change)});
       }
     }
     if (consoleLogEnabled) {
