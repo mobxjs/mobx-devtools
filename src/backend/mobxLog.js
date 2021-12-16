@@ -160,6 +160,7 @@ export default bridge => {
             }
           }),
         );
+        getComputed.setMobxSymbol(collection.mobx.$mobx);
       }
     },
     dispose() {

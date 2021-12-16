@@ -6,21 +6,36 @@ import { Stores } from './stores/StoresStore';
 import injectStores from './utils/injectStores';
 
 export type StoresTreeProps = {
-  stores: Stores;
+  storesStore: Stores;
   requestStores: () => void;
 };
 
 const StoresTreeBase = (props: StoresTreeProps) => {
-  const { stores, requestStores } = props;
+  const { storesStore, requestStores } = props;
 
   const handleRefresh = () => {
     requestStores();
   };
 
+  if (storesStore.noInject) {
+    return (
+      <TipContainer>
+        If you want to use State, please refer to this{' '}
+        <a
+          href="https://www.npmjs.com/package/@mobx-devtools/tools"
+          target="_blank"
+        >
+          document
+        </a>
+        , and then inject stores of application.
+      </TipContainer>
+    );
+  }
+
   return (
     <Container>
       <ReactJsonContainer>
-        {Object.entries(stores).map(([storeName, store], index) => {
+        {Object.entries(storesStore.stores).map(([storeName, store], index) => {
           return (
             <ReactJson
               key={`${storeName}-${index}`}
@@ -49,10 +64,14 @@ export const StoresTree = injectStores({
   },
   // @ts-ignore
   injectProps: ({ storesStore }) => ({
-    stores: storesStore.stores,
+    storesStore,
     requestStores: storesStore.requestStores,
   }),
 })(StoresTreeBase);
+
+const TipContainer = styled.div`
+  padding: 16px;
+`;
 
 const Container = styled.div`
   height: 100%;

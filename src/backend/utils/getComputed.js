@@ -1,6 +1,11 @@
 import { cloneDeep, isObject, difference, get, set } from 'lodash';
 import stringify from 'json-stringify-safe';
 
+let $mobx;
+const setMobxSymbol = (mobxSymbol) => {
+  $mobx = mobxSymbol;
+}
+
 // TODO: need to find a better way to loop the stores;
 
 // NOTE: store key is store's constructor.name!!!
@@ -64,7 +69,6 @@ const getStoreName = object => {
 const isMobxStore = object => {
   // eslint-disable-next-line no-underscore-dangle
   const mobxHook = window.__MOBX_DEVTOOLS_GLOBAL_STORES_HOOK__;
-  const $mobx = mobxHook && mobxHook.$mobx;
   // eslint-disable-next-line no-underscore-dangle
   return object[$mobx] && !object[$mobx].isPlainObject_;
 };
@@ -114,4 +118,4 @@ const mergeComputedIntoStores = (originalStore) => {
   return targetStore;
 };
 
-export default { getStoresComputedKeysMap, mergeComputedIntoStores };
+export default { getStoresComputedKeysMap, mergeComputedIntoStores, setMobxSymbol };

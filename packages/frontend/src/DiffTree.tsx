@@ -2,11 +2,13 @@ import React from 'react';
 import JSONTree from 'react-json-tree';
 import styled from 'styled-components';
 import ActionsLoggerStore from './stores/ActionsStore';
+import StoresStore from './stores/StoresStore';
 import { stringifyAndShrink, prepareDelta } from './utils/diff';
 import injectStores from './utils/injectStores';
 
 export type DiffTreeProps = {
   actionsLoggerStore: ActionsLoggerStore;
+  storesStore: StoresStore;
 };
 
 // TODO: update theme
@@ -32,7 +34,7 @@ const theme = {
 };
 
 const DiffTreeBase = (props: DiffTreeProps) => {
-  const { actionsLoggerStore } = props;
+  const { actionsLoggerStore, storesStore } = props;
   const diff = actionsLoggerStore.diffById[actionsLoggerStore.selectedActionId];
 
   const hasSelect = !!actionsLoggerStore.selectedActionId;
@@ -59,6 +61,21 @@ const DiffTreeBase = (props: DiffTreeProps) => {
   };
 
   const renderContent = () => {
+    if (storesStore.noInject) {
+      return (
+        <div>
+          If you want to use Diff, please refer to this{' '}
+          <a
+            href="https://www.npmjs.com/package/@mobx-devtools/tools"
+            target="_blank"
+          >
+            document
+          </a>
+          , and then inject stores of application.
+        </div>
+      );
+    }
+
     if (!hasSelect) {
       return (
         <Container key="noSelect">
@@ -106,10 +123,12 @@ const DiffTreeBase = (props: DiffTreeProps) => {
 export const DiffTree = injectStores({
   subscribe: {
     actionsLoggerStore: ['selectAction'],
+    storesStore: ['update-stores'],
   },
   // @ts-ignore
-  injectProps: ({ actionsLoggerStore }) => ({
+  injectProps: ({ actionsLoggerStore, storesStore }) => ({
     actionsLoggerStore,
+    storesStore,
   }),
 })(DiffTreeBase);
 
