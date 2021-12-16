@@ -6,6 +6,7 @@ import storaTempValueInGlobalScope from './utils/storaTempValueInGlobalScope';
 import getStoresFromHook from './utils/getStoresFromHook';
 import getComputed from './utils/getComputed';
 import diff from './utils/diff';
+import createDiffPatcher from './utils/createDiffPatcher'
 
 const getStoreDataFromChangeObj = obj => {
   let storeData = {};
@@ -88,13 +89,14 @@ export default bridge => {
         // Action and Diff
         const prevStores = diff.getPrevStores();
         diff.setPervStores(mergedStore);
+
         const storeSummary = summary(change);
 
+        const diffData = createDiffPatcher().diff(prevStores, mergedStore);
+        
         bridge.send('appended-log-item', {
           change: storeSummary,
-          prevStores,
-          currentStores: mergedStore,
-          storeName: storeSummary.storeName
+          diffData,
         });
       } else if (change && change.type === 'reaction' && change.name.match(/^observer/)) {
         itemsById[change.id] = change;

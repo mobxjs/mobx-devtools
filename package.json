@@ -103,6 +103,7 @@
         "date-fns": "^2.25.0",
         "geckodriver": "^1.10.0",
         "json-stringify-safe": "^5.0.1",
+        "jsondiffpatch": "^0.4.1",
         "lodash": "^4.17.21"
     }
 }

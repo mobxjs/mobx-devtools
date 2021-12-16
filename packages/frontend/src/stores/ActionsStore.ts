@@ -78,8 +78,7 @@ export default class ActionsStore extends AbstractStore {
     this.bridge = bridge;
 
     this.addDisposer(
-      bridge.sub('appended-log-item', ({ change, prevStores,
-        currentStores, storeName }) => {
+      bridge.sub('appended-log-item', ({ change, diffData, }) => {
         if (this.logItemsIds.length > 5000) {
           const removedIds = this.logItemsIds.splice(0, this.logItemsIds.length - 4900);
           removedIds.forEach(id => {
@@ -88,8 +87,8 @@ export default class ActionsStore extends AbstractStore {
           this.bridge.send('remove-log-items', removedIds);
         }
 
-        if (prevStores && currentStores) {
-          this.diffById[change.id] = getDiffData(prevStores, currentStores, storeName);
+        if (diffData) {
+          this.diffById[change.id] = diffData;
         }
 
         this.logItemsById[change.id] = change;
