@@ -1,30 +1,22 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import ReactJson from 'react-json-view';
 import styled from 'styled-components';
 import { PRIMARY_BG_COLOR } from './constant/color';
-import { Stores } from './stores/StoresStore';
-import injectStores from './utils/injectStores';
+import { useStores } from './contexts/storesProvider';
 
-export type StoresTreeProps = {
-  storesStore: Stores;
-  requestStores: () => void;
-};
-
-const StoresTreeBase = (props: StoresTreeProps) => {
-  const { storesStore, requestStores } = props;
+export const StoresTree = observer(() => {
+  const { storesStore } = useStores();
 
   const handleRefresh = () => {
-    requestStores();
+    storesStore.requestStores();
   };
 
   if (storesStore.noInject) {
     return (
       <TipContainer>
         If you want to use State, please refer to this{' '}
-        <a
-          href="https://www.npmjs.com/package/@mobx-devtools/tools"
-          target="_blank"
-        >
+        <a href="https://www.npmjs.com/package/@mobx-devtools/tools" target="_blank">
           document
         </a>
         , and then inject stores of application.
@@ -56,18 +48,7 @@ const StoresTreeBase = (props: StoresTreeProps) => {
       <RefreshButton onClick={handleRefresh}>Refresh</RefreshButton>
     </Container>
   );
-};
-
-export const StoresTree = injectStores({
-  subscribe: {
-    storesStore: ['updateStores'],
-  },
-  // @ts-ignore
-  injectProps: ({ storesStore }) => ({
-    storesStore,
-    requestStores: storesStore.requestStores,
-  }),
-})(StoresTreeBase);
+});
 
 const TipContainer = styled.div`
   padding: 16px;

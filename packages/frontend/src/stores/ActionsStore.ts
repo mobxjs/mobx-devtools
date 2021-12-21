@@ -1,7 +1,8 @@
-import AbstractStore from './AbstractStore';
-import preferences from './preferences';
 import { diff } from 'just-diff';
 import { get, setWith } from 'lodash';
+import { makeAutoObservable } from 'mobx';
+import preferences from './preferences';
+import { RootStore } from '.';
 
 type ActionType = 'action' | 'reaction';
 const ActionsArray: ActionType[] = ['action', 'reaction'];
@@ -15,10 +16,10 @@ const getUpdatedPath = (path, storeName) => {
     updatedPath = path.slice(index);
   }
 
-  updatedPath = updatedPath.map(updatedPathItem => String(updatedPathItem))
-  
+  updatedPath = updatedPath.map(updatedPathItem => String(updatedPathItem));
+
   return updatedPath;
-}
+};
 
 const getDiffData = (prevStores, currentStores, storeName) => {
   const result = diff(prevStores, currentStores);
@@ -34,7 +35,7 @@ const getDiffData = (prevStores, currentStores, storeName) => {
         break;
       }
       case 'replace': {
-        const oldValue = get(prevStores, path)
+        const oldValue = get(prevStores, path);
         const newValue = value;
         val = [oldValue, newValue];
         break;
@@ -45,17 +46,19 @@ const getDiffData = (prevStores, currentStores, storeName) => {
         break;
       }
     }
-    setWith(diffData, updatedPath, val, Object)
+    setWith(diffData, updatedPath, val, Object);
   });
   return diffData;
-}
+};
 
-export default class ActionsStore extends AbstractStore {
+export default class ActionsStore {
+  rootStore: RootStore;
+
   logEnabled = true;
 
   consoleLogEnabled = false;
 
-  logFilter = undefined;
+  logFilter?: string = undefined;
 
   selectedActionId: string = '';
 
@@ -63,9 +66,7 @@ export default class ActionsStore extends AbstractStore {
 
   logItemsIds: any[] = [];
 
-  searchText = '';
-
-  bridge: any = undefined;
+  searchText: string = '';
 
   contextMenu: any = {};
 
@@ -73,18 +74,29 @@ export default class ActionsStore extends AbstractStore {
 
   diffById = {};
 
-  constructor(bridge) {
-    super();
-    this.bridge = bridge;
+  get bridge() {
+    return this.rootStore.capabilitiesStore.bridge;
+  }
 
-    this.addDisposer(
-      bridge.sub('appended-log-item', ({ change, diffData, }) => {
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+    makeAutoObservable(this);
+
+    preferences.get('logEnabled').then(({ logEnabled }) => {
+      if (logEnabled) this.toggleLogging(true);
+    });
+  }
+
+  subscribe() {
+    this.bridge?.sub(
+      'appended-log-item',
+      ({ change, diffData }) => {
         if (this.logItemsIds.length > 5000) {
           const removedIds = this.logItemsIds.splice(0, this.logItemsIds.length - 4900);
           removedIds.forEach(id => {
             delete this.logItemsById[id];
           });
-          this.bridge.send('remove-log-items', removedIds);
+          this.bridge?.send('remove-log-items', removedIds);
         }
 
         if (diffData) {
@@ -93,72 +105,58 @@ export default class ActionsStore extends AbstractStore {
 
         this.logItemsById[change.id] = change;
         this.logItemsIds.push(change.id);
-        this.emit('log');
-      }),
-      bridge.sub('log-item-details', item => {
-        if (this.logItemsById[item.id]) {
-          Object.assign(this.logItemsById[item.id], item);
-          this.emit(item.id);
-        }
-      }),
-      bridge.sub('inspect-change-result', ({ changeId, path, data }) => {
-        const obj = path.reduce((acc, next) => acc && acc[next], this.logItemsById[changeId]);
-        if (obj) {
-          Object.assign(obj, data);
-        }
-        // if (__DEV__) console.log(`inspected--${path.join('/')}`, data);
-        this.emit(`inspected--${path.join('/')}`);
-      }),
+      },
     );
-
-    preferences.get('logEnabled').then(({ logEnabled }) => {
-      if (logEnabled) this.toggleLogging(true);
+    this.bridge?.sub('log-item-details', item => {
+      if (this.logItemsById[item.id]) {
+        Object.assign(this.logItemsById[item.id], item);
+      }
+    });
+    this.bridge?.sub('inspect-change-result', ({ changeId, path, data }) => {
+      const obj = path.reduce((acc, next) => acc && acc[next], this.logItemsById[changeId]);
+      if (obj) {
+        Object.assign(obj, data);
+      }
+      // if (__DEV__) console.log(`inspected--${path.join('/')}`, data);
     });
   }
 
   inspect(changeId, path) {
-    this.bridge.send('inspect-change', { changeId, path });
+    this.bridge?.send('inspect-change', { changeId, path });
   }
 
   stopInspecting(changeId, path) {
-    this.bridge.send('stop-inspecting-change', { changeId, path });
+    this.bridge?.send('stop-inspecting-change', { changeId, path });
   }
 
   toggleLogging(logEnabled = !this.logEnabled) {
     preferences.set({ logEnabled });
-    this.bridge.send('set-log-enabled', logEnabled);
+    this.bridge?.send('set-log-enabled', logEnabled);
     this.logEnabled = logEnabled;
-    this.emit('logEnabled');
   }
 
   toggleConsoleLogging(consoleLogEnabled = !this.consoleLogEnabled) {
-    this.bridge.send('set-console-log-enabled', consoleLogEnabled);
+    this.bridge?.send('set-console-log-enabled', consoleLogEnabled);
     this.consoleLogEnabled = consoleLogEnabled;
-    this.emit('consoleLogEnabled');
   }
 
   getDetails(id) {
-    this.bridge.send('get-log-item-details', id);
+    this.bridge?.send('get-log-item-details', id);
   }
 
   clearLog() {
     this.logItemsIds = [];
     this.logItemsById = {};
     this.selectedActionId = '';
-    this.bridge.send('remove-all-log-items');
-    this.emit('log');
-    this.emit('selectAction');
+    this.bridge?.send('remove-all-log-items');
   }
 
   setSearchText(text) {
     this.searchText = text;
-    this.emit('log');
   }
 
   setLogFilter(logFilter) {
-    this.setValueAndEmit('logFilter', logFilter);
     this.logFilter = logFilter;
-    this.emit('logFilter');
   }
 
   toggleLogTypes(logType: ActionType) {
@@ -167,7 +165,6 @@ export default class ActionsStore extends AbstractStore {
     } else {
       this.logTypes.add(logType);
     }
-    this.emit('logTypes');
   }
 
   showContextMenu(type, evt, ...args) {
@@ -180,12 +177,10 @@ export default class ActionsStore extends AbstractStore {
         this.hideContextMenu();
       },
     };
-    this.emit('contextMenu');
   }
 
   hideContextMenu() {
     this.contextMenu = undefined;
-    this.emit('contextMenu');
   }
 
   getContextMenuActions(type, args) {
@@ -197,7 +192,7 @@ export default class ActionsStore extends AbstractStore {
             key: 'storeAsGlobal',
             title: 'Store as global variable',
             action: () => {
-              this.bridge.send('log:makeGlobal', { changeId, path });
+              this.bridge?.send('log:makeGlobal', { changeId, path });
               this.hideContextMenu();
             },
           },
@@ -230,6 +225,5 @@ export default class ActionsStore extends AbstractStore {
 
   selectAction(id: string) {
     this.selectedActionId = id;
-    this.emit('selectAction');
   }
 }
