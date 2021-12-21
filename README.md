@@ -4,7 +4,7 @@ The official [MobX Devtools](https://github.com/mobxjs/mobx-devtools) enhanced v
 
 This repository is home for:
 
-- MobX Developer Tools Pro(in review)
+- [MobX Developer Tools Pro for Chrome](https://chrome.google.com/webstore/detail/mobx-developer-tools-pro/kbkofmkelombofknjlippaelfjhbpena)
 
 ## MobX Devtools Pro vs [MobX Devtool](https://github.com/mobxjs/mobx-devtools)
 
