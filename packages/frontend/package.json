@@ -9,8 +9,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack --watch",
-    "build": "cross-env NODE_ENV=development webpack",
+    "dev": "cross-env NODE_ENV=production webpack --watch",
+    "build": "cross-env NODE_ENV=production webpack",
     "lint": "eslint '**/*.@([jt]s?(x)|json)'",
     "lint:fix": "eslint --fix '**/*.@([jt]s?(x)|json)'"
   },
@@ -21,7 +21,9 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-json-tree": "^0.15.1",
-    "react-json-view": "^1.21.3"
+    "react-json-view": "^1.21.3",
+    "mobx": "^6.3.9",
+    "mobx-react-lite": "^3.2.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",

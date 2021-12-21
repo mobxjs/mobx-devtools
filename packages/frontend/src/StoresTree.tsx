@@ -1,26 +1,21 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import ReactJson from 'react-json-view';
 import styled from 'styled-components';
 import { PRIMARY_BG_COLOR } from './constant/color';
-import { Stores } from './stores/StoresStore';
-import injectStores from './utils/injectStores';
+import { useStores } from './contexts/storesProvider';
 
-export type StoresTreeProps = {
-  stores: Stores;
-  requestStores: () => void;
-};
-
-const StoresTreeBase = (props: StoresTreeProps) => {
-  const { stores, requestStores } = props;
+export const StoresTree = observer(() => {
+  const { storesStore } = useStores();
 
   const handleRefresh = () => {
-    requestStores();
+    storesStore.requestStores();
   };
 
   return (
     <Container>
       <ReactJsonContainer>
-        {Object.entries(stores).map(([storeName, store], index) => {
+        {Object.entries(storesStore.stores).map(([storeName, store], index) => {
           return (
             <ReactJson
               key={`${storeName}-${index}`}
@@ -41,18 +36,7 @@ const StoresTreeBase = (props: StoresTreeProps) => {
       <RefreshButton onClick={handleRefresh}>Refresh</RefreshButton>
     </Container>
   );
-};
-
-export const StoresTree = injectStores({
-  subscribe: {
-    storesStore: ['updateStores'],
-  },
-  // @ts-ignore
-  injectProps: ({ storesStore }) => ({
-    stores: storesStore.stores,
-    requestStores: storesStore.requestStores,
-  }),
-})(StoresTreeBase);
+});
 
 const Container = styled.div`
   height: 100%;

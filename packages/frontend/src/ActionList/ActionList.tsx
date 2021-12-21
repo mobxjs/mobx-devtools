@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { escapeRegExp } from 'lodash';
+import { observer } from 'mobx-react-lite';
 import styled from 'styled-components';
-import ActionsLoggerStore from '../stores/ActionsStore';
-import injectStores from '../utils/injectStores';
+import { useStores } from '../contexts/storesProvider';
 import { FilterAction } from './FilterAction';
 import { FunctionBar } from './FunctionBar';
 import { ListItem } from './ListItem';
@@ -13,12 +13,8 @@ export type ActionItem = {
   time: string;
 };
 
-export type ActionListProps = {
-  actionsLoggerStore: ActionsLoggerStore;
-};
-
-const ActionListBase = (props: ActionListProps) => {
-  const { actionsLoggerStore } = props;
+export const ActionList = observer(() => {
+  const { actionsLoggerStore } = useStores();
   const [keyword, setKeyword] = useState<string>('');
   const [caseEnable, setCaseEnable] = useState<boolean>(false);
   const [regexEnable, setRegexEnable] = useState<boolean>(false);
@@ -74,17 +70,7 @@ const ActionListBase = (props: ActionListProps) => {
       </ActionsContainer>
     </Container>
   );
-};
-
-export const ActionList = injectStores({
-  subscribe: {
-    actionsLoggerStore: ['log', 'selectAction', 'logTypes'],
-  },
-  // @ts-ignore
-  injectProps: ({ actionsLoggerStore }) => ({
-    actionsLoggerStore,
-  }),
-})(ActionListBase);
+});
 
 const Container = styled.div`
   width: 100%;

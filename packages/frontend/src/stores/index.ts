@@ -2,14 +2,9 @@ import ActionsLoggerStore from './ActionsStore';
 import CapabilitiesStore from './CapabilitiesStore';
 import StoresStore from './StoresStore';
 
-export type AppStores = {
-  actionsLoggerStore: ActionsLoggerStore,
-  capabilitiesStore: CapabilitiesStore,
-  storesStore: StoresStore
+export class RootStore {
+  actionsLoggerStore = new ActionsLoggerStore(this);
+  capabilitiesStore = new CapabilitiesStore(this);
+  storesStore = new StoresStore(this);
 }
 
-export const createStores: (bridge?: any) => AppStores = bridge => ({
-  actionsLoggerStore: new ActionsLoggerStore(bridge),
-  capabilitiesStore: new CapabilitiesStore(bridge),
-  storesStore: new StoresStore(bridge)
-});

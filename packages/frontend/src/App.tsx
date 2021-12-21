@@ -1,9 +1,8 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import Blocker from './Blocker';
 import Bridge from './Bridge';
-import { createStores } from './stores';
-import ContextProvider from './stores/ContextProvider';
+import { StoreProvider, useStores } from './contexts/storesProvider';
 
 export type AppProps = {
   quiet?: boolean;
@@ -15,6 +14,7 @@ export type AppProps = {
 
 export const App = (props: AppProps) => {
   const { quiet, reloadSubscribe, inject, reload, children } = props;
+  const { capabilitiesStore } = useStores();
 
   const [contentScriptInstallationError, setContentScriptInstallationError] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -24,7 +24,6 @@ export const App = (props: AppProps) => {
   const unsubscribeReloadRef = useRef(undefined);
   const teardownWallRef = useRef(undefined);
   const disposablesRef = useRef([]);
-  const storesRef = useRef({});
   const unMountedRef = useRef(false);
 
   useEffect(() => {
@@ -34,6 +33,7 @@ export const App = (props: AppProps) => {
     inject((wall, teardownWall) => {
       teardownWallRef.current = teardownWall;
       const bridge = new Bridge(wall);
+      capabilitiesStore.setBridge(bridge);
 
       disposablesRef.current.push(
         // @ts-ignore
@@ -50,7 +50,6 @@ export const App = (props: AppProps) => {
       const connectInterval = setInterval(() => bridge.send('backend:ping'), 500);
       bridge.once('frontend:pong', () => {
         clearInterval(connectInterval);
-        storesRef.current = createStores(bridge);
 
         setConnected(true);
         bridge.send('get-capabilities');
@@ -81,10 +80,10 @@ export const App = (props: AppProps) => {
       return !quiet && <Blocker>Looking for mobx...</Blocker>;
     }
     return (
-      <ContextProvider stores={storesRef.current}>
+      <StoreProvider>
         <GlobalStyle />
         {React.Children.only(children)}
-      </ContextProvider>
+      </StoreProvider>
     );
   };
 

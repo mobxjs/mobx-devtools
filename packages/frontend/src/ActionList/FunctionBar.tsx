@@ -1,8 +1,8 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import styled from 'styled-components';
 import { PRIMARY_FONT_COLOR, OBSERVER_COLOR, GREY_FILL, GREY_BORDER } from '../constant/color';
-import ActionsLoggerStore from '../stores/ActionsStore';
-import injectStores from '../utils/injectStores';
+import { useStores } from '../contexts/storesProvider';
 
 const ClearLogo = (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,12 +14,8 @@ const ClearLogo = (
   </svg>
 );
 
-export type FunctionBarProps = {
-  actionsLoggerStore: ActionsLoggerStore;
-};
-
-const FunctionBarBase = (props: FunctionBarProps) => {
-  const { actionsLoggerStore } = props;
+export const FunctionBar = observer(() => {
+  const { actionsLoggerStore } = useStores();
 
   return (
     <FunctionBarContainer>
@@ -46,17 +42,7 @@ const FunctionBarBase = (props: FunctionBarProps) => {
       </ObserverPill>
     </FunctionBarContainer>
   );
-};
-
-export const FunctionBar = injectStores({
-  subscribe: {
-    actionsLoggerStore: ['logEnabled', 'log', 'logTypes'],
-  },
-  // @ts-ignore
-  injectProps: ({ actionsLoggerStore }) => ({
-    actionsLoggerStore,
-  }),
-})(FunctionBarBase);
+});
 
 const FunctionBarContainer = styled.div`
   position: relative;

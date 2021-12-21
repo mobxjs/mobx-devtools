@@ -1,16 +1,12 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import ReactJson from 'react-json-view';
 import styled from 'styled-components';
 import { GREY_BORDER } from './constant/color';
-import ActionsLoggerStore from './stores/ActionsStore';
-import injectStores from './utils/injectStores';
+import { useStores } from './contexts/storesProvider';
 
-export type ActionStateTreeProps = {
-  actionsLoggerStore: ActionsLoggerStore;
-};
-
-const ActionStateTreeBase = (props: ActionStateTreeProps) => {
-  const { actionsLoggerStore } = props;
+export const ActionStateTree = observer(() => {
+  const { actionsLoggerStore } = useStores();
   const changes = actionsLoggerStore.logItemsById[actionsLoggerStore.selectedActionId];
 
   return (
@@ -42,17 +38,7 @@ const ActionStateTreeBase = (props: ActionStateTreeProps) => {
       />
     </>
   );
-};
-
-export const ActionStateTree = injectStores({
-  subscribe: {
-    actionsLoggerStore: ['selectAction'],
-  },
-  // @ts-ignore
-  injectProps: ({ actionsLoggerStore }) => ({
-    actionsLoggerStore,
-  }),
-})(ActionStateTreeBase);
+});
 
 const StyledDivider = styled.div`
   width: 100%;

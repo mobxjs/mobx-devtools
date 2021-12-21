@@ -1,13 +1,9 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import JSONTree from 'react-json-tree';
 import styled from 'styled-components';
-import ActionsLoggerStore from './stores/ActionsStore';
+import { useStores } from './contexts/storesProvider';
 import { stringifyAndShrink, prepareDelta } from './utils/diff';
-import injectStores from './utils/injectStores';
-
-export type DiffTreeProps = {
-  actionsLoggerStore: ActionsLoggerStore;
-};
 
 // TODO: update theme
 const theme = {
@@ -31,8 +27,9 @@ const theme = {
   base0F: '#cc6633',
 };
 
-const DiffTreeBase = (props: DiffTreeProps) => {
-  const { actionsLoggerStore } = props;
+export const DiffTree = observer(() => {
+  const { actionsLoggerStore } = useStores();
+
   const diff = actionsLoggerStore.diffById[actionsLoggerStore.selectedActionId];
 
   const hasSelect = !!actionsLoggerStore.selectedActionId;
@@ -101,17 +98,7 @@ const DiffTreeBase = (props: DiffTreeProps) => {
   };
 
   return <Container>{renderContent()}</Container>;
-};
-
-export const DiffTree = injectStores({
-  subscribe: {
-    actionsLoggerStore: ['selectAction'],
-  },
-  // @ts-ignore
-  injectProps: ({ actionsLoggerStore }) => ({
-    actionsLoggerStore,
-  }),
-})(DiffTreeBase);
+});
 
 const Container = styled.div`
   height: 100%;

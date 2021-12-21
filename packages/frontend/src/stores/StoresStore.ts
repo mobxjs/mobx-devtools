@@ -1,26 +1,31 @@
-import AbstractStore from './AbstractStore';
+import { makeAutoObservable } from 'mobx';
+import { RootStore } from '.';
 
 export type Stores = {
   [storeName: string]: object;
-}
+};
 
-export default class StoresStore extends AbstractStore {
-  bridge: any = undefined;
+export default class StoresStore {
+  rootStore: RootStore;
   stores: Stores = {};
 
-  constructor(bridge) {
-    super();
-    this.bridge = bridge;
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
 
-    this.addDisposer(
-      bridge.sub('update-stores', (stores: Stores) => {
-        this.stores = stores;
-        this.emit('updateStores')
-      }),
-    );
+    makeAutoObservable(this);
+  }
+
+  get bridge() {
+    return this.rootStore.capabilitiesStore.bridge;
   }
 
   requestStores = () => {
-    this.bridge.send('request-stores')
+    this.bridge?.send('request-stores');
+  };
+
+  subscribe() {
+    this.bridge?.sub('update-stores', (stores: Stores) => {
+      this.stores = stores;
+    });
   }
 }
