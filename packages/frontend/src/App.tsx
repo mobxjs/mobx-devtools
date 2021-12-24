@@ -14,7 +14,7 @@ export type AppProps = {
 
 export const App = (props: AppProps) => {
   const { quiet, reloadSubscribe, inject, reload, children } = props;
-  const { capabilitiesStore } = useStores();
+  const { capabilitiesStore, actionsLoggerStore } = useStores();
 
   const [contentScriptInstallationError, setContentScriptInstallationError] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -40,6 +40,7 @@ export const App = (props: AppProps) => {
         bridge.sub('capabilities', ({ mobxFound }) => {
           setMobxFound(mobxFound);
           bridge.send('request-stores');
+          actionsLoggerStore.getPreferences();
         }),
         bridge.sub('content-script-installation-error', () => {
           setContentScriptInstallationError(true);

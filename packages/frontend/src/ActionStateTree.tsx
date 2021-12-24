@@ -15,7 +15,7 @@ export const ActionStateTree = observer(() => {
         name="arguments"
         src={changes?.arguments || { message: 'Please select an action!' }}
         indentWidth={2}
-        collapsed
+        collapsed={false}
         displayDataTypes={false}
         displayObjectSize={false}
         enableClipboard={false}
@@ -29,7 +29,7 @@ export const ActionStateTree = observer(() => {
         name={changes?.storeName || 'Tip'}
         src={changes?.storeData || { message: 'Please select an action!' }}
         indentWidth={2}
-        collapsed
+        collapsed={1}
         displayDataTypes={false}
         displayObjectSize={false}
         enableClipboard={false}

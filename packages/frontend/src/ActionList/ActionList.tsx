@@ -16,8 +16,6 @@ export type ActionItem = {
 export const ActionList = observer(() => {
   const { actionsLoggerStore } = useStores();
   const [keyword, setKeyword] = useState<string>('');
-  const [caseEnable, setCaseEnable] = useState<boolean>(false);
-  const [regexEnable, setRegexEnable] = useState<boolean>(false);
 
   const list = actionsLoggerStore.logItemsIds.map(id => actionsLoggerStore.logItemsById[id]);
 
@@ -27,15 +25,21 @@ export const ActionList = observer(() => {
         if (!keyword) return true;
 
         try {
-          const key = regexEnable ? keyword : escapeRegExp(keyword);
-          const regex = caseEnable ? new RegExp(key) : new RegExp(key, 'i');
+          const key = actionsLoggerStore.regexEnable ? keyword : escapeRegExp(keyword);
+          const regex = actionsLoggerStore.caseEnable ? new RegExp(key) : new RegExp(key, 'i');
           return item.actionName?.match(regex) || item.reactionName?.match(regex);
         } catch (e) {
           return false;
         }
       })
       .filter(item => actionsLoggerStore.logTypes.has(item.type));
-  }, [keyword, list, actionsLoggerStore.logTypes, caseEnable, regexEnable]);
+  }, [
+    keyword,
+    list,
+    actionsLoggerStore.logTypes,
+    actionsLoggerStore.caseEnable,
+    actionsLoggerStore.regexEnable,
+  ]);
 
   const onActionItemSelected = useCallback(
     (id: string) => {
@@ -49,10 +53,10 @@ export const ActionList = observer(() => {
       <FilterAction
         keyword={keyword}
         setKeyword={setKeyword}
-        caseEnable={caseEnable}
-        setCaseEnable={setCaseEnable}
-        regexEnable={regexEnable}
-        setRegexEnable={setRegexEnable}
+        caseEnable={actionsLoggerStore.caseEnable}
+        setCaseEnable={actionsLoggerStore.setCaseEnable}
+        regexEnable={actionsLoggerStore.regexEnable}
+        setRegexEnable={actionsLoggerStore.setRegexEnable}
       />
       <FunctionBar />
       <ActionsContainer>

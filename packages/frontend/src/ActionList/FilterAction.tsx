@@ -6,9 +6,9 @@ export type FilterActionProps = {
   keyword: string;
   setKeyword: (keyword: string) => void;
   caseEnable: boolean;
-  setCaseEnable: (caseEnable) => void;
+  setCaseEnable: (caseEnable: boolean) => void;
   regexEnable: boolean;
-  setRegexEnable: (regexEnable) => void;
+  setRegexEnable: (regexEnable: boolean) => void;
 };
 
 export const FilterAction = memo((props: FilterActionProps) => {

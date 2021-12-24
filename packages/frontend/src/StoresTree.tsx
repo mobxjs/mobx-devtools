@@ -34,7 +34,7 @@ export const StoresTree = observer(() => {
               name={storeName}
               src={store}
               indentWidth={2}
-              collapsed
+              collapsed={1}
               displayDataTypes={false}
               displayObjectSize={false}
               enableClipboard={false}

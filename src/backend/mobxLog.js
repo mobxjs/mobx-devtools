@@ -112,7 +112,6 @@ export default bridge => {
   const disposables = [
     bridge.sub('set-log-enabled', value => {
       logEnabled = value;
-      bridge.send('log-enabled', value);
       if (!logEnabled && !consoleLogEnabled) changesProcessor.reset();
     }),
     bridge.sub('set-console-log-enabled', value => {

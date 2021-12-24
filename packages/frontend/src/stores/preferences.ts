@@ -1,6 +1,8 @@
-const LS_KEY = '@@mobx-devtools';
+/* eslint-disable no-undef */
+const LS_KEY = '@@mobx-devtools-pro';
 const getLSSettings = () => {
   try {
+    // @ts-ignore
     return JSON.parse(window.localStorage.getItem(LS_KEY)) || {};
   } catch (e) {
     return {};
@@ -13,7 +15,8 @@ const setLSSettings = settings => {
 const memoryStorage = {};
 
 export default {
-  get(...keys) {
+  get(...keys: string[]) {
+    // @ts-ignore
     if (__DEV__ && typeof keys[0] !== 'string') {
       // eslint-disable-next-line no-console
       console.warn(`[preferences] get() expected strings, given ${typeof keys[0]}`);
@@ -26,14 +29,13 @@ export default {
         resolve(keys.reduce((acc, key) => ({ ...acc, [key]: settings[key] }), {}));
       } else {
         resolve(
-          keys.reduce((acc, key) => ({ ...acc, [key]: memoryStorage[key] })),
-          {},
+          keys.reduce((acc, key) => ({ ...acc, [key]: memoryStorage[key] }), {}),
         );
       }
     });
   },
 
-  set(settings) {
+  set(settings: Object): Promise<void> {
     return new Promise(resolve => {
       if (chrome.storage) {
         chrome.storage.sync.set(settings, resolve);
@@ -50,7 +52,7 @@ export default {
     });
   },
 
-  delete(key) {
+  delete(key: string): Promise<void> {
     return new Promise(resolve => {
       if (chrome.storage) {
         chrome.storage.sync.remove(key, resolve);

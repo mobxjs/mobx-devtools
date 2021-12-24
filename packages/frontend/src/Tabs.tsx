@@ -1,52 +1,58 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { observer } from 'mobx-react-lite';
 import styled from 'styled-components';
 import { ActionStateTree } from './ActionStateTree';
 import { DiffTree } from './DiffTree';
 import { StoresTree } from './StoresTree';
 import { PRIMARY_BG_COLOR } from './constant/color';
+import { useStores } from './contexts/storesProvider';
+import { TabNames } from './stores/TabsStore';
 
-export enum TabNames {
-  ACTION = 'Action',
-  DIFF = 'Diff',
-  STATE = 'State',
-}
-
-export const Tabs = () => {
-  const [tab, setTab] = useState(TabNames.ACTION);
+export const Tabs = observer(() => {
+  const {tabsStore} = useStores();
 
   return (
     <Container>
       <Header>
-        <Title>{tab}</Title>
+        <Title>{tabsStore.selectedTab}</Title>
         <div>
-          <ActionButton onClick={() => setTab(TabNames.ACTION)} selected={tab === TabNames.ACTION}>
+          <ActionButton
+            onClick={() => tabsStore.setSelectedTab(TabNames.ACTION)}
+            selected={tabsStore.selectedTab === TabNames.ACTION}
+          >
             Action
           </ActionButton>
-          <Button onClick={() => setTab(TabNames.DIFF)} selected={tab === TabNames.DIFF}>
+          <Button
+            onClick={() => tabsStore.setSelectedTab(TabNames.DIFF)}
+            selected={tabsStore.selectedTab === TabNames.DIFF}
+          >
             Diff
           </Button>
-          <StateButton onClick={() => setTab(TabNames.STATE)} selected={tab === TabNames.STATE}>
+          <StateButton
+            onClick={() => tabsStore.setSelectedTab(TabNames.STATE)}
+            selected={tabsStore.selectedTab === TabNames.STATE}
+          >
             State
           </StateButton>
         </div>
       </Header>
 
       <Body>
-        <TreeContainer hide={tab !== TabNames.ACTION}>
+        <TreeContainer hide={tabsStore.selectedTab !== TabNames.ACTION}>
           <ActionStateTree />
         </TreeContainer>
 
-        <DiffTreeContainer hide={tab !== TabNames.DIFF}>
+        <DiffTreeContainer hide={tabsStore.selectedTab !== TabNames.DIFF}>
           <DiffTree></DiffTree>
         </DiffTreeContainer>
 
-        <StoresTreeContainer hide={tab !== TabNames.STATE}>
+        <StoresTreeContainer hide={tabsStore.selectedTab !== TabNames.STATE}>
           <StoresTree></StoresTree>
         </StoresTreeContainer>
       </Body>
     </Container>
   );
-};
+});
 
 const Container = styled.div`
   width: 100%;
