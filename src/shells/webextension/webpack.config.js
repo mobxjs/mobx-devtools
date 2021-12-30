@@ -14,7 +14,6 @@ module.exports = {
     contentScript: path.join(__dirname, 'contentScript.js'),
     panel: path.join(__dirname, 'panel.jsx'),
     'panel-loader': path.join(__dirname, 'panel-loader.js'),
-    window: path.join(__dirname, 'window.jsx'),
     icons: path.join(__dirname, 'icons'),
   },
   output: {

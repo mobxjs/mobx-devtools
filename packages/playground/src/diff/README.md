@@ -1,3 +1,5 @@
-# denmark
+# diff
 
-Playground for debugging mobx@6
+Playground for debugging:
+
+- Diff

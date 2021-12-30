@@ -1,8 +1,5 @@
 import { format } from 'date-fns';
 import makeChangesProcessor from '../utils/changesProcessor';
-import consoleLogChange from './utils/consoleLogChange';
-import makeInspector from './utils/inspector';
-import storaTempValueInGlobalScope from './utils/storaTempValueInGlobalScope';
 import getStoresFromHook from './utils/getStoresFromHook';
 import getComputed from './utils/getComputed';
 import diff from './utils/diff';
@@ -55,17 +52,10 @@ const summary = change => {
 };
 
 export default bridge => {
-  // TODO: Added the ability to toggle log
-  // let logEnabled = false;
   let logEnabled = true;
-  let consoleLogEnabled = false;
   const logFilter = undefined;
 
   let itemsById = {};
-
-  const inspector = makeInspector(({ inspectedObject, path, data }) => {
-    bridge.send('inspect-change-result', { changeId: inspectedObject.id, path, data });
-  });
 
   const changesProcessor = makeChangesProcessor(change => {
     if (logFilter) {
@@ -104,24 +94,12 @@ export default bridge => {
         bridge.send('appended-log-item', {change: summary(change)});
       }
     }
-    if (consoleLogEnabled) {
-      consoleLogChange(change);
-    }
   });
 
   const disposables = [
     bridge.sub('set-log-enabled', value => {
       logEnabled = value;
-      if (!logEnabled && !consoleLogEnabled) changesProcessor.reset();
-    }),
-    bridge.sub('set-console-log-enabled', value => {
-      consoleLogEnabled = value;
-      bridge.send('console-log-enabled', value);
-      if (!logEnabled && !consoleLogEnabled) changesProcessor.reset();
-    }),
-    bridge.sub('get-log-item-details', id => {
-      bridge.send('log-item-details', itemsById[id]);
-      return itemsById[id];
+      if (!logEnabled) changesProcessor.reset();
     }),
     bridge.sub('remove-log-items', ids => {
       ids.forEach(id => {
@@ -131,22 +109,6 @@ export default bridge => {
     bridge.sub('remove-all-log-items', () => {
       itemsById = {};
     }),
-    bridge.sub('inspect-change', ({ changeId, path }) => {
-      if (!inspector.inspectedObject || changeId !== inspector.inspectedObject.id) {
-        inspector.setInspectedObject(itemsById[changeId]);
-      }
-      inspector.inspect(path);
-    }),
-    bridge.sub('stop-inspecting-change', ({ changeId, path }) => {
-      if (inspector.inspectedObject && changeId === inspector.inspectedObject.id) {
-        inspector.forget(path);
-      }
-    }),
-    bridge.sub('log:makeGlobal', ({ changeId, path }) => {
-      const change = itemsById[changeId];
-      const value = path.reduce((acc, next) => acc && acc[next], change);
-      storaTempValueInGlobalScope(value);
-    }),
   ];
 
   return {
@@ -154,7 +116,7 @@ export default bridge => {
       if (collection.mobx) {
         disposables.push(
           collection.mobx.spy(change => {
-            if (logEnabled || consoleLogEnabled) {
+            if (logEnabled) {
               changesProcessor.push(change, collection.mobx);
             }
           }),

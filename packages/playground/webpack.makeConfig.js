@@ -7,12 +7,7 @@ const WebpackDevServer = require('webpack-dev-server');
 
 exports.makeConfig = ({
   pages = [
-    'amsterdam',
-    'baltimore',
-    'baltimore-hooks',
-    'denmark',
-    'todo-6',
-    'todo-local-6',
+    'todo',
     'diff'
   ],
   plainDevtool = false,

@@ -1,7 +1,4 @@
 import initCapabilitiesBackend from './cababilities';
-import initMSTBackend from './mst';
-import initMobxReactNodesTreeBackend from './mobxReactNodesTree';
-import initMobxReactUpdatesHighlighter from './mobxReactUpdatesHighlighter';
 import initMobxLogBackend from './mobxLog';
 import initMobxStoresBackend from './mobxStores';
 

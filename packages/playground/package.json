@@ -10,8 +10,7 @@
   "author": "Andy Kogut",
   "license": "MIT",
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack-dev-server --hot",
-    "start-electron": "cross-env NODE_ENV=development node electron/start"
+    "start": "cross-env NODE_ENV=development webpack-dev-server --hot"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",

@@ -15,7 +15,6 @@
     "lint:fix": "eslint --fix '**/*.@([jt]s?(x)|json)'"
   },
   "dependencies": {
-    "just-diff": "^5.0.1",
     "lodash": "^4.17.21",
     "mobx": "^6.3.9",
     "mobx-react-lite": "^3.2.2",
