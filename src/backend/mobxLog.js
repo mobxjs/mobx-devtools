@@ -99,6 +99,13 @@ export default bridge => {
   const disposables = [
     bridge.sub('set-log-enabled', value => {
       logEnabled = value;
+      if (logEnabled) {
+        const stores = getComputed.mergeComputedIntoStores(
+          getStoresFromHook(true),
+          getStoresFromHook(),
+        );
+        diff.setPervStores(stores);
+      }
       if (!logEnabled) changesProcessor.reset();
     }),
     bridge.sub('remove-log-items', ids => {
