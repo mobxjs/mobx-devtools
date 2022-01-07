@@ -22,7 +22,8 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-json-tree": "^0.15.1",
-    "react-json-view": "^1.21.3"
+    "react-json-view": "^1.21.3",
+    "react-window": "^1.8.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",

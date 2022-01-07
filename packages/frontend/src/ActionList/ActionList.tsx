@@ -1,11 +1,12 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { escapeRegExp } from 'lodash';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { escapeRegExp, debounce } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import styled from 'styled-components';
 import { useStores } from '../contexts/storesProvider';
 import { FilterAction } from './FilterAction';
 import { FunctionBar } from './FunctionBar';
 import { ListItem } from './ListItem';
+import { FixedSizeList } from 'react-window';
 
 export type ActionItem = {
   id: string;
@@ -16,8 +17,23 @@ export type ActionItem = {
 export const ActionList = observer(() => {
   const { actionsLoggerStore } = useStores();
   const [keyword, setKeyword] = useState<string>('');
+  const [height, setHeight] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const list = actionsLoggerStore.logItemsIds.map(id => actionsLoggerStore.logItemsById[id]);
+
+  useEffect(() => {
+    const handleResize = debounce(() => {
+      if (containerRef && containerRef.current) {
+        setHeight(containerRef.current.clientHeight - 81);
+      }
+    }, 500);
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const filteredList = useMemo(() => {
     return list
@@ -48,8 +64,17 @@ export const ActionList = observer(() => {
     [actionsLoggerStore],
   );
 
+  const itemData = useMemo(
+    () => ({
+      list: filteredList,
+      onSelected: onActionItemSelected,
+      selectedActionId: actionsLoggerStore.selectedActionId,
+    }),
+    [filteredList, onActionItemSelected, actionsLoggerStore.selectedActionId],
+  );
+
   return (
-    <Container>
+    <Container ref={containerRef}>
       <FilterAction
         keyword={keyword}
         setKeyword={setKeyword}
@@ -59,19 +84,18 @@ export const ActionList = observer(() => {
         setRegexEnable={actionsLoggerStore.setRegexEnable}
       />
       <FunctionBar />
-      <ActionsContainer>
-        {filteredList.map(({ id, actionName, reactionName, time, type }) => (
-          <ListItem
-            key={id}
-            id={id}
-            type={type}
-            name={type === 'action' ? actionName : reactionName}
-            time={time}
-            selected={actionsLoggerStore.selectedActionId === id}
-            onSelected={onActionItemSelected}
-          />
-        ))}
-      </ActionsContainer>
+      {!!height && (
+        <FixedSizeList
+          height={height}
+          itemCount={filteredList.length}
+          itemSize={40}
+          itemData={itemData}
+          width="100%"
+          itemKey={(index: number, data: { list: any[] }) => data.list[index].id}
+        >
+          {ListItem}
+        </FixedSizeList>
+      )}
     </Container>
   );
 });

@@ -10,26 +10,32 @@ import {
 
 export type ListItemProps = {
   selected: boolean;
-  onSelected: (id: string) => void;
   id: string;
   name: string;
   time: string;
   type: string;
+  index: number;
+  data: { list: any[]; onSelected: (id: string) => void; selectedActionId: string };
+  style: React.CSSProperties;
 };
 
 export const ListItem = memo((props: ListItemProps) => {
-  const { selected, onSelected, id, name, time, type } = props;
+  const { data, index, style } = props;
+  const { list, onSelected, selectedActionId } = data;
+  const { id, name, time, type } = list[index];
+
+  const selected = selectedActionId === id;
 
   return type === 'action' ? (
-    <Container onClick={() => onSelected(id)} selected={selected}>
-      <Name selected={selected}>
-        <ActionLogo selected={selected}>A</ActionLogo>
+    <Container onClick={() => onSelected(id)} selected={selected} style={style}>
+      <Name>
+        <ActionLogo>A</ActionLogo>
         {name}
       </Name>
-      <Time selected={selected}>{time}</Time>
+      <Time>{time}</Time>
     </Container>
   ) : (
-    <ReactionContainer>
+    <ReactionContainer style={style}>
       <Name>
         <ObserverLogo>O</ObserverLogo>
         {name}
