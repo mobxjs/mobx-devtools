@@ -19,12 +19,21 @@ export type ListItemProps = {
   style: React.CSSProperties;
 };
 
+const ANONYMOUT_RENDER = '<anonymous> render';
+
 export const ListItem = memo((props: ListItemProps) => {
   const { data, index, style } = props;
   const { list, onSelected, selectedActionId } = data;
-  const { id, name, time, type } = list[index];
+  const { id, name, time, type, reactionName } = list[index];
 
   const selected = selectedActionId === id;
+
+  const getReactionName = (reactionName: string) => {
+    if (reactionName === ANONYMOUT_RENDER) {
+      return <Link href="https://github.com/mobx-devtools/mobx-devtools-pro/blob/master/QA.md" target="_blank">{reactionName}</Link>
+    }
+    return reactionName;
+  }
 
   return type === 'action' ? (
     <Container onClick={() => onSelected(id)} selected={selected} style={style}>
@@ -38,7 +47,7 @@ export const ListItem = memo((props: ListItemProps) => {
     <ReactionContainer style={style}>
       <Name>
         <ObserverLogo>O</ObserverLogo>
-        {name}
+        {getReactionName(reactionName)}
       </Name>
       <Time>{time}</Time>
     </ReactionContainer>
@@ -92,3 +101,7 @@ const Time = styled.div`
   padding-right: 16px;
   color: ${GREY_FONT};
 `;
+
+const Link = styled.a`
+  color: ${GREY_FONT};
+`

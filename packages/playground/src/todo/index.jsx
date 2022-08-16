@@ -23,15 +23,15 @@ const rootStore = new RootStore();
 
 injectStores({ rootStore });
 
-const TodoComponent = observer(function TodoComponent({ todo }) {
+const Todo = ({ todo }) => {
   return (
     <div>
       #{todo.id} <strong>{todo.title}</strong>
     </div>
   );
-});
+};
 
-const TodoAppComponent = () => {
+const TodoList = observer(function TodoList() {
   const { todoStore } = rootStore;
 
   const handleInputKeydown = useCallback(e => {
@@ -44,13 +44,15 @@ const TodoAppComponent = () => {
   return (
     <div>
       {todoStore.todos.map(t => (
-        <TodoComponent key={t.id} todo={t} />
+        <Todo key={t.id} todo={t} />
       ))}
       <input type="test" onKeyDown={handleInputKeydown} />
     </div>
   );
+});
+
+const App = () => {
+  return <TodoList />;
 };
 
-const ObserverTodoAppComponent = observer(TodoAppComponent);
-
-render(<ObserverTodoAppComponent />, document.querySelector('#root'));
+render(<App />, document.querySelector('#root'));

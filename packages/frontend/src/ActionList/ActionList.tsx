@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { escapeRegExp, debounce } from 'lodash';
 import { observer } from 'mobx-react-lite';
+import { FixedSizeList } from 'react-window';
 import styled from 'styled-components';
 import { useStores } from '../contexts/storesProvider';
 import { FilterAction } from './FilterAction';
 import { FunctionBar } from './FunctionBar';
 import { ListItem } from './ListItem';
-import { FixedSizeList } from 'react-window';
 
 export type ActionItem = {
   id: string;
