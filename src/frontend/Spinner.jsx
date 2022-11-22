@@ -1,7 +1,7 @@
 import React from 'react';
 import { css, StyleSheet } from 'aphrodite';
 
-export default () => <div className={css(styles.spinner)} />;
+const Spinner = () => <div className={css(styles.spinner)} />;
 
 const styles = StyleSheet.create({
   spinner: {
@@ -27,3 +27,5 @@ const styles = StyleSheet.create({
     animationTimingFunction: 'linear',
   },
 });
+
+export default Spinner;

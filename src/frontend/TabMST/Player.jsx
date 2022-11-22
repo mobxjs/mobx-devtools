@@ -18,6 +18,7 @@ export default class Player extends React.Component {
     this.props.onIndexChange(this.props.currentIndex + 1);
   };
 
+  // eslint-disable-next-line class-methods-use-this
   handleDraggableStart = () => {};
 
   handleDraggableMove = x => {
@@ -29,6 +30,7 @@ export default class Player extends React.Component {
     }
   };
 
+  // eslint-disable-next-line class-methods-use-this
   handleDraggableStop = () => {};
 
   render() {

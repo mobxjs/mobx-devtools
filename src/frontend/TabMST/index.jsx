@@ -97,8 +97,10 @@ export default class TabMST extends React.PureComponent {
     }
   };
 
+  // eslint-disable-next-line class-methods-use-this
   leftRenderer = () => <MstLog />;
 
+  // eslint-disable-next-line class-methods-use-this
   rightRenderer = () => <LogItemExplorer />;
 
   render() {
@@ -118,6 +120,7 @@ export default class TabMST extends React.PureComponent {
       <div
         className={css(styles.tabmst)}
         ref={el => {
+          // eslint-disable-next-line react/no-unused-class-component-methods
           this.containerEl = el;
         }}
       >

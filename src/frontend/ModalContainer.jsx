@@ -28,6 +28,7 @@ export default class ModalContainer extends React.PureComponent {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   stopPropagation = e => e.stopPropagation();
 
   render() {

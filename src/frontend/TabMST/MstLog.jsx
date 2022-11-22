@@ -121,6 +121,7 @@ export default class Log extends React.PureComponent {
       >
         <List
           ref={list => {
+            // eslint-disable-next-line react/no-unused-class-component-methods
             this.list = list;
           }}
           onScroll={this.handleScroll}

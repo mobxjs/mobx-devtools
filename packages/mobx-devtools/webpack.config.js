@@ -12,20 +12,32 @@ module.exports = [
       filename: 'mobxDevtoolsBackend.js',
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.jsx?$/,
-          loader: 'babel-loader',
-          exclude: /node_modules/,
-          query: { cacheDirectory: true },
+          use: [{ 
+            loader: 'babel-loader',
+            options: {
+              presets: ["@babel/preset-env", "@babel/preset-react"],
+              plugins: [
+                ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                "@babel/plugin-transform-runtime",
+                "@babel/plugin-proposal-class-properties"
+              ]
+            }
+          }],
+          exclude: /node_modules/
         },
         {
           test: /\.(eot|ttf|woff2?)$/,
-          loader: 'file-loader?name=fonts/[name].[ext]',
+          use: [{ loader: 'file-loader?name=fonts/[name].[ext]' }],
         },
         {
           test: /\.css$/,
-          loaders: ['style-loader', 'css-loader'],
+          use: [
+            { loader: 'style-loader' },
+            { loader: 'css-loader' }
+          ]
         },
       ],
     },
@@ -47,20 +59,32 @@ module.exports = [
       filename: 'frontend.js',
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.jsx?$/,
-          loader: 'babel-loader',
-          exclude: /node_modules/,
-          query: { cacheDirectory: true },
+          use: [{ 
+            loader: 'babel-loader',
+            options: {
+              presets: ["@babel/preset-env", "@babel/preset-react"],
+              plugins: [
+                ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                "@babel/plugin-transform-runtime",
+                "@babel/plugin-proposal-class-properties"
+              ]
+            }
+          }],
+          exclude: /node_modules/
         },
         {
           test: /\.(eot|ttf|woff2?)$/,
-          loader: 'file-loader?name=fonts/[name].[ext]',
+          use: 'file-loader?name=fonts/[name].[ext]',
         },
         {
           test: /\.css$/,
-          loaders: ['style-loader', 'css-loader'],
+          use: [
+            { loader: 'style-loader' },
+            { loader: 'css-loader' }
+          ],
         },
       ],
     },

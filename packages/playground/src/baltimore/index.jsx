@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-class-component-methods */
 /* eslint-disable react/jsx-no-bind */
 import React from 'react';
 import { observable, action } from 'mobx';

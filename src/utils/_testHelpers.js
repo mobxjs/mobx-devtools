@@ -1,4 +1,4 @@
-const { jsdom } = require('jsdom/lib/old-api.js');
+const { jsdom } = require('jsdom/lib/old-api');
 
 exports.jsdomHelper = html => {
   if (typeof document !== 'undefined') {

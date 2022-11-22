@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 const del = require('del');
 const fs = require('fs');
 const path = require('path');

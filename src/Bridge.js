@@ -17,6 +17,7 @@ export const symbols = {
   serializationException: '@@serializationException',
 };
 
+// eslint-disable-next-line default-param-last
 function serialize(data, path = [], seen = new Map(), propToExtract) {
   try {
     if (propToExtract !== undefined) {

@@ -53,6 +53,7 @@ const TodoComponent = ({ todo }) => (
 
 @observer
 class TodoAppComponent extends React.Component {
+  // eslint-disable-next-line class-methods-use-this
   handleInputKeydown = e => {
     if (e.keyCode === 13) {
       storeInstance.addTodo(e.target.value);
@@ -60,6 +61,7 @@ class TodoAppComponent extends React.Component {
     }
   };
 
+  // eslint-disable-next-line class-methods-use-this
   onDestroy = () => destroy(storeInstance);
 
   render() {

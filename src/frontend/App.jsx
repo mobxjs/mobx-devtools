@@ -93,6 +93,7 @@ export default class App extends React.PureComponent {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   handleContextMenu = e => e.preventDefault();
 
   renderContent() {

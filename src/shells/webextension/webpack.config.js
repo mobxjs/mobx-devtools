@@ -22,49 +22,61 @@ module.exports = {
     filename: '[name].js',
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
-          cacheDirectory: true,
-          presets: ['es2015', 'stage-1'],
-          plugins: ['transform-decorators-legacy', 'transform-class-properties'],
-        },
+        use: [{ 
+          loader: 'babel-loader',
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+            plugins: [
+              ["@babel/plugin-proposal-decorators", { "legacy": true }],
+              "@babel/plugin-transform-runtime",
+              "@babel/plugin-proposal-class-properties"
+            ]
+          }
+        }],
+        exclude: /node_modules/
       },
       {
         test: /icons\/.*\.(png|svg)$/,
-        loader: 'file-loader?name=icons/[name].[ext]',
+        use: 'file-loader?name=icons/[name].[ext]',
         exclude: /node_modules/,
       },
       {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        query: {
-          failOnWarning: false,
-          failOnError: process.env.NODE_ENV !== 'development',
-          fix: process.env.NODE_ENV === 'development',
-          cache: false,
-        },
+        use: [{ 
+          loader: 'babel-loader',
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+            plugins: [
+              ["@babel/plugin-proposal-decorators", { "legacy": true }],
+              "@babel/plugin-transform-runtime",
+              "@babel/plugin-proposal-class-properties"
+            ]
+          }
+        }],
+        exclude: /node_modules/
       },
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
+        use: 'ts-loader',
       },
       {
         test: /\.(png|svg)$/,
-        loader: 'url-loader',
+        use: 'url-loader',
         exclude: /icons\//,
       },
       {
         test: /\.(eot|ttf|woff2?)$/,
-        loader: 'file-loader?name=fonts/[name].[ext]',
+        use: 'file-loader?name=fonts/[name].[ext]',
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' }
+        ],
       },
     ],
   },

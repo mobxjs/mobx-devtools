@@ -1,7 +1,7 @@
 const WebpackDevServer = require('webpack-dev-server');
 const webpack = require('webpack');
 const path = require('path');
-const config = require('../../src/shells/webextension/webpack.config.js');
+const config = require('../../src/shells/webextension/webpack.config');
 
 const { TARGET_BROWSER } = process.env;
 const rootDir = path.join(__dirname, '../../');
@@ -25,7 +25,7 @@ const compiler = webpack(config);
 
 const server = new WebpackDevServer(compiler, {
   hot: true,
-  contentBase: path.join(rootDir, 'lib', TARGET_BROWSER),
+  static: path.join(rootDir, 'lib', TARGET_BROWSER),
   headers: { 'Access-Control-Allow-Origin': '*' },
 });
 

@@ -53,44 +53,40 @@ exports.makeConfig = ({
     },
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
-          cacheDirectory: true,
-          presets: ['es2015', 'stage-1'],
-          plugins: ['transform-decorators-legacy', 'transform-class-properties'],
-        },
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+            plugins: [
+              ["@babel/plugin-proposal-decorators", { "legacy": true }],
+              "@babel/plugin-transform-runtime",
+              "@babel/plugin-proposal-class-properties"
+            ]
+          }
+        }],
+        exclude: /node_modules/
       },
-      // {
-      //   test: /\.jsx?$/,
-      //   exclude: /node_modules/,
-      //   loader: 'eslint-loader',
-      //   query: {
-      //     emitWarning: process.env.NODE_ENV === 'development',
-      //     failOnWarning: false,
-      //     failOnError: process.env.NODE_ENV !== 'development',
-      //     fix: process.env.NODE_ENV === 'development',
-      //     cache: false,
-      //   },
-      // },
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
+        use: 'ts-loader',
       },
       {
         test: /\.svg$/,
-        loader: 'url-loader',
+        use: 'url-loader',
       },
       {
         test: /\.(eot|ttf|woff2?)$/,
-        loader: 'file-loader?name=fonts/[name].[ext]',
+        use: 'file-loader?name=fonts/[name].[ext]',
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' }
+        ],
       },
     ],
   },
@@ -119,26 +115,28 @@ exports.makeConfig = ({
   ],
   devServer: {
     port: 8082,
-    contentBase: [path.join(__dirname, 'static')],
-    stats: {
-      errorDetails: true,
-      assets: false,
-      chunks: false,
-    },
+    static: path.join(__dirname, 'static'),
+    devMiddleware: {
+      stats: {
+        errorDetails: true,
+        assets: false,
+        chunks: false,
+      },
+    }
   },
 });
 
-exports.startDevServer = options =>
-  new Promise((resolve, reject) => {
-    const webpackConfig = exports.makeConfig(options);
-    const compiler = webpack(webpackConfig);
-    const playDevServer = new WebpackDevServer(compiler, {
-      ...webpackConfig.devServer,
-      publicPath: webpackConfig.output.publicPath,
-    });
+// exports.startDevServer = options =>
+//   new Promise((resolve, reject) => {
+//     const webpackConfig = exports.makeConfig(options);
+//     const compiler = webpack(webpackConfig);
+//     const playDevServer = new WebpackDevServer(compiler, {
+//       ...webpackConfig.devServer,
+//       publicPath: webpackConfig.output.publicPath,
+//     });
 
-    playDevServer.listen(options.port);
+//     playDevServer.listen(options.port);
 
-    compiler.plugin('done', () => resolve(() => playDevServer.close()));
-    compiler.plugin('failed', reject);
-  });
+//     // compiler.plugin('done', () => resolve(() => playDevServer.close()));
+//     // compiler.plugin('failed', reject);
+//   });
