@@ -11,11 +11,11 @@
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot",
-    "start-electron": "cross-env NODE_ENV=development node electron/start"
+    "start-electron": "cross-env NODE_ENV=development cross-env node electron/start"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "electron": "10.1.3",
+    "electron": "^11.0.1",
     "mobx": "^6.3.2",
     "mobx-react": "^7.2.0",
     "mobx-state-tree": "^5.0.2",

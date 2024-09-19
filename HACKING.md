@@ -3,7 +3,7 @@
 ## Preparation
 
 - run `git submodule update --init`
-- run `npm install`
+- run `npm install --legacy-peer-deps`
 
 ## Start the test project
 
