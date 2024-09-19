@@ -4,6 +4,10 @@ const webpack = require('webpack');
 const rootPath = path.join(__dirname, '../..');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackDevServer = require('webpack-dev-server');
+const crypto = require("crypto");
+
+const crytpoOriginalCreateHash = crypto.createHash;
+crypto.createHash = algorithm => crytpoOriginalCreateHash(algorithm === "md4" ? "sha256" : algorithm);
 
 exports.makeConfig = ({
   pages = [

@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot",
-    "start-electron": "cross-env NODE_ENV=development cross-env NODE_OPTIONS='--openssl-legacy-provider' node electron/start"
+    "start-electron": "cross-env NODE_ENV=development cross-env node electron/start"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
