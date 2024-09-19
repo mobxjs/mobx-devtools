@@ -18,17 +18,6 @@ const startBrowser = () => {
   }
 };
 
-const getServerAddr = () => {
-  switch (TARGET_BROWSER) {
-    case 'chrome':
-      return 'http://localhost:9515';
-    case 'firefox':
-      return 'http://localhost:4444';
-    default:
-      throw new Error(`${TARGET_BROWSER} browser server address is not configured`);
-  }
-};
-
 const getCapabilities = () => {
   switch (TARGET_BROWSER) {
     case 'chrome':
@@ -49,7 +38,6 @@ const getCapabilities = () => {
 module.exports = async ({ initialUrl, openDevtool = true }) => {
   const stopBrowser = startBrowser();
   const driver = new webdriver.Builder()
-    .usingServer(getServerAddr())
     .withCapabilities(getCapabilities())
     .forBrowser(TARGET_BROWSER)
     .build();
