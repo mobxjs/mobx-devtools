@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = [
   {
+    mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',  // Added 'mode'
     devtool: false,
     entry: path.join(__dirname, 'src/mobxDevtoolsBackend'),
     output: {
@@ -12,20 +13,22 @@ module.exports = [
       filename: 'mobxDevtoolsBackend.js',
     },
     module: {
-      loaders: [
+      rules: [  // Changed 'loaders' to 'rules'
         {
           test: /\.jsx?$/,
-          loader: 'babel-loader',
+          use: {
+            loader: 'babel-loader',
+            options: { cacheDirectory: true },
+          },
           exclude: /node_modules/,
-          query: { cacheDirectory: true },
         },
         {
           test: /\.(eot|ttf|woff2?)$/,
-          loader: 'file-loader?name=fonts/[name].[ext]',
+          use: 'file-loader?name=fonts/[name].[ext]',
         },
         {
           test: /\.css$/,
-          loaders: ['style-loader', 'css-loader'],
+          use: ['style-loader', 'css-loader'],
         },
       ],
     },
@@ -39,6 +42,7 @@ module.exports = [
     ],
   },
   {
+    mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',  // Added 'mode'
     devtool: false,
     entry: path.join(__dirname, '../../src/frontend'),
     output: {
@@ -47,20 +51,32 @@ module.exports = [
       filename: 'frontend.js',
     },
     module: {
-      loaders: [
+      rules: [  // Changed 'loaders' to 'rules'
         {
           test: /\.jsx?$/,
-          loader: 'babel-loader',
+          use: {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true, presets: [
+                '@babel/preset-env',
+                '@babel/preset-react'
+              ],
+              plugins: [
+                ['@babel/plugin-proposal-decorators', { 'legacy': true }],
+                '@babel/plugin-transform-class-properties',
+                '@babel/plugin-transform-runtime'
+              ]
+            },
+          },
           exclude: /node_modules/,
-          query: { cacheDirectory: true },
         },
         {
           test: /\.(eot|ttf|woff2?)$/,
-          loader: 'file-loader?name=fonts/[name].[ext]',
+          use: 'file-loader?name=fonts/[name].[ext]',
         },
         {
           test: /\.css$/,
-          loaders: ['style-loader', 'css-loader'],
+          use: ['style-loader', 'css-loader'],
         },
       ],
     },

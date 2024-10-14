@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
+  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',  // Added 'mode'
   devtool: false,
   entry: path.join(__dirname, 'src'),
   output: {
@@ -11,12 +12,24 @@ module.exports = {
     filename: 'index.js',
   },
   module: {
-    loaders: [
+    rules: [  // Changed 'loaders' to 'rules'
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true, presets: [
+              '@babel/preset-env',
+              '@babel/preset-react'
+            ],
+            plugins: [
+              ['@babel/plugin-proposal-decorators', { 'legacy': true }],
+              '@babel/plugin-transform-class-properties',
+              '@babel/plugin-transform-runtime'
+            ]
+          },
+        },
         exclude: /node_modules/,
-        query: { cacheDirectory: true },
       },
     ],
   },
@@ -36,6 +49,6 @@ module.exports = {
       __DEBUG_CONNECTION__: JSON.stringify(process.env.DEBUG_CONNECTION === 'true'),
       __TARGET__: JSON.stringify('browser'),
     }),
-    // new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
+    // UglifyJsPlugin is no longer needed; optimization in production mode is handled by Webpack 4
   ],
 };

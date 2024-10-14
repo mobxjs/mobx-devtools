@@ -1,11 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
-
-const rootPath = path.join(__dirname, '../..');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WebpackDevServer = require('webpack-dev-server');
+// WebpackDevServer no longer needs to be required manually as it is part of the devServer configuration
 const crypto = require("crypto");
 
+const rootPath = path.join(__dirname, '../..');
+
+// Fix for MD4 deprecation
 const crytpoOriginalCreateHash = crypto.createHash;
 crypto.createHash = algorithm => crytpoOriginalCreateHash(algorithm === "md4" ? "sha256" : algorithm);
 
@@ -21,6 +22,7 @@ exports.makeConfig = ({
   ],
   plainDevtool = false,
 }) => ({
+  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production', // Added 'mode'
   devtool: 'eval',
   entry: pages.reduce(
     (acc, entry) =>
@@ -57,44 +59,40 @@ exports.makeConfig = ({
     },
   },
   module: {
-    loaders: [
+    rules: [  // Changed 'loaders' to 'rules'
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
-          cacheDirectory: true,
-          presets: ['es2015', 'stage-1'],
-          plugins: ['transform-decorators-legacy', 'transform-class-properties'],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true, presets: [
+              '@babel/preset-env',
+              '@babel/preset-react'
+            ],
+            plugins: [
+              ['@babel/plugin-proposal-decorators', { 'legacy': true }],
+              '@babel/plugin-transform-class-properties',
+              '@babel/plugin-transform-runtime'
+            ]
+          },
         },
+        exclude: /node_modules/,
       },
-      // {
-      //   test: /\.jsx?$/,
-      //   exclude: /node_modules/,
-      //   loader: 'eslint-loader',
-      //   query: {
-      //     emitWarning: process.env.NODE_ENV === 'development',
-      //     failOnWarning: false,
-      //     failOnError: process.env.NODE_ENV !== 'development',
-      //     fix: process.env.NODE_ENV === 'development',
-      //     cache: false,
-      //   },
-      // },
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
+        use: 'ts-loader',
       },
       {
         test: /\.svg$/,
-        loader: 'url-loader',
+        use: 'url-loader',
       },
       {
         test: /\.(eot|ttf|woff2?)$/,
-        loader: 'file-loader?name=fonts/[name].[ext]',
+        use: 'file-loader?name=fonts/[name].[ext]',
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
@@ -123,12 +121,13 @@ exports.makeConfig = ({
   ],
   devServer: {
     port: 8082,
-    contentBase: [path.join(__dirname, 'static')],
+    contentBase: path.join(__dirname, 'static'),
     stats: {
       errorDetails: true,
       assets: false,
       chunks: false,
     },
+    publicPath: '/', // Added to support serving files correctly in Webpack 4
   },
 });
 
@@ -136,13 +135,16 @@ exports.startDevServer = options =>
   new Promise((resolve, reject) => {
     const webpackConfig = exports.makeConfig(options);
     const compiler = webpack(webpackConfig);
-    const playDevServer = new WebpackDevServer(compiler, {
+    const devServerOptions = {
       ...webpackConfig.devServer,
       publicPath: webpackConfig.output.publicPath,
+    };
+    const playDevServer = new webpack.DevServer(compiler, devServerOptions);
+
+    playDevServer.listen(options.port, 'localhost', (err) => {
+      if (err) reject(err);
     });
 
-    playDevServer.listen(options.port);
-
-    compiler.plugin('done', () => resolve(() => playDevServer.close()));
-    compiler.plugin('failed', reject);
+    compiler.hooks.done.tap('done', () => resolve(() => playDevServer.close()));  // Changed to use Webpack 4 hooks
+    compiler.hooks.failed.tap('failed', reject);
   });

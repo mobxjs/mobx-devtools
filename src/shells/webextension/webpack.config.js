@@ -1,11 +1,11 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
-
+// WriteFilePlugin is no longer needed in Webpack 4+
 const rootDir = path.join(__dirname, '../../../');
 
 module.exports = {
+  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',  // Added 'mode'
   devtool: false,
   entry: {
     backend: path.join(__dirname, 'backend.js'),
@@ -22,49 +22,52 @@ module.exports = {
     filename: '[name].js',
   },
   module: {
-    loaders: [
+    rules: [  // Changed 'loaders' to 'rules'
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
-          cacheDirectory: true,
-          presets: ['es2015', 'stage-1'],
-          plugins: ['transform-decorators-legacy', 'transform-class-properties'],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+          },
         },
+        exclude: /node_modules/,
       },
       {
         test: /icons\/.*\.(png|svg)$/,
-        loader: 'file-loader?name=icons/[name].[ext]',
+        use: 'file-loader?name=icons/[name].[ext]',
         exclude: /node_modules/,
-      },
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        query: {
-          failOnWarning: false,
-          failOnError: process.env.NODE_ENV !== 'development',
-          fix: process.env.NODE_ENV === 'development',
-          cache: false,
-        },
       },
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
+        use: 'ts-loader',
       },
       {
         test: /\.(png|svg)$/,
-        loader: 'url-loader',
+        use: 'url-loader',
         exclude: /icons\//,
       },
       {
         test: /\.(eot|ttf|woff2?)$/,
-        loader: 'file-loader?name=fonts/[name].[ext]',
+        use: 'file-loader?name=fonts/[name].[ext]',
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.jsx?$/,
+        enforce: 'pre',
+        exclude: /node_modules/,
+        use: {
+          loader: 'eslint-loader',
+          options: {
+            failOnWarning: false,
+            failOnError: process.env.NODE_ENV !== 'development',
+            fix: process.env.NODE_ENV === 'development',
+            cache: false,
+          },
+        },
       },
     ],
   },
@@ -98,6 +101,6 @@ module.exports = {
       filename: 'panel.html',
       chunks: ['panel'],
     }),
-    new WriteFilePlugin(),
+    // WriteFilePlugin is no longer needed as Webpack 4 handles this internally
   ],
 };
