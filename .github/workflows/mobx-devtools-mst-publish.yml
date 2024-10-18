@@ -19,10 +19,9 @@ jobs:
         working-directory: ./packages/mobx-devtools-mst
         run: |
           NAME=$(node -p "require('./package.json').name")
-          VERSION=$(node -p "require('./package.json').version")
+          VERSION=$(node -p "require('./package.json').version.split('.').slice(0, 2).join('.')")
           export LATEST=$(npm show "$NAME@$VERSION" version --json)
-          NEXT=$(node -p "JSON.parse(process.env.LATEST).split('.').map((n, i) => i === 2 ? ++n : n).join('.')")
-          echo "NEXT: $NEXT"
+          NEXT=$(node -p "JSON.parse(process.env.LATEST).at(-1).split('.').map((n, i) => i === 2 ? ++n : n).join('.')")
           npm version $NEXT --git-tag-version false
           npm run build
           cat ./package.json
