@@ -1,0 +1,25 @@
+name: Release
+
+on: workflow_dispatch
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 17
+          registry-url: https://registry.npmjs.org/
+      - run: npm run bootstrap
+      - run: npm run build
+      - run: |
+          TAG=$(echo $TAG | cut -c1-8)
+          gh release create "$TAG" \
+            --repo="$GITHUB_REPOSITORY" \
+            --title="${TAG#v}" \
+            --generate-notes \
+            ./lib/*.zip
+        env:
+          TAG: ${{ github.event.pull_request.head.sha || github.sha }}
+          GH_TOKEN: ${{ github.token }}
