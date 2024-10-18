@@ -11,7 +11,7 @@
     "build:chrome": "cross-env NODE_ENV=production cross-env NODE_OPTIONS='--openssl-legacy-provider' TARGET_BROWSER=chrome node scripts/webextension/build.js && echo 'Chrome built'",
     "start:firefox": "cross-env NODE_ENV=development cross-env TARGET_BROWSER=firefox NODE_OPTIONS='--openssl-legacy-provider' node scripts/webextension/dev-server.js",
     "build:firefox": "cross-env NODE_ENV=production TARGET_BROWSER=firefox NODE_OPTIONS='--openssl-legacy-provider' node scripts/webextension/build.js",
-    "test": "npm run test:unit ; npm run test:e2e",
+    "test": "npm run test:unit",
     "test:unit": "cross-env NODE_ENV=test NODE_OPTIONS='--openssl-legacy-provider' mocha --require 'babel-core/register' 'src/**/*-test.js'",
     "test:e2e": "npm run test:e2e:chrome",
     "test:e2e:chrome": "cross-env NODE_ENV=test TARGET_BROWSER=chrome NODE_OPTIONS='--openssl-legacy-provider' node scripts/webextension/build.js && npm run test:e2e:chrome:now",

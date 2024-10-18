@@ -1,0 +1,32 @@
+name: Publish mobx-devtools-mst
+
+on:
+  push:
+    paths: [ "packages/mobx-devtools-mst/**", ".github/**" ]
+    branches: [ "master" ]
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: npm run bootstrap
+      - name: Resolve new package version & Publish
+        working-directory: ./packages/mobx-devtools-mst
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          export LATEST=$(npm show "$NAME@$VERSION" version --json)
+          NEXT=$(node -p "JSON.parse(process.env.LATEST).split('.').map((n, i) => i === 2 ? ++n : n).join('.')")
+          echo "NEXT: $NEXT"
+          npm version $NEXT --git-tag-version false
+          npm run build
+          cat ./package.json
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
