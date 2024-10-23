@@ -1,13 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
-
-const rootPath = path.join(__dirname, '../..');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackDevServer = require('webpack-dev-server');
-const crypto = require("crypto");
 
-const crytpoOriginalCreateHash = crypto.createHash;
-crypto.createHash = algorithm => crytpoOriginalCreateHash(algorithm === "md4" ? "sha256" : algorithm);
+const rootPath = path.join(__dirname, '../..');
 
 exports.makeConfig = ({
   pages = [
@@ -21,6 +17,7 @@ exports.makeConfig = ({
   ],
   plainDevtool = false,
 }) => ({
+  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
   devtool: 'eval',
   entry: pages.reduce(
     (acc, entry) =>
@@ -35,7 +32,7 @@ exports.makeConfig = ({
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].bundle.js',
-    publicPath: '',
+    publicPath: '/',
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -57,44 +54,41 @@ exports.makeConfig = ({
     },
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
-          cacheDirectory: true,
-          presets: ['es2015', 'stage-1'],
-          plugins: ['transform-decorators-legacy', 'transform-class-properties'],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+            plugins: [
+              ['@babel/plugin-proposal-decorators', { legacy: true }],
+              '@babel/plugin-transform-class-properties',
+              '@babel/plugin-transform-runtime',
+            ],
+          },
         },
+        exclude: /node_modules/,
       },
-      // {
-      //   test: /\.jsx?$/,
-      //   exclude: /node_modules/,
-      //   loader: 'eslint-loader',
-      //   query: {
-      //     emitWarning: process.env.NODE_ENV === 'development',
-      //     failOnWarning: false,
-      //     failOnError: process.env.NODE_ENV !== 'development',
-      //     fix: process.env.NODE_ENV === 'development',
-      //     cache: false,
-      //   },
-      // },
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
+        use: 'ts-loader',
       },
       {
         test: /\.svg$/,
-        loader: 'url-loader',
+        type: 'asset/inline',
       },
       {
         test: /\.(eot|ttf|woff2?)$/,
-        loader: 'file-loader?name=fonts/[name].[ext]',
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name][ext][query]',
+        },
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
@@ -122,13 +116,24 @@ exports.makeConfig = ({
     ),
   ],
   devServer: {
+    host: 'localhost',
     port: 8082,
-    contentBase: [path.join(__dirname, 'static')],
-    stats: {
-      errorDetails: true,
-      assets: false,
-      chunks: false,
+    static: {
+      directory: path.join(__dirname, 'static'),
     },
+    devMiddleware: {
+      publicPath: '/',
+    },
+    hot: true,
+    historyApiFallback: true,
+    client: {
+      overlay: true,
+    },
+  },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
   },
 });
 
@@ -136,13 +141,32 @@ exports.startDevServer = options =>
   new Promise((resolve, reject) => {
     const webpackConfig = exports.makeConfig(options);
     const compiler = webpack(webpackConfig);
-    const playDevServer = new WebpackDevServer(compiler, {
-      ...webpackConfig.devServer,
-      publicPath: webpackConfig.output.publicPath,
+
+    // Set host and port if not already set
+    webpackConfig.devServer.host = webpackConfig.devServer.host || 'localhost';
+    webpackConfig.devServer.port = webpackConfig.devServer.port || options.port || 8082;
+
+    const server = new WebpackDevServer(webpackConfig.devServer, compiler);
+
+    server
+      .start()
+      .then(() => {
+        console.log(
+          `Dev server is running on http://${webpackConfig.devServer.host}:${webpackConfig.devServer.port}`,
+        );
+        resolve(() => server.stop());
+      })
+      .catch(err => {
+        console.error('Failed to start server:', err);
+        reject(err);
+      });
+
+    compiler.hooks.done.tap('done', () => {
+      console.log('Compilation completed.');
     });
 
-    playDevServer.listen(options.port);
-
-    compiler.plugin('done', () => resolve(() => playDevServer.close()));
-    compiler.plugin('failed', reject);
+    compiler.hooks.failed.tap('failed', error => {
+      console.error('Compilation failed:', error);
+      reject(error);
+    });
   });

@@ -9,13 +9,12 @@
 
 - run `npm run start-playground-plain`
 
-
 ## Chrome extension
 
 - run `npm run start:chrome`
 - Go to `chrome://extensions`, check "developer mode", and click "Load
   unpacked extension", and select directory `lib/chrome`
-  
+
 ## Firefox extension
 
 - run `npm run start:firefox`

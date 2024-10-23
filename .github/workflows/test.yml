@@ -2,9 +2,9 @@ name: Test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ['master']
   pull_request_target:
-    branches: [ "master" ]
+    branches: ['master']
 
 jobs:
   test:

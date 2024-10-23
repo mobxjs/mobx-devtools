@@ -26,7 +26,7 @@ export default class LObjDiffPreview extends React.PureComponent {
   render() {
     const { addedCount, removedCount } = this.getStats();
     return (
-      <div className={css(styles.container)} >
+      <div className={css(styles.container)}>
         {addedCount > 0 && <div className={css(styles.added)}>+{addedCount}</div>}
         {removedCount > 0 && <div className={css(styles.removed)}>−{removedCount}</div>}
       </div>

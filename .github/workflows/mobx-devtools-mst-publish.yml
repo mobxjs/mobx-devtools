@@ -2,8 +2,8 @@ name: Publish mobx-devtools-mst
 
 on:
   push:
-    paths: [ "packages/mobx-devtools-mst/**", ".github/**" ]
-    branches: [ "master" ]
+    paths: ['packages/mobx-devtools-mst/**', '.github/**']
+    branches: ['master']
 
 jobs:
   publish-npm:
@@ -28,4 +28,3 @@ jobs:
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
