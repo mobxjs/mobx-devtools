@@ -3,7 +3,7 @@ import debugConnection from '../../utils/debugConnection';
 /*
  * background.js
  *
- * Runs all the time and serves as a central message hub for panels, contentScript, backend
+ * Runs as a service worker serves as a central message hub for panels, contentScript, backend
  */
 
 if (process.env.NODE_ENV === 'test') {

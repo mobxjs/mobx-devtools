@@ -26,7 +26,6 @@
     }
   },
 
-  "content_security_policy": "script-src 'self'; object-src 'self'",
   "web_accessible_resources": [
     {
       "resources": ["main.html", "panel.html", "backend.js"],
@@ -35,8 +34,8 @@
   ],
 
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false
+    "service_worker": "background.js",
+    "type": "module"
   },
 
   "permissions": ["contextMenus", "storage"],
