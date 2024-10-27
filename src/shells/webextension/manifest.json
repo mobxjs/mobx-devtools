@@ -38,7 +38,7 @@
     "type": "module"
   },
 
-  "permissions": ["contextMenus", "storage"],
+  "permissions": ["contextMenus", "storage", "scripting"],
   "host_permissions": ["<all_urls>"],
 
   "browser_action": {
@@ -56,4 +56,5 @@
       "run_at": "document_start"
     }
   ]
+
 }

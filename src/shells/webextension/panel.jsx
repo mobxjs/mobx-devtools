@@ -20,41 +20,41 @@ const inject = done => {
         }
       }());
     `;
-  chrome.devtools.inspectedWindow.eval(code, (res, err) => {
-    if (err) {
-      if (__DEV__) console.log(err); // eslint-disable-line no-console
-      return;
-    }
+  // chrome.devtools.inspectedWindow.eval(code, (res, err) => {
+  //   if (err) {
+  //     if (__DEV__) console.log(err); // eslint-disable-line no-console
+  //     return;
+  //   }
 
-    let disconnected = false;
+  //   let disconnected = false;
 
-    const port = chrome.runtime.connect({
-      name: `${chrome.devtools.inspectedWindow.tabId}`,
-    });
+  //   const port = chrome.runtime.connect({
+  //     name: `${chrome.devtools.inspectedWindow.tabId}`,
+  //   });
 
-    port.onDisconnect.addListener(() => {
-      disconnected = true;
-      if (disconnectListener) {
-        disconnectListener();
-      }
-    });
+  //   port.onDisconnect.addListener(() => {
+  //     disconnected = true;
+  //     if (disconnectListener) {
+  //       disconnectListener();
+  //     }
+  //   });
 
-    const wall = {
-      listen(fn) {
-        port.onMessage.addListener(message => {
-          debugConnection('[background -> FRONTEND]', message);
-          fn(message);
-        });
-      },
-      send(data) {
-        if (disconnected) return;
-        debugConnection('[FRONTEND -> background]', data);
-        port.postMessage(data);
-      },
-    };
+  //   const wall = {
+  //     listen(fn) {
+  //       port.onMessage.addListener(message => {
+  //         debugConnection('[background -> FRONTEND]', message);
+  //         fn(message);
+  //       });
+  //     },
+  //     send(data) {
+  //       if (disconnected) return;
+  //       debugConnection('[FRONTEND -> background]', data);
+  //       port.postMessage(data);
+  //     },
+  //   };
 
-    done(wall, () => port.disconnect());
-  });
+  //   done(wall, () => port.disconnect());
+  // });
 };
 
 initFrontend({
