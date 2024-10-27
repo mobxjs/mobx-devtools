@@ -6,6 +6,7 @@
  */
 
 export default function installGlobalHook(window) {
+  console.log('installGlobalHook', window);
   if (window.__MOBX_DEVTOOLS_GLOBAL_HOOK__ && window.__MOBX_DEVTOOLS_GLOBAL_HOOK__.collections) {
     return;
   }
