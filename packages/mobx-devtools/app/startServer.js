@@ -1,5 +1,4 @@
 /* eslint-disable global-require */
-// eslint-disable-next-line import/no-unresolved
 const ws = require('ws');
 const fs = require('fs');
 const path = require('path');

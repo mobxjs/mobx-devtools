@@ -3,64 +3,89 @@ const path = require('path');
 
 module.exports = [
   {
-    devtool: false,
+    mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
     entry: path.join(__dirname, 'src/mobxDevtoolsBackend'),
     output: {
-      libraryTarget: 'umd',
-      library: 'mobxDevtoolsBackend',
+      library: {
+        name: 'mobxDevtoolsBackend',
+        type: 'umd',
+      },
       path: path.join(__dirname, '/lib'),
       filename: 'mobxDevtoolsBackend.js',
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.jsx?$/,
-          loader: 'babel-loader',
+          use: {
+            loader: 'babel-loader',
+            options: { cacheDirectory: true },
+          },
           exclude: /node_modules/,
-          query: { cacheDirectory: true },
         },
         {
           test: /\.(eot|ttf|woff2?)$/,
-          loader: 'file-loader?name=fonts/[name].[ext]',
+          type: 'asset/resource',
+          generator: {
+            filename: 'fonts/[name][ext][query]',
+          },
         },
         {
           test: /\.css$/,
-          loaders: ['style-loader', 'css-loader'],
+          use: ['style-loader', 'css-loader'],
         },
       ],
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
         __DEBUG_CONNECTION__: JSON.stringify(process.env.DEBUG_CONNECTION === 'true'),
         __TARGET__: JSON.stringify('browser'),
       }),
     ],
+    devtool: 'source-map',
+    performance: {
+      hints: false, // Disable performance hints
+    },
   },
   {
-    devtool: false,
+    mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
     entry: path.join(__dirname, '../../src/frontend'),
     output: {
-      libraryTarget: 'commonjs2',
+      library: {
+        type: 'commonjs2',
+      },
       path: path.join(__dirname, '/lib'),
       filename: 'frontend.js',
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.jsx?$/,
-          loader: 'babel-loader',
+          use: {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              presets: ['@babel/preset-env', '@babel/preset-react'],
+              plugins: [
+                ['@babel/plugin-proposal-decorators', { legacy: true }],
+                ['@babel/plugin-transform-class-properties'],
+                '@babel/plugin-transform-runtime',
+              ],
+            },
+          },
           exclude: /node_modules/,
-          query: { cacheDirectory: true },
         },
         {
           test: /\.(eot|ttf|woff2?)$/,
-          loader: 'file-loader?name=fonts/[name].[ext]',
+          type: 'asset/resource',
+          generator: {
+            filename: 'fonts/[name][ext][query]',
+          },
         },
         {
           test: /\.css$/,
-          loaders: ['style-loader', 'css-loader'],
+          use: ['style-loader', 'css-loader'],
         },
       ],
     },
@@ -69,11 +94,14 @@ module.exports = [
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
         __DEBUG_CONNECTION__: JSON.stringify(process.env.DEBUG_CONNECTION === 'true'),
         __TARGET__: JSON.stringify('browser'),
       }),
     ],
+    devtool: 'source-map',
+    performance: {
+      hints: false, // Disable performance hints
+    },
   },
 ];

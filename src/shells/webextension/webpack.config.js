@@ -1,11 +1,12 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const rootDir = path.join(__dirname, '../../../');
 
 module.exports = {
+  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
   devtool: false,
   entry: {
     backend: path.join(__dirname, 'backend.js'),
@@ -22,50 +23,51 @@ module.exports = {
     filename: '[name].js',
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
         exclude: /node_modules/,
-        query: {
-          cacheDirectory: true,
-          presets: ['es2015', 'stage-1'],
-          plugins: ['transform-decorators-legacy', 'transform-class-properties'],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+          },
         },
       },
       {
         test: /icons\/.*\.(png|svg)$/,
-        loader: 'file-loader?name=icons/[name].[ext]',
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        query: {
-          failOnWarning: false,
-          failOnError: process.env.NODE_ENV !== 'development',
-          fix: process.env.NODE_ENV === 'development',
-          cache: false,
+        type: 'asset/resource',
+        generator: {
+          filename: 'icons/[name][ext]',
         },
+        exclude: /node_modules/,
       },
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
+        use: 'ts-loader',
       },
       {
         test: /\.(png|svg)$/,
-        loader: 'url-loader',
         exclude: /icons\//,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 8 * 1024, // 8KB
+          },
+        },
       },
       {
         test: /\.(eot|ttf|woff2?)$/,
-        loader: 'file-loader?name=fonts/[name].[ext]',
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name][ext]',
+        },
       },
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader'],
       },
+      // Removed the eslint-loader rule
     ],
   },
   resolve: {
@@ -78,7 +80,6 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
       __DEBUG_CONNECTION__: JSON.stringify(process.env.DEBUG_CONNECTION === 'true'),
       __TARGET__: JSON.stringify('browser'),
@@ -98,6 +99,17 @@ module.exports = {
       filename: 'panel.html',
       chunks: ['panel'],
     }),
-    new WriteFilePlugin(),
+    // Added ESLintPlugin for linting
+    new ESLintPlugin({
+      extensions: ['js', 'jsx'],
+      exclude: 'node_modules',
+      failOnWarning: false,
+      failOnError: process.env.NODE_ENV !== 'development',
+      fix: process.env.NODE_ENV === 'development',
+      cache: false,
+    }),
   ],
+  performance: {
+    hints: false, // Disable performance hints
+  },
 };

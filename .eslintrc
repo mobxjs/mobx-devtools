@@ -1,6 +1,34 @@
 {
-  "parser": "babel-eslint",
-  "extends": ["airbnb", "prettier", "prettier/react"],
+  "parser": "@babel/eslint-parser",
+  "env": {
+    "browser": true, // Enables browser global variables like window and document
+    "node": true, // Enables Node.js global variables and Node.js scoping
+    "es6": true, // Enables ES6 global variables like Set, Map, etc.
+    "commonjs": true, // CommonJS global variables and CommonJS scoping (useful for require)
+    "jquery": false, // Set to true if you're using jQuery
+    "jest": true // Enables Jest global variables for testing
+  },
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "plugins": [
+        ["@babel/plugin-proposal-decorators", { "legacy": true }]
+      ],
+      "presets": [
+        "@babel/preset-react"
+      ]
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "prettier"
+  ],
+  "plugins": [
+    "react",
+    "jsx-a11y",
+    "prettier"
+  ],
   "rules": {
     "no-param-reassign": "off",
     "no-unused-vars": "off",
@@ -20,7 +48,11 @@
     "react/destructuring-assignment": "off",
     "react/static-property-placement": "off",
     "react/sort-comp": "off",
-    "react/no-deprecated": "off"
+    "react/no-deprecated": "off",
+    "prettier/prettier": "error",
+    "import/no-unresolved": "off",
+    "react/display-name": "off",
+    "no-console": "off"
   },
   "globals": {
     "__DEBUG_CONNECTION__": false,
@@ -35,5 +67,10 @@
     "after": false,
     "it": false,
     "expect": false
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
