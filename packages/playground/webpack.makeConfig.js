@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackDevServer = require('webpack-dev-server');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 const rootPath = path.join(__dirname, '../..');
 
@@ -43,6 +44,9 @@ exports.makeConfig = ({
       'mobx-react': path.join(__dirname, 'node_modules/mobx-react'),
       mobx: path.join(__dirname, 'node_modules/mobx'),
       aphrodite: 'aphrodite/no-important',
+    },
+    fallback: {
+      path: require.resolve('path-browserify'),
     },
   },
   externals: {
@@ -93,6 +97,7 @@ exports.makeConfig = ({
     ],
   },
   plugins: [
+    new NodePolyfillPlugin(),
     new webpack.DefinePlugin({
       __TARGET__: JSON.stringify('browser'),
       __CLIENT__: JSON.stringify(true),
