@@ -4,102 +4,57 @@ import initFrontend from '../../frontend';
 let disconnectListener;
 
 const inject = done => {
-  const code = `
-      (function() {
-        var inject = function() {
-          // the prototype stuff is in case document.createElement has been modified
-          var script = document.constructor.prototype.createElement.call(document, 'script');
-          script.src = "${chrome.runtime.getURL('backend.js')}";
-          document.documentElement.appendChild(script);
-          script.parentNode.removeChild(script);
-        }
-        if (!document.documentElement) {
-          document.addEventListener('DOMContentLoaded', inject);
-        } else {
-          inject();
-        }
-      }());
-    `;
-  chrome.scripting.executeScript({
-    target: { tabId: chrome.devtools.inspectedWindow.tabId },
-    func: () => {
-      console.log('running script from panel');
+  // Remove the code injection part since we'll handle that differently
+  let disconnected = false;
 
-      let disconnected = false;
+  // Get the current tab ID from the URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabId = urlParams.get('tabId');
 
-      const port = chrome.runtime.connect({
-        name: `${chrome.devtools.inspectedWindow.tabId}`,
-      });
-
-      port.onDisconnect.addListener(() => {
-        disconnected = true;
-        if (disconnectListener) {
-          disconnectListener();
-        }
-      });
-
-      const wall = {
-        listen(fn) {
-          port.onMessage.addListener(message => {
-            debugConnection('[background -> FRONTEND]', message);
-            fn(message);
-          });
-        },
-        send(data) {
-          if (disconnected) return;
-          debugConnection('[FRONTEND -> background]', data);
-          port.postMessage(data);
-        },
-      };
-
-      done(wall, () => port.disconnect());
-    },
+  // Connect using the tab ID from URL parameters
+  const port = chrome.runtime.connect({
+    name: `panel_${tabId}`,
   });
-  // chrome.devtools.inspectedWindow.eval(code, (res, err) => {
-  //   if (err) {
-  //     if (__DEV__) console.log(err); // eslint-disable-line no-console
-  //     return;
-  //   }
 
-  //   let disconnected = false;
+  port.onDisconnect.addListener(() => {
+    disconnected = true;
+    if (disconnectListener) {
+      disconnectListener();
+    }
+  });
 
-  //   const port = chrome.runtime.connect({
-  //     name: `${chrome.devtools.inspectedWindow.tabId}`,
-  //   });
+  const wall = {
+    listen(fn) {
+      port.onMessage.addListener(message => {
+        debugConnection('[background -> FRONTEND]', message);
+        fn(message);
+      });
+    },
+    send(data) {
+      if (disconnected) return;
+      debugConnection('[FRONTEND -> background]', data);
+      port.postMessage(data);
+    },
+  };
 
-  //   port.onDisconnect.addListener(() => {
-  //     disconnected = true;
-  //     if (disconnectListener) {
-  //       disconnectListener();
-  //     }
-  //   });
-
-  //   const wall = {
-  //     listen(fn) {
-  //       port.onMessage.addListener(message => {
-  //         debugConnection('[background -> FRONTEND]', message);
-  //         fn(message);
-  //       });
-  //     },
-  //     send(data) {
-  //       if (disconnected) return;
-  //       debugConnection('[FRONTEND -> background]', data);
-  //       port.postMessage(data);
-  //     },
-  //   };
-
-  //   done(wall, () => port.disconnect());
-  // });
+  done(wall, () => port.disconnect());
 };
 
 initFrontend({
   node: document.getElementById('container'),
   debugName: 'Panel UI',
   inject,
+  // We'll need to handle reload differently since we don't have access to chrome.devtools
   reloadSubscribe: reloadFn => {
-    chrome.devtools.network.onNavigated.addListener(reloadFn);
+    // Listen for reload messages from the background script
+    chrome.runtime.onMessage.addListener((message, sender) => {
+      if (message.type === 'TAB_NAVIGATED') {
+        reloadFn();
+      }
+    });
     return () => {
-      chrome.devtools.network.onNavigated.removeListener(reloadFn);
+      // Cleanup listener if needed
+      chrome.runtime.onMessage.removeListener(reloadFn);
     };
   },
 });
