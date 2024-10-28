@@ -184,46 +184,62 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
+// Keep service worker alive
 chrome.runtime.onConnect.addListener(port => {
-  let tab = null;
-  let name = null;
-  if (isNumeric(port.name)) {
-    tab = port.name;
-    name = 'devtools';
-    installContentScript(+port.name);
-  } else {
-    tab = port.sender.tab.id;
-    name = 'content-script';
-  }
+  console.log('Service worker connected to port:', port.name);
+});
 
-  if (!orphansByTabId[tab]) {
-    orphansByTabId[tab] = [];
-  }
+// Create a long-lived connection for the content script
+let contentScriptPorts = new Map();
 
-  if (name === 'content-script') {
-    const orphan = orphansByTabId[tab].find(t => t.name === 'devtools');
-    if (orphan) {
-      doublePipe(orphan.port, port);
-      orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== orphan);
-    } else {
-      const newOrphan = { name, port };
-      orphansByTabId[tab].push(newOrphan);
-      port.onDisconnect.addListener(() => {
-        if (__DEV__) console.warn('orphan devtools disconnected'); // eslint-disable-line no-console
-        orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== newOrphan);
+chrome.runtime.onConnect.addListener(port => {
+  console.log('New connection:', port.name);
+
+  if (port.name === 'content-script') {
+    const tabId = port.sender.tab.id;
+    contentScriptPorts.set(tabId, port);
+
+    port.onDisconnect.addListener(() => {
+      console.log('Content script disconnected:', tabId);
+      contentScriptPorts.delete(tabId);
+    });
+  }
+});
+
+// Handle messages from panel
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log('Background received message:', message);
+
+  if (message.type === 'panel-to-backend') {
+    const port = contentScriptPorts.get(message.tabId);
+    if (port) {
+      // Use the existing port to send to content script
+      port.postMessage({
+        type: 'panel-message',
+        data: message.data,
       });
-    }
-  } else if (name === 'devtools') {
-    const orphan = orphansByTabId[tab].find(t => t.name === 'content-script');
-    if (orphan) {
-      orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== orphan);
     } else {
-      const newOrphan = { name, port };
-      orphansByTabId[tab].push(newOrphan);
-      port.onDisconnect.addListener(() => {
-        if (__DEV__) console.warn('orphan content-script disconnected'); // eslint-disable-line no-console
-        orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== newOrphan);
-      });
+      console.error('No connection to content script for tab:', message.tabId);
     }
+  }
+  // Return true to indicate we'll respond asynchronously
+  return true;
+});
+
+// Handle messages from content script to panel
+chrome.runtime.onMessage.addListener((message, sender) => {
+  if (sender.tab && message.type === 'content-to-panel') {
+    // Broadcast to all extension pages
+    chrome.runtime
+      .sendMessage({
+        tabId: sender.tab.id,
+        data: message.data,
+      })
+      .catch(err => {
+        // Ignore errors about receiving end not existing
+        if (!err.message.includes('receiving end does not exist')) {
+          console.error('Error sending message:', err);
+        }
+      });
   }
 });

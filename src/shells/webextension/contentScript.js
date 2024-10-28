@@ -12,7 +12,18 @@ import debugConnection from '../../utils/debugConnection';
 const contentScriptId = Math.random().toString(32).slice(2);
 
 // proxy from main page to devtools (via the background page)
-const port = chrome.runtime.connect({ name: 'content-script' });
+let port = chrome.runtime.connect({ name: 'content-script' });
+
+// Handle port disconnection and reconnection
+port.onDisconnect.addListener(() => {
+  console.log('Port disconnected, attempting to reconnect...');
+  // Try to reconnect after a short delay
+  setTimeout(() => {
+    const newPort = chrome.runtime.connect({ name: 'content-script' });
+    // Update port reference
+    port = newPort;
+  }, 100);
+});
 
 const handshake = backendId => {
   function sendMessageToBackend(payload) {
@@ -105,5 +116,38 @@ window.addEventListener('message', function listener(message) {
     }
 
     setTimeout(() => window.removeEventListener('message', listener), 50000);
+  }
+});
+
+// Listen for messages from the background script
+chrome.runtime.onMessage.addListener((message, sender) => {
+  if (message.type === 'panel-message') {
+    // Forward to backend
+    window.postMessage(
+      {
+        source: 'mobx-devtools-content-script',
+        payload: message.data,
+        contentScriptId,
+      },
+      '*',
+    );
+  }
+});
+
+// Handle messages from backend
+window.addEventListener('message', evt => {
+  if (evt.data.source === 'mobx-devtools-backend' && evt.data.contentScriptId === contentScriptId) {
+    // Forward to panel via background script
+    chrome.runtime
+      .sendMessage({
+        type: 'content-to-panel',
+        data: evt.data.payload,
+      })
+      .catch(err => {
+        // Ignore errors about receiving end not existing
+        if (!err.message.includes('receiving end does not exist')) {
+          console.error('Error sending message:', err);
+        }
+      });
   }
 });

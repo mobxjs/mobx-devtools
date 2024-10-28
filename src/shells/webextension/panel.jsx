@@ -4,62 +4,85 @@ import initFrontend from '../../frontend';
 let disconnectListener;
 
 const inject = done => {
-  const code = `
-      (function() {
-        var inject = function() {
-          // the prototype stuff is in case document.createElement has been modified
-          var script = document.constructor.prototype.createElement.call(document, 'script');
-          script.src = "${chrome.runtime.getURL('backend.js')}";
-          document.documentElement.appendChild(script);
-          script.parentNode.removeChild(script);
-        }
-        if (!document.documentElement) {
-          document.addEventListener('DOMContentLoaded', inject);
-        } else {
-          inject();
-        }
-      }());
-    `;
+  console.log('Injecting scripts');
+  const tabId = chrome.devtools.inspectedWindow.tabId;
+
+  // First inject the content script, then the backend script
   chrome.scripting
     .executeScript({
-      target: { tabId: chrome.devtools.inspectedWindow.tabId },
-      files: ['/backend.js'],
+      target: { tabId },
+      files: ['/contentScript.js'],
     })
-    .then((res, err) => {
-      console.log('script injected');
-      if (err) {
-        if (__DEV__) console.log(err); // eslint-disable-line no-console
-        return;
-      }
+    .then(() => {
+      console.log('Content script injected');
+      // Wait a bit for the content script to initialize its port connection
+      setTimeout(() => {
+        chrome.scripting
+          .executeScript({
+            target: { tabId },
+            files: ['/backend.js'],
+          })
+          .then(() => {
+            console.log('Backend script injected');
 
-      let disconnected = false;
+            let disconnected = false;
 
-      const port = chrome.runtime.connect({
-        name: `${chrome.devtools.inspectedWindow.tabId}`,
-      });
+            // Create message handlers
+            const wall = {
+              listen(fn) {
+                // Listen for messages from the background script
+                chrome.runtime.onMessage.addListener((message, sender) => {
+                  if (message.tabId === tabId) {
+                    debugConnection('[background -> FRONTEND]', message);
+                    fn(message.data);
+                  }
+                });
+              },
+              send(data) {
+                if (disconnected) return;
+                debugConnection('[FRONTEND -> background]', data);
+                // Send message to background script with tabId
+                chrome.runtime
+                  .sendMessage({
+                    type: 'panel-to-backend',
+                    tabId: tabId,
+                    data: data,
+                  })
+                  .catch(err => {
+                    // Ignore errors about receiving end not existing
+                    if (!err.message.includes('receiving end does not exist')) {
+                      console.error('Error sending message:', err);
+                    }
+                  });
+              },
+            };
 
-      port.onDisconnect.addListener(() => {
-        disconnected = true;
-        if (disconnectListener) {
-          disconnectListener();
-        }
-      });
+            // Set up disconnect handler
+            if (disconnectListener) {
+              chrome.runtime.onMessage.addListener(message => {
+                if (message.type === 'disconnect' && message.tabId === tabId) {
+                  disconnected = true;
+                  disconnectListener();
+                }
+              });
+            }
 
-      const wall = {
-        listen(fn) {
-          port.onMessage.addListener(message => {
-            debugConnection('[background -> FRONTEND]', message);
-            fn(message);
+            done(wall, () => {
+              disconnected = true;
+              // Notify background script about disconnect
+              chrome.runtime.sendMessage({
+                type: 'panel-disconnect',
+                tabId: tabId,
+              });
+            });
+          })
+          .catch(err => {
+            console.error('Failed to inject backend:', err);
           });
-        },
-        send(data) {
-          if (disconnected) return;
-          debugConnection('[FRONTEND -> background]', data);
-          port.postMessage(data);
-        },
-      };
-
-      done(wall, () => port.disconnect());
+      }, 100); // Give content script time to connect
+    })
+    .catch(err => {
+      console.error('Failed to inject content script:', err);
     });
 };
 
