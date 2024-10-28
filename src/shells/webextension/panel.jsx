@@ -4,57 +4,73 @@ import initFrontend from '../../frontend';
 let disconnectListener;
 
 const inject = done => {
-  // Remove the code injection part since we'll handle that differently
-  let disconnected = false;
+  const code = `
+      (function() {
+        var inject = function() {
+          // the prototype stuff is in case document.createElement has been modified
+          var script = document.constructor.prototype.createElement.call(document, 'script');
+          script.src = "${chrome.runtime.getURL('backend.js')}";
+          document.documentElement.appendChild(script);
+          script.parentNode.removeChild(script);
+        }
+        if (!document.documentElement) {
+          document.addEventListener('DOMContentLoaded', inject);
+        } else {
+          inject();
+        }
+      }());
+    `;
+  chrome.scripting
+    .executeScript({
+      target: { tabId: chrome.devtools.inspectedWindow.tabId },
+      files: ['/backend.js'],
+    })
+    .then((res, err) => {
+      console.log('script injected');
+      if (err) {
+        if (__DEV__) console.log(err); // eslint-disable-line no-console
+        return;
+      }
 
-  // Get the current tab ID from the URL parameters
-  const urlParams = new URLSearchParams(window.location.search);
-  const tabId = urlParams.get('tabId');
+      let disconnected = false;
 
-  // Connect using the tab ID from URL parameters
-  const port = chrome.runtime.connect({
-    name: `panel_${tabId}`,
-  });
-
-  port.onDisconnect.addListener(() => {
-    disconnected = true;
-    if (disconnectListener) {
-      disconnectListener();
-    }
-  });
-
-  const wall = {
-    listen(fn) {
-      port.onMessage.addListener(message => {
-        debugConnection('[background -> FRONTEND]', message);
-        fn(message);
+      const port = chrome.runtime.connect({
+        name: `${chrome.devtools.inspectedWindow.tabId}`,
       });
-    },
-    send(data) {
-      if (disconnected) return;
-      debugConnection('[FRONTEND -> background]', data);
-      port.postMessage(data);
-    },
-  };
 
-  done(wall, () => port.disconnect());
+      port.onDisconnect.addListener(() => {
+        disconnected = true;
+        if (disconnectListener) {
+          disconnectListener();
+        }
+      });
+
+      const wall = {
+        listen(fn) {
+          port.onMessage.addListener(message => {
+            debugConnection('[background -> FRONTEND]', message);
+            fn(message);
+          });
+        },
+        send(data) {
+          if (disconnected) return;
+          debugConnection('[FRONTEND -> background]', data);
+          port.postMessage(data);
+        },
+      };
+
+      done(wall, () => port.disconnect());
+    });
 };
 
 initFrontend({
   node: document.getElementById('container'),
   debugName: 'Panel UI',
   inject,
-  // We'll need to handle reload differently since we don't have access to chrome.devtools
   reloadSubscribe: reloadFn => {
-    // Listen for reload messages from the background script
-    chrome.runtime.onMessage.addListener((message, sender) => {
-      if (message.type === 'TAB_NAVIGATED') {
-        reloadFn();
-      }
-    });
+    chrome.devtools.network.onNavigated.addListener(reloadFn);
     return () => {
-      // Cleanup listener if needed
-      chrome.runtime.onMessage.removeListener(reloadFn);
+      chrome.devtools.network.onNavigated.removeListener(reloadFn);
     };
   },
 });

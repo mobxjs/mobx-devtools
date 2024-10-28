@@ -100,7 +100,7 @@ const installContentScript = tabId => {
     if (err) {
       handleInstallError(tabId, err);
     } else {
-      chrome.scripting.executeScript(tabId, { file: '/contentScript.js' }, res => {
+      chrome.scripting.executeScript({ target: { tabId }, files: ['/backend.js'] }, res => {
         const installError = chrome.runtime.lastError;
         if (err || !res) handleInstallError(tabId, installError);
       });
