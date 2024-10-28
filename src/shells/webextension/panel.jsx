@@ -20,6 +20,41 @@ const inject = done => {
         }
       }());
     `;
+  chrome.scripting.executeScript({
+    target: { tabId: chrome.devtools.inspectedWindow.tabId },
+    func: () => {
+      console.log('running script from panel');
+
+      let disconnected = false;
+
+      const port = chrome.runtime.connect({
+        name: `${chrome.devtools.inspectedWindow.tabId}`,
+      });
+
+      port.onDisconnect.addListener(() => {
+        disconnected = true;
+        if (disconnectListener) {
+          disconnectListener();
+        }
+      });
+
+      const wall = {
+        listen(fn) {
+          port.onMessage.addListener(message => {
+            debugConnection('[background -> FRONTEND]', message);
+            fn(message);
+          });
+        },
+        send(data) {
+          if (disconnected) return;
+          debugConnection('[FRONTEND -> background]', data);
+          port.postMessage(data);
+        },
+      };
+
+      done(wall, () => port.disconnect());
+    },
+  });
   // chrome.devtools.inspectedWindow.eval(code, (res, err) => {
   //   if (err) {
   //     if (__DEV__) console.log(err); // eslint-disable-line no-console

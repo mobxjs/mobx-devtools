@@ -20,6 +20,7 @@ const whenTabLoaded = (tabId, cb) => {
 
 const inject = (contentTabId, done) =>
   whenTabLoaded(contentTabId, () => {
+    console.log('Injecting content script');
     const code = `
           // the prototype stuff is in case document.createElement has been modified
           var script = document.constructor.prototype.createElement.call(document, 'script');
@@ -28,6 +29,7 @@ const inject = (contentTabId, done) =>
           script.parentNode.removeChild(script);
         `;
     chrome.tabs.executeScript(contentTabId, { code }, () => {
+      console.log('Content script injected');
       let disconnected = false;
 
       const port = chrome.runtime.connect({
@@ -35,6 +37,7 @@ const inject = (contentTabId, done) =>
       });
 
       port.onDisconnect.addListener(() => {
+        console.log('Port disconnected');
         debugConnection('[background -x FRONTEND]');
         disconnected = true;
         if (onDisconnect) {
@@ -44,13 +47,16 @@ const inject = (contentTabId, done) =>
 
       const wall = {
         listen(fn) {
+          console.log('Listening for messages');
           port.onMessage.addListener(message => {
+            console.log('Received message:', message);
             debugConnection('[background -> FRONTEND]', message);
             fn(message);
           });
         },
         send(data) {
           if (disconnected) return;
+          console.log('Sending message:', data);
           debugConnection('[FRONTEND -> background]', data);
           port.postMessage(data);
         },
