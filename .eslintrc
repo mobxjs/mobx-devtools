@@ -55,8 +55,8 @@
     "no-console": "off"
   },
   "globals": {
-    "__DEBUG_CONNECTION__": false,
-    "__DEV__": false,
+    "__DEBUG_CONNECTION__": true,
+    "__DEV__": true,
     "chrome": "readonly",
     "window": false,
     "document": false,

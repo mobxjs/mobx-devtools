@@ -64,6 +64,7 @@ function handshake(hook, contentScriptId) {
 
 function waitForPing() {
   function pingListener(evt) {
+    console.log('[contentScript -> BACKEND]', evt);
     if (evt.data.source === 'mobx-devtools-content-script' && evt.data.payload === 'backend:ping') {
       debugConnection('[contentScript -> BACKEND]', evt);
       const { contentScriptId } = evt.data;

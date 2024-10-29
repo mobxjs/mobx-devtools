@@ -27,6 +27,7 @@ port.onDisconnect.addListener(() => {
 
 const handshake = backendId => {
   function sendMessageToBackend(payload) {
+    console.log('sendMessageToBackend', payload);
     debugConnection('[backgrond -> CONTENTSCRIPT -> backend]', payload);
     window.postMessage(
       {
@@ -95,6 +96,7 @@ window.addEventListener('message', function listener(message) {
     message.data.payload === 'contentScript:pong' &&
     message.data.contentScriptId === contentScriptId
   ) {
+    console.log('[backend -> CONTENTSCRIPT]', message);
     debugConnection('[backend -> CONTENTSCRIPT]', message);
     const { backendId } = message.data;
     clearTimeout(handshakeFailedTimeout);
