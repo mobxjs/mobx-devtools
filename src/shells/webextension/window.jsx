@@ -21,48 +21,68 @@ const whenTabLoaded = (tabId, cb) => {
 const inject = (contentTabId, done) =>
   whenTabLoaded(contentTabId, () => {
     console.log('Injecting content script');
-    const code = `
-          // the prototype stuff is in case document.createElement has been modified
-          var script = document.constructor.prototype.createElement.call(document, 'script');
-          script.src = "${chrome.runtime.getURL('backend.js')}";
-          document.documentElement.appendChild(script);
-          script.parentNode.removeChild(script);
-        `;
-    chrome.tabs.executeScript(contentTabId, { code }, () => {
-      console.log('Content script injected');
-      let disconnected = false;
 
-      const port = chrome.runtime.connect({
-        name: `${contentTabId}`,
+    // First inject content script
+    chrome.scripting
+      .executeScript({
+        target: { tabId: contentTabId },
+        files: ['/contentScript.js'],
+      })
+      .then(() => {
+        console.log('Content script injected');
+        // Wait a bit for content script to initialize
+        setTimeout(() => {
+          // Then inject backend
+          chrome.scripting
+            .executeScript({
+              target: { tabId: contentTabId },
+              files: ['/backend.js'],
+              world: 'MAIN',
+            })
+            .then(() => {
+              console.log('Backend script injected');
+              let disconnected = false;
+
+              const port = chrome.runtime.connect({
+                name: `${contentTabId}`,
+              });
+
+              port.onDisconnect.addListener(() => {
+                console.log('Port disconnected');
+                debugConnection('[background -x FRONTEND]');
+                disconnected = true;
+                if (onDisconnect) {
+                  onDisconnect();
+                }
+              });
+
+              const wall = {
+                listen(fn) {
+                  console.log('Listening for messages');
+                  port.onMessage.addListener(message => {
+                    console.log('Received message:', message);
+                    debugConnection('[background -> FRONTEND]', message);
+                    fn(message);
+                  });
+                },
+                send(data) {
+                  if (disconnected) return;
+                  console.log('Sending message:', data);
+                  debugConnection('[FRONTEND -> background]', data);
+                  port.postMessage(data);
+                },
+              };
+
+              done(wall, () => port.disconnect());
+            })
+            .catch(err => {
+              console.error('Failed to inject backend:', err);
+            });
+        }, 100);
+      })
+      .catch(err => {
+        console.error('Failed to inject content script:', err);
       });
-
-      port.onDisconnect.addListener(() => {
-        console.log('Port disconnected');
-        debugConnection('[background -x FRONTEND]');
-        disconnected = true;
-        if (onDisconnect) {
-          onDisconnect();
-        }
-      });
-
-      const wall = {
-        listen(fn) {
-          console.log('Listening for messages');
-          port.onMessage.addListener(message => {
-            console.log('Received message:', message);
-            debugConnection('[background -> FRONTEND]', message);
-            fn(message);
-          });
-        },
-        send(data) {
-          if (disconnected) return;
-          console.log('Sending message:', data);
-          debugConnection('[FRONTEND -> background]', data);
-          port.postMessage(data);
-        },
-      };
-      done(wall, () => port.disconnect());
-    });
   });
 
 chrome.runtime.getBackgroundPage(({ contentTabId }) =>

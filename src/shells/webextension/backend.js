@@ -8,13 +8,18 @@ import initBackend from '../../backend';
 import Bridge from '../../Bridge';
 import debugConnection from '../../utils/debugConnection';
 
+console.log('All imports successful');
+
 const backendId = Math.random().toString(32).slice(2);
+console.log('Generated backendId:', backendId);
 
 function handshake(hook, contentScriptId) {
+  console.log('Handshake called with:', { hook, contentScriptId });
   let listeners = [];
 
   const bridge = new Bridge({
     listen(fn) {
+      console.log('Bridge listen called');
       const listener = evt => {
         if (
           evt.data.source === 'mobx-devtools-content-script' &&
@@ -29,6 +34,7 @@ function handshake(hook, contentScriptId) {
       window.addEventListener('message', listener);
     },
     send(data) {
+      console.log('Bridge send called with:', data);
       debugConnection('[BACKEND -> contentScript]', data);
       window.postMessage(
         {
@@ -42,30 +48,43 @@ function handshake(hook, contentScriptId) {
     },
   });
 
-  const disposeBackend = initBackend(bridge, hook);
+  console.log('Bridge created');
 
-  bridge.once('disconnect', () => {
-    debugConnection('[contentScript -x BACKEND]');
-    listeners.forEach(listener => window.removeEventListener('message', listener));
-    listeners = [];
-    disposeBackend();
-  });
+  try {
+    console.log('About to call initBackend');
+    const disposeBackend = initBackend(bridge, hook);
+    console.log('initBackend called successfully');
+    bridge.once('disconnect', () => {
+      debugConnection('[contentScript -x BACKEND]');
+      listeners.forEach(listener => window.removeEventListener('message', listener));
+      listeners = [];
+      disposeBackend();
+    });
+
+    console.log('MobX DevTools hook status:', {
+      hook: !!window.__MOBX_DEVTOOLS_GLOBAL_HOOK__,
+      collections: window.__MOBX_DEVTOOLS_GLOBAL_HOOK__.collections,
+    });
+  } catch (e) {
+    console.error('Error in initBackend:', e);
+  }
 }
 
 /*
-  This mechanism ensures that each content-script can be messaging with only one backend
-  and vice versa:
-  1. Wait for `ping`
-  2. As soon as pinged, stop listening to `ping` send `pong`,
-     start waiting for `hello`/`connection-fail`
-  3. If received `hello`, the connection is established,
-     if recieved `connection-fail`, then content-script is already busy, return to paragraph 1
-*/
+    This mechanism ensures that each content-script can be messaging with only one backend
+    and vice versa:
+    1. Wait for `ping`
+    2. As soon as pinged, stop listening to `ping` send `pong`,
+       start waiting for `hello`/`connection-fail`
+    3. If received `hello`, the connection is established,
+       if recieved `connection-fail`, then content-script is already busy, return to paragraph 1
+  */
 
 function waitForPing() {
   function pingListener(evt) {
     console.log('[contentScript -> BACKEND]', evt);
     if (evt.data.source === 'mobx-devtools-content-script' && evt.data.payload === 'backend:ping') {
+      console.log('Backend handling ping message');
       debugConnection('[contentScript -> BACKEND]', evt);
       const { contentScriptId } = evt.data;
 

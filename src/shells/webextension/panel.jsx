@@ -21,6 +21,7 @@ const inject = done => {
           .executeScript({
             target: { tabId },
             files: ['/backend.js'],
+            world: 'MAIN',
           })
           .then(() => {
             console.log('Backend script injected');
