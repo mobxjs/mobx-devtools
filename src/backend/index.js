@@ -5,6 +5,7 @@ import initMobxReactUpdatesHighlighter from './mobxReactUpdatesHighlighter';
 import initMobxLogBackend from './mobxLog';
 
 export default (bridge, hook) => {
+  console.log('initBackend called');
   if (!hook) {
     if (__DEV__) {
       throw new Error('');
@@ -28,8 +29,12 @@ export default (bridge, hook) => {
     backends.forEach(({ setup }) => setup(mobxid, hook.collections[mobxid]));
   });
 
+  console.log('initBackend subscribing to backend:ping');
   disposables.push(
-    bridge.sub('backend:ping', () => bridge.send('frontend:pong')),
+    bridge.sub('backend:ping', () => {
+      console.log('initBackend received backend:ping');
+      bridge.send('frontend:pong');
+    }),
     hook.sub('instances-injected', mobxid => {
       backends.forEach(p => p.setup(mobxid, hook.collections[mobxid]));
     }),
