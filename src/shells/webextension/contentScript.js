@@ -89,8 +89,10 @@ const handshakeFailedTimeout = setTimeout(() => {
 }, 500 * 20);
 
 let connected = false;
+let backendId;
 
 window.addEventListener('message', function listener(message) {
+  console.log('Content script received message:', message);
   if (
     message.data.source === 'mobx-devtools-backend' &&
     message.data.payload === 'contentScript:pong' &&
@@ -98,7 +100,7 @@ window.addEventListener('message', function listener(message) {
   ) {
     console.log('[backend -> CONTENTSCRIPT]', message);
     debugConnection('[backend -> CONTENTSCRIPT]', message);
-    const { backendId } = message.data;
+    backendId = message.data.backendId;
     clearTimeout(handshakeFailedTimeout);
     clearInterval(pingInterval);
     debugConnection('[CONTENTSCRIPT -> backend]', 'backend:hello');
@@ -151,5 +153,45 @@ window.addEventListener('message', evt => {
           console.error('Error sending message:', err);
         }
       });
+  }
+});
+
+// Add to port message listener
+port.onMessage.addListener(message => {
+  console.log('Content script port received:', message);
+  if (message.type === 'panel-message') {
+    window.postMessage(
+      {
+        source: 'mobx-devtools-content-script',
+        payload: message.data,
+        contentScriptId: contentScriptId,
+        backendId: backendId,
+      },
+      '*',
+    );
+  }
+});
+
+// Add this message handler for panel messages
+port.onMessage.addListener(message => {
+  console.log('Content script port received:', message);
+  if (message.type === 'panel-message') {
+    // Add these specific properties needed by the backend
+    window.postMessage(
+      {
+        source: 'mobx-devtools-content-script',
+        payload: message.data,
+        contentScriptId: contentScriptId, // Make sure this matches the initial handshake
+        backendId: backendId, // Make sure this is available from the handshake
+      },
+      '*',
+    );
+  }
+});
+
+// Add this to verify backend is receiving messages
+window.addEventListener('message', function (evt) {
+  if (evt.data && evt.data.source === 'mobx-devtools-backend') {
+    console.log('Backend responded:', evt.data);
   }
 });

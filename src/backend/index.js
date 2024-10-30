@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import initCapabilitiesBackend from './cababilities';
 import initMSTBackend from './mst';
 import initMobxReactNodesTreeBackend from './mobxReactNodesTree';
@@ -30,9 +31,11 @@ export default (bridge, hook) => {
   });
 
   console.log('initBackend subscribing to backend:ping');
+  debugger;
   disposables.push(
     bridge.sub('backend:ping', () => {
       console.log('initBackend received backend:ping');
+      debugger;
       bridge.send('frontend:pong');
     }),
     hook.sub('instances-injected', mobxid => {

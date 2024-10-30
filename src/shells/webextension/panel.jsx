@@ -30,8 +30,9 @@ const inject = done => {
             // Create message handlers
             const wall = {
               listen(fn) {
-                // Listen for messages from the background script
+                console.log('Panel setting up listener');
                 chrome.runtime.onMessage.addListener((message, sender) => {
+                  console.log('Panel received message:', message);
                   if (message.tabId === tabId) {
                     debugConnection('[background -> FRONTEND]', message);
                     fn(message.data);
@@ -39,9 +40,7 @@ const inject = done => {
                 });
               },
               send(data) {
-                if (disconnected) return;
-                debugConnection('[FRONTEND -> background]', data);
-                // Send message to background script with tabId
+                console.log('Panel sending:', data);
                 chrome.runtime
                   .sendMessage({
                     type: 'panel-to-backend',
@@ -49,13 +48,16 @@ const inject = done => {
                     data: data,
                   })
                   .catch(err => {
-                    // Ignore errors about receiving end not existing
-                    if (!err.message.includes('receiving end does not exist')) {
-                      console.error('Error sending message:', err);
-                    }
+                    console.error('Error sending from panel:', err);
                   });
               },
             };
+
+            // Send ping after small delay to ensure listeners are set up
+            setTimeout(() => {
+              console.log('Sending initial ping');
+              wall.send('backend:ping');
+            }, 1000);
 
             // Set up disconnect handler
             if (disconnectListener) {

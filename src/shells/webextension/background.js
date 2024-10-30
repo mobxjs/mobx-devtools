@@ -211,9 +211,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('Background received message:', message);
 
   if (message.type === 'panel-to-backend') {
+    console.log('Forwarding to content script:', message.tabId, message.data);
+    // Use the existing port to send to content script
     const port = contentScriptPorts.get(message.tabId);
     if (port) {
-      // Use the existing port to send to content script
       port.postMessage({
         type: 'panel-message',
         data: message.data,
