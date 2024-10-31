@@ -193,14 +193,11 @@ chrome.runtime.onConnect.addListener(port => {
 let contentScriptPorts = new Map();
 
 chrome.runtime.onConnect.addListener(port => {
-  console.log('New connection:', port.name);
-
   if (port.name === 'content-script') {
     const tabId = port.sender.tab.id;
     contentScriptPorts.set(tabId, port);
 
     port.onDisconnect.addListener(() => {
-      console.log('Content script disconnected:', tabId);
       contentScriptPorts.delete(tabId);
     });
   }
@@ -208,10 +205,7 @@ chrome.runtime.onConnect.addListener(port => {
 
 // Handle messages from panel
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('Background received message:', message);
-
   if (message.type === 'panel-to-backend') {
-    console.log('Forwarding to content script:', message.tabId, message.data);
     // Use the existing port to send to content script
     const port = contentScriptPorts.get(message.tabId);
     if (port) {

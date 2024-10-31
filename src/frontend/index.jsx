@@ -6,7 +6,6 @@ import RichPanel from './RichPanel';
 
 export default config => {
   const reload = () => {
-    console.log('Reloading');
     ReactDOM.unmountComponentAtNode(config.node);
     setTimeout(() => {
       // for some reason React 16 does unmountComponentAtNode asynchronously (?)
@@ -16,7 +15,6 @@ export default config => {
   };
 
   const render = () => {
-    console.log('Rendering');
     ReactDOM.render(
       <App
         {...config} // eslint-disable-line react/jsx-props-no-spreading

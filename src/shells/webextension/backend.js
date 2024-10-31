@@ -8,18 +8,13 @@ import initBackend from '../../backend';
 import Bridge from '../../Bridge';
 import debugConnection from '../../utils/debugConnection';
 
-console.log('All imports successful');
-
 const backendId = Math.random().toString(32).slice(2);
-console.log('Generated backendId:', backendId);
 
 function handshake(hook, contentScriptId) {
-  console.log('Handshake called with:', { hook, contentScriptId });
   let listeners = [];
 
   const bridge = new Bridge({
     listen(fn) {
-      console.log('Bridge listen called');
       const listener = evt => {
         if (
           evt.data.source === 'mobx-devtools-content-script' &&
@@ -34,7 +29,6 @@ function handshake(hook, contentScriptId) {
       window.addEventListener('message', listener);
     },
     send(data) {
-      console.log('Bridge send called with:', data);
       debugConnection('[BACKEND -> contentScript]', data);
       window.postMessage(
         {
@@ -48,26 +42,13 @@ function handshake(hook, contentScriptId) {
     },
   });
 
-  console.log('Bridge created');
-
-  try {
-    console.log('About to call initBackend');
-    const disposeBackend = initBackend(bridge, hook);
-    console.log('initBackend called successfully');
-    bridge.once('disconnect', () => {
-      debugConnection('[contentScript -x BACKEND]');
-      listeners.forEach(listener => window.removeEventListener('message', listener));
-      listeners = [];
-      disposeBackend();
-    });
-
-    console.log('MobX DevTools hook status:', {
-      hook: !!window.__MOBX_DEVTOOLS_GLOBAL_HOOK__,
-      collections: window.__MOBX_DEVTOOLS_GLOBAL_HOOK__.collections,
-    });
-  } catch (e) {
-    console.error('Error in initBackend:', e);
-  }
+  const disposeBackend = initBackend(bridge, hook);
+  bridge.once('disconnect', () => {
+    debugConnection('[contentScript -x BACKEND]');
+    listeners.forEach(listener => window.removeEventListener('message', listener));
+    listeners = [];
+    disposeBackend();
+  });
 }
 
 /*
@@ -82,9 +63,7 @@ function handshake(hook, contentScriptId) {
 
 function waitForPing() {
   function pingListener(evt) {
-    console.log('[contentScript -> BACKEND]', evt);
     if (evt.data.source === 'mobx-devtools-content-script' && evt.data.payload === 'backend:ping') {
-      console.log('Backend handling ping message');
       debugConnection('[contentScript -> BACKEND]', evt);
       const { contentScriptId } = evt.data;
 

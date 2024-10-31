@@ -23,7 +23,6 @@ const bridgeA = new Bridge({
 initBackend(bridgeA, hook);
 
 const createNode = () => {
-  console.log('Creating node');
   const node = document.createElement('div');
   node.style.position = 'fixed';
   node.style.right = '3px';
@@ -50,14 +49,14 @@ const createNode = () => {
   return node;
 };
 
-// initFrontend({
-//   node: createNode(),
-//   inject: done => {
-//     const wall = {
-//       listen: fn => listenersB.push(fn),
-//       send: data => randomDelay(() => listenersA.forEach(fn => fn(data))),
-//     };
-//     done(wall, () => {});
-//   },
-//   reloadSubscribe: () => () => {},
-// });
+initFrontend({
+  node: createNode(),
+  inject: done => {
+    const wall = {
+      listen: fn => listenersB.push(fn),
+      send: data => randomDelay(() => listenersA.forEach(fn => fn(data))),
+    };
+    done(wall, () => {});
+  },
+  reloadSubscribe: () => () => {},
+});

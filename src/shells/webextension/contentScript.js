@@ -16,7 +16,6 @@ let port = chrome.runtime.connect({ name: 'content-script' });
 
 // Handle port disconnection and reconnection
 port.onDisconnect.addListener(() => {
-  console.log('Port disconnected, attempting to reconnect...');
   // Try to reconnect after a short delay
   setTimeout(() => {
     const newPort = chrome.runtime.connect({ name: 'content-script' });
@@ -27,7 +26,6 @@ port.onDisconnect.addListener(() => {
 
 const handshake = backendId => {
   function sendMessageToBackend(payload) {
-    console.log('sendMessageToBackend', payload);
     debugConnection('[backgrond -> CONTENTSCRIPT -> backend]', payload);
     window.postMessage(
       {
@@ -92,13 +90,11 @@ let connected = false;
 let backendId;
 
 window.addEventListener('message', function listener(message) {
-  console.log('Content script received message:', message);
   if (
     message.data.source === 'mobx-devtools-backend' &&
     message.data.payload === 'contentScript:pong' &&
     message.data.contentScriptId === contentScriptId
   ) {
-    console.log('[backend -> CONTENTSCRIPT]', message);
     debugConnection('[backend -> CONTENTSCRIPT]', message);
     backendId = message.data.backendId;
     clearTimeout(handshakeFailedTimeout);
@@ -158,7 +154,6 @@ window.addEventListener('message', evt => {
 
 // Add to port message listener
 port.onMessage.addListener(message => {
-  console.log('Content script port received:', message);
   if (message.type === 'panel-message') {
     window.postMessage(
       {
@@ -174,7 +169,6 @@ port.onMessage.addListener(message => {
 
 // Add this message handler for panel messages
 port.onMessage.addListener(message => {
-  console.log('Content script port received:', message);
   if (message.type === 'panel-message') {
     // Add these specific properties needed by the backend
     window.postMessage(
@@ -186,12 +180,5 @@ port.onMessage.addListener(message => {
       },
       '*',
     );
-  }
-});
-
-// Add this to verify backend is receiving messages
-window.addEventListener('message', function (evt) {
-  if (evt.data && evt.data.source === 'mobx-devtools-backend') {
-    console.log('Backend responded:', evt.data);
   }
 });
