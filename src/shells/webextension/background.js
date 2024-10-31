@@ -150,9 +150,18 @@ function doublePipe(one, two) {
 }
 
 if (chrome.contextMenus) {
-  // electron doesn't support this api
-  chrome.contextMenus.onClicked.addListener((_, contentWindow) => {
-    openWindow(contentWindow.id);
+  chrome.contextMenus.onClicked.addListener((info, tab) => {
+    console.log('Context menu clicked', info, tab);
+    if (info.menuItemId === 'mobx-devtools') {
+      try {
+        console.log('Attempting to open window for tab', tab.id);
+        window.contentTabId = tab.id;
+        installContentScript(tab.id);
+        openWindow(tab.id);
+      } catch (err) {
+        console.error('Error opening devtools window:', err);
+      }
+    }
   });
 }
 
@@ -175,14 +184,6 @@ if (chrome.browserAction) {
     openWindow(tab.id);
   });
 }
-
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'mobx-devtools',
-    title: 'Open Mobx DevTools',
-    contexts: ['all'],
-  });
-});
 
 // Keep service worker alive
 chrome.runtime.onConnect.addListener(port => {
