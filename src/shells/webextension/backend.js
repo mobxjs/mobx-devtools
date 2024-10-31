@@ -57,9 +57,9 @@ function handshake(hook, contentScriptId) {
   and vice versa:
   1. Wait for `ping`
   2. As soon as pinged, stop listening to `ping` send `pong`,
-      start waiting for `hello`/`connection-fail`
+    start waiting for `hello`/`connection-fail`
   3. If received `hello`, the connection is established,
-      if recieved `connection-fail`, then content-script is already busy, return to paragraph 1
+    if recieved `connection-fail`, then content-script is already busy, return to paragraph 1
   */
 
 function waitForPing() {
