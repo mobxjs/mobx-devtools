@@ -43,6 +43,7 @@ function handshake(hook, contentScriptId) {
   });
 
   const disposeBackend = initBackend(bridge, hook);
+
   bridge.once('disconnect', () => {
     debugConnection('[contentScript -x BACKEND]');
     listeners.forEach(listener => window.removeEventListener('message', listener));
@@ -52,13 +53,13 @@ function handshake(hook, contentScriptId) {
 }
 
 /*
-    This mechanism ensures that each content-script can be messaging with only one backend
-    and vice versa:
-    1. Wait for `ping`
-    2. As soon as pinged, stop listening to `ping` send `pong`,
-       start waiting for `hello`/`connection-fail`
-    3. If received `hello`, the connection is established,
-       if recieved `connection-fail`, then content-script is already busy, return to paragraph 1
+  This mechanism ensures that each content-script can be messaging with only one backend
+  and vice versa:
+  1. Wait for `ping`
+  2. As soon as pinged, stop listening to `ping` send `pong`,
+      start waiting for `hello`/`connection-fail`
+  3. If received `hello`, the connection is established,
+      if recieved `connection-fail`, then content-script is already busy, return to paragraph 1
   */
 
 function waitForPing() {
