@@ -108,47 +108,6 @@ const installContentScript = tabId => {
   });
 };
 
-function doublePipe(one, two) {
-  if (!one.$i) {
-    one.$i = Math.random().toString(32).slice(2);
-  }
-  if (!two.$i) {
-    two.$i = Math.random().toString(32).slice(2);
-  }
-
-  debugConnection(`BACKGORUND: connect ${one.name} <-> ${two.name} [${one.$i} <-> ${two.$i}]`);
-
-  function lOne(message) {
-    debugConnection(`${one.name} -> BACKGORUND -> ${two.name} [${one.$i}-${two.$i}]`, message);
-    try {
-      two.postMessage(message);
-    } catch (e) {
-      if (__DEV__) console.error('Unexpected disconnect, error', e); // eslint-disable-line no-console
-      shutdown(); // eslint-disable-line no-use-before-define
-    }
-  }
-  function lTwo(message) {
-    debugConnection(`${two.name} -> BACKGORUND -> ${one.name} [${two.$i}-${one.$i}]`, message);
-    try {
-      one.postMessage(message);
-    } catch (e) {
-      if (__DEV__) console.error('Unexpected disconnect, error', e); // eslint-disable-line no-console
-      shutdown(); // eslint-disable-line no-use-before-define
-    }
-  }
-  one.onMessage.addListener(lOne);
-  two.onMessage.addListener(lTwo);
-  function shutdown() {
-    debugConnection(`SHUTDOWN ${one.name} <-> ${two.name} [${one.$i} <-> ${two.$i}]`);
-    one.onMessage.removeListener(lOne);
-    two.onMessage.removeListener(lTwo);
-    one.disconnect();
-    two.disconnect();
-  }
-  one.onDisconnect.addListener(shutdown);
-  two.onDisconnect.addListener(shutdown);
-}
-
 if (chrome.contextMenus) {
   chrome.contextMenus.onClicked.addListener((info, tab) => {
     console.log('Context menu clicked', info, tab);
