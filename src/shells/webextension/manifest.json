@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "MobX Developer Tools",
   "description": "Adds MobX debugging tools to the Chrome Developer Tools.",
-  "minimum_chrome_version": "44",
+  "minimum_chrome_version": "88",
   "applications": {
     "gecko": {
       "id": "@mobx",
