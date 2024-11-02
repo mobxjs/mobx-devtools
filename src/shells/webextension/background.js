@@ -3,7 +3,7 @@ import debugConnection from '../../utils/debugConnection';
 /*
  * background.js
  *
- * Runs all the time and serves as a central message hub for panels, contentScript, backend
+ * Runs as a service worker serves as a central message hub for panels, contentScript, backend
  */
 
 if (process.env.NODE_ENV === 'test') {
@@ -100,7 +100,7 @@ const installContentScript = tabId => {
     if (err) {
       handleInstallError(tabId, err);
     } else {
-      chrome.tabs.executeScript(tabId, { file: '/contentScript.js' }, res => {
+      chrome.scripting.executeScript({ target: { tabId }, files: ['/backend.js'] }, res => {
         const installError = chrome.runtime.lastError;
         if (err || !res) handleInstallError(tabId, installError);
       });
@@ -108,51 +108,19 @@ const installContentScript = tabId => {
   });
 };
 
-function doublePipe(one, two) {
-  if (!one.$i) {
-    one.$i = Math.random().toString(32).slice(2);
-  }
-  if (!two.$i) {
-    two.$i = Math.random().toString(32).slice(2);
-  }
-
-  debugConnection(`BACKGORUND: connect ${one.name} <-> ${two.name} [${one.$i} <-> ${two.$i}]`);
-
-  function lOne(message) {
-    debugConnection(`${one.name} -> BACKGORUND -> ${two.name} [${one.$i}-${two.$i}]`, message);
-    try {
-      two.postMessage(message);
-    } catch (e) {
-      if (__DEV__) console.error('Unexpected disconnect, error', e); // eslint-disable-line no-console
-      shutdown(); // eslint-disable-line no-use-before-define
-    }
-  }
-  function lTwo(message) {
-    debugConnection(`${two.name} -> BACKGORUND -> ${one.name} [${two.$i}-${one.$i}]`, message);
-    try {
-      one.postMessage(message);
-    } catch (e) {
-      if (__DEV__) console.error('Unexpected disconnect, error', e); // eslint-disable-line no-console
-      shutdown(); // eslint-disable-line no-use-before-define
-    }
-  }
-  one.onMessage.addListener(lOne);
-  two.onMessage.addListener(lTwo);
-  function shutdown() {
-    debugConnection(`SHUTDOWN ${one.name} <-> ${two.name} [${one.$i} <-> ${two.$i}]`);
-    one.onMessage.removeListener(lOne);
-    two.onMessage.removeListener(lTwo);
-    one.disconnect();
-    two.disconnect();
-  }
-  one.onDisconnect.addListener(shutdown);
-  two.onDisconnect.addListener(shutdown);
-}
-
 if (chrome.contextMenus) {
-  // electron doesn't support this api
-  chrome.contextMenus.onClicked.addListener((_, contentWindow) => {
-    openWindow(contentWindow.id);
+  chrome.contextMenus.onClicked.addListener((info, tab) => {
+    console.log('Context menu clicked', info, tab);
+    if (info.menuItemId === 'mobx-devtools') {
+      try {
+        console.log('Attempting to open window for tab', tab.id);
+        window.contentTabId = tab.id;
+        installContentScript(tab.id);
+        openWindow(tab.id);
+      } catch (err) {
+        console.error('Error opening devtools window:', err);
+      }
+    }
   });
 }
 
@@ -176,54 +144,57 @@ if (chrome.browserAction) {
   });
 }
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'mobx-devtools',
-    title: 'Open Mobx DevTools',
-    contexts: ['all'],
-  });
+// Keep service worker alive
+chrome.runtime.onConnect.addListener(port => {
+  console.log('Service worker connected to port:', port.name);
 });
 
+// Create a long-lived connection for the content script
+let contentScriptPorts = new Map();
+
 chrome.runtime.onConnect.addListener(port => {
-  let tab = null;
-  let name = null;
-  if (isNumeric(port.name)) {
-    tab = port.name;
-    name = 'devtools';
-    installContentScript(+port.name);
-  } else {
-    tab = port.sender.tab.id;
-    name = 'content-script';
-  }
+  if (port.name === 'content-script') {
+    const tabId = port.sender.tab.id;
+    contentScriptPorts.set(tabId, port);
 
-  if (!orphansByTabId[tab]) {
-    orphansByTabId[tab] = [];
+    port.onDisconnect.addListener(() => {
+      contentScriptPorts.delete(tabId);
+    });
   }
+});
 
-  if (name === 'content-script') {
-    const orphan = orphansByTabId[tab].find(t => t.name === 'devtools');
-    if (orphan) {
-      doublePipe(orphan.port, port);
-      orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== orphan);
-    } else {
-      const newOrphan = { name, port };
-      orphansByTabId[tab].push(newOrphan);
-      port.onDisconnect.addListener(() => {
-        if (__DEV__) console.warn('orphan devtools disconnected'); // eslint-disable-line no-console
-        orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== newOrphan);
+// Handle messages from panel
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'panel-to-backend') {
+    // Use the existing port to send to content script
+    const port = contentScriptPorts.get(message.tabId);
+    if (port) {
+      port.postMessage({
+        type: 'panel-message',
+        data: message.data,
       });
-    }
-  } else if (name === 'devtools') {
-    const orphan = orphansByTabId[tab].find(t => t.name === 'content-script');
-    if (orphan) {
-      orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== orphan);
     } else {
-      const newOrphan = { name, port };
-      orphansByTabId[tab].push(newOrphan);
-      port.onDisconnect.addListener(() => {
-        if (__DEV__) console.warn('orphan content-script disconnected'); // eslint-disable-line no-console
-        orphansByTabId[tab] = orphansByTabId[tab].filter(t => t !== newOrphan);
-      });
+      console.error('No connection to content script for tab:', message.tabId);
     }
+  }
+  // Return true to indicate we'll respond asynchronously
+  return true;
+});
+
+// Handle messages from content script to panel
+chrome.runtime.onMessage.addListener((message, sender) => {
+  if (sender.tab && message.type === 'content-to-panel') {
+    // Broadcast to all extension pages
+    chrome.runtime
+      .sendMessage({
+        tabId: sender.tab.id,
+        data: message.data,
+      })
+      .catch(err => {
+        // Ignore errors about receiving end not existing
+        if (!err.message.includes('receiving end does not exist')) {
+          console.error('Error sending message:', err);
+        }
+      });
   }
 });

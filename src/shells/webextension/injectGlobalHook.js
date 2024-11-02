@@ -1,9 +1,5 @@
+// Simply importing this file will install the global hook here
 import installGlobalHook from '../../backend/utils/installGlobalHook';
-
-const script = document.createElement('script');
-script.textContent = `;(${installGlobalHook.toString()}(window))`;
-document.documentElement.appendChild(script);
-script.parentNode.removeChild(script);
 
 // if (__DEV__) {
 window.addEventListener('test-open-mobx-devtools-window', () => {

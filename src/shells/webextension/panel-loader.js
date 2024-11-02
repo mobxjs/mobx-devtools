@@ -4,18 +4,31 @@ function createPanelIfMobxLoaded() {
   if (panelCreated) {
     return;
   }
-  chrome.devtools.inspectedWindow.eval(
-    '!!(Object.keys(window.__MOBX_DEVTOOLS_GLOBAL_HOOK__.collections).length)',
-    pageHasMobx => {
+
+  chrome.scripting
+    .executeScript({
+      target: { tabId: chrome.devtools.inspectedWindow.tabId },
+      func: () => {
+        const pageHasMobx = !!Object.keys(window.__MOBX_DEVTOOLS_GLOBAL_HOOK__?.collections || {})
+          .length;
+        return pageHasMobx;
+      },
+      world: 'MAIN',
+    })
+    .then(([result]) => {
+      const pageHasMobx = result?.result; // Access the result property
+
       if (!pageHasMobx || panelCreated) {
         return;
       }
 
       clearInterval(loadCheckInterval);
       panelCreated = true;
-      chrome.devtools.panels.create('MobX', '', 'panel.html', () => {});
-    },
-  );
+      chrome.devtools.panels.create('MobX', '', 'panel.html', panel => {});
+    })
+    .catch(err => {
+      console.error('Failed to check MobX:', err);
+    });
 }
 
 chrome.devtools.network.onNavigated.addListener(createPanelIfMobxLoaded);
