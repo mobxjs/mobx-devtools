@@ -23,8 +23,7 @@ jobs:
           git commit -am "chore: Bump version ($VERSION)"
           git push --set-upstream origin "bump-version-$VERSION"
           PR_URL="$(gh pr create --title "chore: Bump version ($VERSION)" --body 'This is automatic PR to bump version')"
-          gh pr merge --auto -r "$PR_URL"
-          gh pr merge --auto
+          gh pr merge --auto --squash "$PR_URL"
           gh release create "$VERSION" \
             --repo="$GITHUB_REPOSITORY" \
             --title="${VERSION#v}" \

@@ -1,10 +1,15 @@
 name: Test
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
-    branches: ['master']
-  pull_request_target:
-    branches: ['master']
+    branches:
+      - master
+
+permissions:
+  contents: read
 
 jobs:
   test:
