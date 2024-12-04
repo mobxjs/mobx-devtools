@@ -13,13 +13,17 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm run bootstrap
       - run: npm run build
+      - run: node scripts/bump-version.js
       - run: |
-          TAG=$(echo $TAG | cut -c1-8)
-          gh release create "$TAG" \
+          VERSION=$(node -p "require('./lerna.json').version")
+          gh release create "$VERSION" \
             --repo="$GITHUB_REPOSITORY" \
-            --title="${TAG#v}" \
+            --title="${VERSION#v}" \
             --generate-notes \
             ./lib/*.zip
+          git config --global user.name 'Release'
+          git config --global user.email 'release@bot.com'
+          git commit -am "Bump version ($VERSION)"
+          git push
         env:
-          TAG: ${{ github.event.pull_request.head.sha || github.sha }}
           GH_TOKEN: ${{ github.token }}
