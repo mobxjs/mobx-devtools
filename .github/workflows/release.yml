@@ -11,8 +11,6 @@ jobs:
         with:
           node-version: 17
           registry-url: https://registry.npmjs.org/
-      - run: npm run bootstrap
-      - run: node scripts/bump-version.js
       - run: |
           VERSION=$(node -p "require('./lerna.json').version")
           gh auth setup-git
