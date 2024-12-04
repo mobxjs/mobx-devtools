@@ -12,7 +12,6 @@ jobs:
           node-version: 17
           registry-url: https://registry.npmjs.org/
       - run: npm run bootstrap
-      - run: npm run build
       - run: node scripts/bump-version.js
       - run: |
           VERSION=$(node -p "require('./lerna.json').version")
@@ -24,10 +23,8 @@ jobs:
           git push --set-upstream origin "bump-version-$VERSION"
           PR_URL="$(gh pr create --title "chore: Bump version ($VERSION)" --body 'This is automatic PR to bump version')"
           gh pr merge --auto --squash "$PR_URL"
-          gh release create "$VERSION" \
-            --repo="$GITHUB_REPOSITORY" \
-            --title="${VERSION#v}" \
-            --generate-notes \
-            ./lib/*.zip
+          sleep 3
+          git commit --amend -m 'test force push'
+          git push -f
         env:
           GH_TOKEN: ${{ github.token }}
