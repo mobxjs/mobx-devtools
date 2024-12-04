@@ -11,7 +11,6 @@ jobs:
         with:
           node-version: 17
           registry-url: https://registry.npmjs.org/
-          token: ${{ secrets.REPO_GIT_PUSH_TOKEN }}
       - run: npm run bootstrap
       - run: npm run build
       - run: node scripts/bump-version.js
@@ -22,7 +21,8 @@ jobs:
           git config --global user.email 'release@bot.com'
           git checkout -b "bump-version-$VERSION"
           git commit -am "chore: Bump version ($VERSION)"
-          PR_URL="$(gh pr create --title "chore: Bump version ($VERSION)") --body 'This is automatic PR to bump version'"
+          git push --set-upstream origin "bump-version-$VERSION"
+          PR_URL="$(gh pr create --title "chore: Bump version ($VERSION)" --body 'This is automatic PR to bump version')"
           gh pr merge --auto -r "$PR_URL"
           gh pr merge --auto
           gh release create "$VERSION" \
