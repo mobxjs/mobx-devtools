@@ -11,19 +11,20 @@ jobs:
         with:
           node-version: 17
           registry-url: https://registry.npmjs.org/
+          token: ${{ secrets.REPO_GIT_PUSH_TOKEN }}
       - run: npm run bootstrap
       - run: npm run build
       - run: node scripts/bump-version.js
       - run: |
           VERSION=$(node -p "require('./lerna.json').version")
+          git config --global user.name 'Release'
+          git config --global user.email 'release@bot.com'
+          git commit -am "Bump version ($VERSION)"
+          git push
           gh release create "$VERSION" \
             --repo="$GITHUB_REPOSITORY" \
             --title="${VERSION#v}" \
             --generate-notes \
             ./lib/*.zip
-          git config --global user.name 'Release'
-          git config --global user.email 'release@bot.com'
-          git commit -am "Bump version ($VERSION)"
-          git push
         env:
           GH_TOKEN: ${{ github.token }}
