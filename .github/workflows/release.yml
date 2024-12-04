@@ -16,15 +16,16 @@ jobs:
       - run: node scripts/bump-version.js
       - run: |
           VERSION=$(node -p "require('./lerna.json').version")
+          BRANCH="bump-version-$VERSION"
           gh auth setup-git
           git config --global user.name 'Release'
           git config --global user.email 'release@bot.com'
-          git checkout -b "bump-version-$VERSION"
+          git checkout -b $BRANCH
           git commit -am "chore: Bump version ($VERSION)"
-          git push --set-upstream origin "bump-version-$VERSION"
+          git push --set-upstream origin $BRANCH
           PR_URL="$(gh pr create --title "chore: Bump version ($VERSION)" --body 'This is automatic PR to bump version')"
           gh pr merge --auto --squash "$PR_URL"
-          HEAD_SHA=$(gh api repos/${GITHUB_REPOSITORY}/commits/$HEAD_BRANCH --jq '.sha')
+          HEAD_SHA=$(gh api repos/${GITHUB_REPOSITORY}/commits/$BRANCH --jq '.sha')
           gh api repos/${GITHUB_REPOSITORY}/check-runs \
             -F name="test" \
             -F head_sha="$HEAD_SHA" \
