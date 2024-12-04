@@ -20,6 +20,6 @@ jobs:
           git config --global user.name 'Release'
           git config --global user.email 'release@bot.com'
           git commit -am "Bump version ($VERSION)"
-          git push origin master
+          git push
         env:
           GH_TOKEN: ${{ github.token }}
