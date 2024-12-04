@@ -27,7 +27,7 @@ jobs:
 
           # Create a successful check run for the commit
           gh api repos/${GITHUB_REPOSITORY}/check-runs \
-            -F name="Automated Check" \
+            -F name="test" \
             -F head_sha="$HEAD_SHA" \
             -F status="completed" \
             -F conclusion="success" \
