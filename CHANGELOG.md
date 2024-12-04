@@ -2,6 +2,7 @@
 
 ## [0.9.27] - 2020-10-30
 
+
 - Enable nodeIntegration in the standalone electron app (#92)
 - Fix Type Definition for MST package
 
