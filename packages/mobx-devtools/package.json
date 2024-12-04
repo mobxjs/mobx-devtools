@@ -1,25 +1,25 @@
 {
-  "name": "mobx-devtools",
-  "version": "0.9.27",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mobxjs/mobx-devtools.git"
-  },
-  "author": "Andy Kogut",
-  "license": "MIT",
-  "scripts": {
-    "build": "webpack"
-  },
-  "bin": {
-    "mobx-devtools": "./bin.js"
-  },
-  "bugs": {
-    "url": "https://github.com/mobxjs/mobx/issues"
-  },
-  "homepage": "https://mobxjs.github.io/mobx",
-  "dependencies": {
-    "electron": "^11.0.1",
-    "ip": "^1.1.5",
-    "ws": "^7.3.1"
-  }
+    "name": "mobx-devtools",
+    "version": "0.9.32",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mobxjs/mobx-devtools.git"
+    },
+    "author": "Andy Kogut",
+    "license": "MIT",
+    "scripts": {
+        "build": "webpack"
+    },
+    "bin": {
+        "mobx-devtools": "./bin.js"
+    },
+    "bugs": {
+        "url": "https://github.com/mobxjs/mobx/issues"
+    },
+    "homepage": "https://mobxjs.github.io/mobx",
+    "dependencies": {
+        "electron": "^11.0.1",
+        "ip": "^1.1.5",
+        "ws": "^7.3.1"
+    }
 }
