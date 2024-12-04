@@ -21,6 +21,7 @@ jobs:
           # git push --set-upstream origin "bump-version-$VERSION"
           # PR_URL="$(gh pr create --title "chore: Bump version ($VERSION)" --body 'This is automatic PR to bump version')"
           # gh workflow run "test.yml" --ref "bump-version-$VERSION"
+          HEAD_BRANCH=bump-version-0.9.32
           HEAD_SHA=$(gh api repos/${GITHUB_REPOSITORY}/commits/$HEAD_BRANCH --jq '.sha')
           echo "Head SHA: $HEAD_SHA"
 
