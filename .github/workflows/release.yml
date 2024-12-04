@@ -13,7 +13,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
           token: ${{ secrets.REPO_GIT_PUSH_TOKEN }}
       - run: npm run bootstrap
-      - run: npm run build
       - run: node scripts/bump-version.js
       - run: |
           VERSION=$(node -p "require('./lerna.json').version")
@@ -22,13 +21,8 @@ jobs:
           git config --global user.email 'release@bot.com'
           git checkout -b "bump-version-$VERSION"
           git commit -am "chore: Bump version ($VERSION)"
-          PR_URL="$(gh pr create --title "chore: Bump version ($VERSION)") --body 'This is automatic PR to bump version'"
+          PR_URL="$(gh pr create --title "chore: Bump version ($VERSION)" --body 'This is automatic PR to bump version')"
           gh pr merge --auto -r "$PR_URL"
           gh pr merge --auto
-          gh release create "$VERSION" \
-            --repo="$GITHUB_REPOSITORY" \
-            --title="${VERSION#v}" \
-            --generate-notes \
-            ./lib/*.zip
         env:
           GH_TOKEN: ${{ github.token }}
