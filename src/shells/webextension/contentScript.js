@@ -120,7 +120,7 @@ window.addEventListener('message', function listener(message) {
 });
 
 // Listen for messages from the background script
-chrome.runtime.onMessage.addListener((message, sender) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'panel-message') {
     // Forward to backend
     window.postMessage(
@@ -131,52 +131,42 @@ chrome.runtime.onMessage.addListener((message, sender) => {
       },
       '*',
     );
+    // Send immediate response to avoid channel closing
+    sendResponse({ received: true });
   }
+  // Return false to indicate we won't send an async response
+  return false;
 });
 
 // Handle messages from backend
 window.addEventListener('message', evt => {
   if (evt.data.source === 'mobx-devtools-backend' && evt.data.contentScriptId === contentScriptId) {
     // Forward to panel via background script
-    chrome.runtime
-      .sendMessage({
-        type: 'content-to-panel',
-        data: evt.data.payload,
-      })
-      .catch(err => {
-        // Ignore errors about receiving end not existing
-        if (!err.message.includes('receiving end does not exist')) {
-          console.error('Error sending message:', err);
-        }
-      });
+    try {
+      chrome.runtime
+        .sendMessage({
+          type: 'content-to-panel',
+          data: evt.data.payload,
+        })
+        .catch(() => {
+          // Ignore "receiving end does not exist" errors silently
+        });
+    } catch (err) {
+      // Ignore chrome.runtime not available errors
+      console.debug('Failed to send message:', err);
+    }
   }
 });
 
-// Add to port message listener
+// Consolidate duplicate port message listeners into one
 port.onMessage.addListener(message => {
   if (message.type === 'panel-message') {
     window.postMessage(
       {
         source: 'mobx-devtools-content-script',
         payload: message.data,
-        contentScriptId: contentScriptId,
-        backendId: backendId,
-      },
-      '*',
-    );
-  }
-});
-
-// Add this message handler for panel messages
-port.onMessage.addListener(message => {
-  if (message.type === 'panel-message') {
-    // Add these specific properties needed by the backend
-    window.postMessage(
-      {
-        source: 'mobx-devtools-content-script',
-        payload: message.data,
-        contentScriptId: contentScriptId, // Make sure this matches the initial handshake
-        backendId: backendId, // Make sure this is available from the handshake
+        contentScriptId,
+        backendId,
       },
       '*',
     );

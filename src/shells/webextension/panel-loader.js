@@ -16,7 +16,7 @@ function createPanelIfMobxLoaded() {
       world: 'MAIN',
     })
     .then(([result]) => {
-      const pageHasMobx = result?.result; // Access the result property
+      const pageHasMobx = result?.result;
 
       if (!pageHasMobx || panelCreated) {
         return;
