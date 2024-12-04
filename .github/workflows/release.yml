@@ -20,8 +20,11 @@ jobs:
           gh auth setup-git
           git config --global user.name 'Release'
           git config --global user.email 'release@bot.com'
-          git commit -am "Bump version ($VERSION)"
-          git push
+          git checkout -b "bump-version-$VERSION"
+          git commit -am "chore: Bump version ($VERSION)"
+          PR_URL="$(gh pr create --title "chore: Bump version ($VERSION)")"
+          gh pr merge --auto -r "$PR_URL"
+          gh pr merge --auto
           gh release create "$VERSION" \
             --repo="$GITHUB_REPOSITORY" \
             --title="${VERSION#v}" \
