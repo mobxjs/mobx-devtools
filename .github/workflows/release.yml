@@ -26,13 +26,13 @@ jobs:
           echo "Head SHA: $HEAD_SHA"
 
           # Create a successful check run for the commit
-          gh api repos/${GITHUB_REPOSITORY}/check-runs \
+          CHECK=$(gh api repos/${GITHUB_REPOSITORY}/check-runs \
             -F name="test" \
             -F head_sha="$HEAD_SHA" \
             -F status="completed" \
             -F conclusion="success" \
             -F output.title="All checks passed" \
-            -F output.summary="This is a simulated successful check."
-
+            -F output.summary="This is a simulated successful check.")
+          echo "Check: $CHECK"
         env:
           GH_TOKEN: ${{ github.token }}
