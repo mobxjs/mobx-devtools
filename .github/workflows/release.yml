@@ -23,8 +23,6 @@ jobs:
           git push --set-upstream origin "bump-version-$VERSION"
           PR_URL="$(gh pr create --title "chore: Bump version ($VERSION)" --body 'This is automatic PR to bump version')"
           gh pr merge --auto --squash "$PR_URL"
-          sleep 3
-          git commit --amend -m 'test force push'
-          git push -f
+          gh workflow run "test.yml" --ref "bump-version-$VERSION"
         env:
           GH_TOKEN: ${{ github.token }}
