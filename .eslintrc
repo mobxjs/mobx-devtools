@@ -57,6 +57,7 @@
   "globals": {
     "__DEBUG_CONNECTION__": false,
     "__DEV__": false,
+    "__TEST__": false,
     "chrome": "readonly",
     "window": false,
     "document": false,
