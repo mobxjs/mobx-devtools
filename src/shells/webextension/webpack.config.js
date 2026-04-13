@@ -16,6 +16,7 @@ module.exports = {
     panel: path.join(__dirname, 'panel.jsx'),
     'panel-loader': path.join(__dirname, 'panel-loader.js'),
     window: path.join(__dirname, 'window.jsx'),
+    testHelper: path.join(__dirname, 'testHelper.js'),
     icons: path.join(__dirname, 'icons'),
   },
   output: {
@@ -81,6 +82,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
+      __TEST__: JSON.stringify(process.env.NODE_ENV === 'test'),
       __DEBUG_CONNECTION__: JSON.stringify(process.env.DEBUG_CONNECTION === 'true'),
       __TARGET__: JSON.stringify('browser'),
     }),

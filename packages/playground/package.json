@@ -14,6 +14,7 @@
         "start-electron": "cross-env NODE_ENV=development cross-env node electron/start"
     },
     "devDependencies": {
+        "chromedriver": "^147.0.2",
         "cross-env": "^7.0.2",
         "electron": "^11.0.1",
         "mobx": "^6.3.2",
@@ -26,6 +27,7 @@
         "webpack-dev-server": "^4.15.2"
     },
     "dependencies": {
+        "mocha": "^10.2.0",
         "path-browserify": "^1.0.1"
     }
 }

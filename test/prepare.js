@@ -1,77 +1,51 @@
-const chromedriver = require('chromedriver');
-const geckodriver = require('geckodriver');
-const webdriver = require('selenium-webdriver');
+const { chromium } = require('playwright');
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
 
-const { TARGET_BROWSER } = process.env;
-
-const startBrowser = () => {
-  switch (TARGET_BROWSER) {
-    case 'chrome':
-      chromedriver.start();
-      return () => chromedriver.stop();
-    case 'firefox':
-      geckodriver.start();
-      return () => geckodriver.stop();
-    default:
-      throw new Error(`${TARGET_BROWSER} browser driver is not configured`);
-  }
-};
-
-const getCapabilities = () => {
-  switch (TARGET_BROWSER) {
-    case 'chrome':
-      return {
-        chromeOptions: {
-          args: [`load-extension=${path.join(__dirname, '../lib/chrome')}`],
-        },
-      };
-    // TODO: Run unsigned extension in ff
-    // case 'firefox': return {
-    //   'moz:firefoxOptions': {},
-    // };
-    default:
-      throw new Error(`${TARGET_BROWSER} browser capabilities are not configured`);
-  }
-};
+const extensionPath = path.join(__dirname, '../lib/chrome');
 
 module.exports = async ({ initialUrl, openDevtool = true }) => {
-  const stopBrowser = startBrowser();
-  const driver = new webdriver.Builder()
-    .withCapabilities(getCapabilities())
-    .forBrowser(TARGET_BROWSER)
-    .build();
+  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mobx-devtools-test-'));
+
+  const context = await chromium.launchPersistentContext(userDataDir, {
+    headless: false,
+    args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
+  });
+
+  // Use the first existing page or open a new one
+  const mainPage = context.pages()[0] || (await context.newPage());
 
   if (initialUrl) {
-    await driver.get(initialUrl);
+    await mainPage.goto(initialUrl);
   }
 
-  const mainWindowHandle = await driver.getWindowHandle();
-  let devtoolWindowHandle;
+  let devtoolPage;
 
   if (openDevtool) {
-    await driver.executeScript(
-      "window.dispatchEvent(new Event('test-open-mobx-devtools-window'));",
-    );
-    await driver.wait(
-      async () => (await driver.getAllWindowHandles()).length > 1,
-      5000,
-      "Devtools wasn't open",
-    );
-    devtoolWindowHandle = (await driver.getAllWindowHandles()).find(h => h !== mainWindowHandle);
+    // Wait for the devtool popup window to open after dispatching the event
+    const pagePromise = context.waitForEvent('page', { timeout: 8000 });
 
-    await driver.switchTo().window(devtoolWindowHandle);
+    await mainPage.evaluate(() =>
+      window.dispatchEvent(new Event('test-open-mobx-devtools-window')),
+    );
+
+    devtoolPage = await pagePromise;
+    await devtoolPage.waitForLoadState();
   }
 
   const teardown = async () => {
-    await driver.quit();
-    stopBrowser();
+    await context.close();
+    fs.rmSync(userDataDir, { recursive: true, force: true });
   };
+
+  // Return a driver-like object for compatibility with test files
+  const driver = mainPage;
 
   return {
     driver,
-    mainWindowHandle,
-    devtoolWindowHandle,
+    mainWindowHandle: mainPage,
+    devtoolWindowHandle: devtoolPage,
     teardown,
   };
 };
