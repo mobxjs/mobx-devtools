@@ -22,7 +22,7 @@ describe('MST tab', function test() {
     if (teardown) await teardown();
   });
 
-  const addTodo = async (title) => {
+  const addTodo = async title => {
     const input = mainPage.locator('input');
     await input.fill(title);
     await input.press('Enter');
@@ -84,9 +84,15 @@ describe('MST tab', function test() {
     await devtoolPage.waitForTimeout(1000);
 
     // After commitAll, patch entries are removed — only the latest state remains as "Initial"
-    assert.equal(await devtoolPage.locator('text=/\\d+ patch/').count(), 0,
-      'Patch entries should be cleared');
-    assert.isAtLeast(await devtoolPage.locator('text=Initial').count(), 1,
-      'Initial snapshot should remain');
+    assert.equal(
+      await devtoolPage.locator('text=/\\d+ patch/').count(),
+      0,
+      'Patch entries should be cleared',
+    );
+    assert.isAtLeast(
+      await devtoolPage.locator('text=Initial').count(),
+      1,
+      'Initial snapshot should remain',
+    );
   });
 });

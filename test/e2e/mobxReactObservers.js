@@ -51,11 +51,13 @@ describe('Changes tab', function test() {
 
     // Verify log entries appeared
     assert.isAtLeast(
-      await devtoolPage.locator('text=manuallyIncrease').count(), 1,
+      await devtoolPage.locator('text=manuallyIncrease').count(),
+      1,
       'Expected manuallyIncrease log entries',
     );
     assert.isAtLeast(
-      await devtoolPage.locator('text=manuallyDecrease').count(), 1,
+      await devtoolPage.locator('text=manuallyDecrease').count(),
+      1,
       'Expected manuallyDecrease log entries',
     );
   });
@@ -67,15 +69,21 @@ describe('Changes tab', function test() {
     await searchInput.fill('manuallyIncrease');
     await devtoolPage.waitForTimeout(1000);
     assert.isAtLeast(await devtoolPage.locator('text=manuallyIncrease').count(), 1);
-    assert.equal(await devtoolPage.locator('text=manuallyDecrease').count(), 0,
-      'manuallyDecrease should be filtered out');
+    assert.equal(
+      await devtoolPage.locator('text=manuallyDecrease').count(),
+      0,
+      'manuallyDecrease should be filtered out',
+    );
 
     // Regex filter
     await searchInput.fill('/manually[Dd]ecrease');
     await devtoolPage.waitForTimeout(1000);
     assert.isAtLeast(await devtoolPage.locator('text=manuallyDecrease').count(), 1);
-    assert.equal(await devtoolPage.locator('text=manuallyIncrease').count(), 0,
-      'manuallyIncrease should not match regex');
+    assert.equal(
+      await devtoolPage.locator('text=manuallyIncrease').count(),
+      0,
+      'manuallyIncrease should not match regex',
+    );
 
     await searchInput.fill('');
     await devtoolPage.waitForTimeout(500);
@@ -86,14 +94,25 @@ describe('Changes tab', function test() {
     assert.isAtLeast(await devtoolPage.locator('text=manuallyIncrease').count(), 1);
     await clickClearButton();
     await devtoolPage.waitForTimeout(1000);
-    assert.equal(await devtoolPage.locator('text=manuallyIncrease').count(), 0, 'Log should be empty after clear');
-    assert.equal(await devtoolPage.locator('text=manuallyDecrease').count(), 0, 'Log should be empty after clear');
+    assert.equal(
+      await devtoolPage.locator('text=manuallyIncrease').count(),
+      0,
+      'Log should be empty after clear',
+    );
+    assert.equal(
+      await devtoolPage.locator('text=manuallyDecrease').count(),
+      0,
+      'Log should be empty after clear',
+    );
 
     // Verify recording still works after clear
     await mainPage.locator('button', { hasText: '+' }).click();
     await devtoolPage.waitForTimeout(2000);
-    assert.isAtLeast(await devtoolPage.locator('text=manuallyIncrease').count(), 1,
-      'New changes should appear after clearing');
+    assert.isAtLeast(
+      await devtoolPage.locator('text=manuallyIncrease').count(),
+      1,
+      'New changes should appear after clearing',
+    );
 
     // Stop recording
     await startRecording();
@@ -102,7 +121,10 @@ describe('Changes tab', function test() {
     await mainPage.locator('button', { hasText: '+' }).click();
     await mainPage.locator('button', { hasText: '+' }).click();
     await devtoolPage.waitForTimeout(2000);
-    assert.equal(await devtoolPage.locator('text=manuallyIncrease').count(), 0,
-      'No changes should be recorded when stopped');
+    assert.equal(
+      await devtoolPage.locator('text=manuallyIncrease').count(),
+      0,
+      'No changes should be recorded when stopped',
+    );
   });
 });
