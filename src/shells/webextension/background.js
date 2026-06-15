@@ -124,9 +124,8 @@ if (chrome.commands) {
   });
 }
 
-if (chrome.browserAction) {
-  // electron doesn't support this api
-  chrome.browserAction.onClicked.addListener(tab => {
+if (chrome.action) {
+  chrome.action.onClicked.addListener(tab => {
     contentTabId = tab.id;
     openWindow(tab.id);
   });
