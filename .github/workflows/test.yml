@@ -22,6 +22,7 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org/
       - run: npm run bootstrap
+      - run: npx playwright install --with-deps chromium
       - run: npm run lint
       - run: npm run build
-      - run: npm run test
+      - run: xvfb-run npm run test
