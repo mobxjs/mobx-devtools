@@ -6,15 +6,17 @@ import debugConnection from '../../utils/debugConnection';
  * Runs as a service worker serves as a central message hub for panels, contentScript, backend
  */
 
-if (process.env.NODE_ENV === 'test') {
+if (__TEST__) {
   const listener = (evt, { tab }) => {
     if (evt.eventName === 'open-mobx-devtools-window') {
-      window.contentTabId = tab.id;
+      contentTabId = tab.id;
       openWindow(tab.id);
     }
   };
   chrome.runtime.onMessage.addListener(listener);
 }
+
+let contentTabId;
 
 const orphansByTabId = {};
 
@@ -26,33 +28,19 @@ function getActiveContentWindow(cb) {
   });
 }
 
-function openWindow(contentTabId) {
-  const devtoolWidth = window.screen.availWidth > 1366 ? 450 : 420;
-  // Resize main window
-  chrome.windows.getCurrent(wind => {
-    if (wind.left + wind.width > window.screen.availWidth - devtoolWidth) {
-      const newWidth = Math.min(window.screen.availWidth - devtoolWidth, wind.width);
-      chrome.windows.update(wind.id, {
-        left: window.screen.availWidth - devtoolWidth - newWidth,
-        top: wind.top,
-        width: newWidth,
-        height: wind.height,
-      });
-    }
-  });
+function openWindow(tabId) {
+  const devtoolWidth = 450;
   // Open devtools window
   chrome.windows.create(
     {
       type: 'popup',
-      url: chrome.extension.getURL('window.html#window'),
+      url: chrome.runtime.getURL('window.html#window'),
       width: devtoolWidth,
-      height: window.screen.availHeight,
-      top: 0,
-      left: window.screen.availWidth - devtoolWidth,
+      height: 800,
     },
     win => {
-      function closeListener(tabId) {
-        if (tabId === contentTabId || tabId === win.tabs[0].id) {
+      function closeListener(removedTabId) {
+        if (removedTabId === tabId || removedTabId === win.tabs[0].id) {
           chrome.tabs.onRemoved.removeListener(closeListener);
           chrome.windows.remove(win.id);
         }
@@ -114,7 +102,7 @@ if (chrome.contextMenus) {
     if (info.menuItemId === 'mobx-devtools') {
       try {
         console.log('Attempting to open window for tab', tab.id);
-        window.contentTabId = tab.id;
+        contentTabId = tab.id;
         installContentScript(tab.id);
         openWindow(tab.id);
       } catch (err) {
@@ -129,37 +117,37 @@ if (chrome.commands) {
   chrome.commands.onCommand.addListener(shortcut => {
     if (shortcut === 'open-devtools-window') {
       getActiveContentWindow(contentWindow => {
-        window.contentTabId = contentWindow.id;
+        contentTabId = contentWindow.id;
         openWindow(contentWindow.id);
       });
     }
   });
 }
 
-if (chrome.browserAction) {
-  // electron doesn't support this api
-  chrome.browserAction.onClicked.addListener(tab => {
-    window.contentTabId = tab.id;
+if (chrome.action) {
+  chrome.action.onClicked.addListener(tab => {
+    contentTabId = tab.id;
     openWindow(tab.id);
   });
 }
 
-// Keep service worker alive
-chrome.runtime.onConnect.addListener(port => {
-  console.log('Service worker connected to port:', port.name);
-});
-
-// Create a long-lived connection for the content script
-let contentScriptPorts = new Map();
+const contentScriptPorts = new Map();
 
 chrome.runtime.onConnect.addListener(port => {
   if (port.name === 'content-script') {
     const tabId = port.sender.tab.id;
     contentScriptPorts.set(tabId, port);
-
     port.onDisconnect.addListener(() => {
       contentScriptPorts.delete(tabId);
     });
+  }
+});
+
+// Respond with contentTabId for the devtools window
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'get-content-tab-id') {
+    sendResponse({ contentTabId });
+    return;
   }
 });
 

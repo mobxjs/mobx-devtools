@@ -15,6 +15,15 @@
     "48": "icons/Icon-48.png"
   },
 
+  "action": {
+    "default_icon": {
+      "16": "icons/Icon-16.png",
+      "48": "icons/Icon-48.png",
+      "128": "icons/Icon-128.png"
+    },
+    "default_title": "MobX Developer Tools"
+  },
+
   "devtools_page": "panel-loader.html",
 
   "commands": {
@@ -47,6 +56,11 @@
       "js": ["injectGlobalHook.js"],
       "run_at": "document_start",
       "world": "MAIN"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["testHelper.js"],
+      "run_at": "document_start"
     }
   ]
 }

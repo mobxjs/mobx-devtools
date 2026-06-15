@@ -1,8 +1,6 @@
 import initFrontend from '../../frontend';
 import debugConnection from '../../utils/debugConnection';
 
-let onDisconnect;
-
 const whenTabLoaded = (tabId, cb) => {
   chrome.tabs.get(tabId, tab => {
     if (tab.status !== 'loading') {
@@ -37,35 +35,39 @@ const inject = (contentTabId, done) =>
               world: 'MAIN',
             })
             .then(() => {
-              let disconnected = false;
-
-              const port = chrome.runtime.connect({
-                name: `${contentTabId}`,
-              });
-
-              port.onDisconnect.addListener(() => {
-                debugConnection('[background -x FRONTEND]');
-                disconnected = true;
-                if (onDisconnect) {
-                  onDisconnect();
-                }
-              });
-
               const wall = {
                 listen(fn) {
-                  port.onMessage.addListener(message => {
-                    debugConnection('[background -> FRONTEND]', message);
-                    fn(message);
+                  chrome.runtime.onMessage.addListener((message, sender) => {
+                    if (message.tabId === contentTabId) {
+                      debugConnection('[background -> FRONTEND]', message);
+                      fn(message.data);
+                    }
                   });
                 },
                 send(data) {
-                  if (disconnected) return;
                   debugConnection('[FRONTEND -> background]', data);
-                  port.postMessage(data);
+                  chrome.runtime
+                    .sendMessage({
+                      type: 'panel-to-backend',
+                      tabId: contentTabId,
+                      data,
+                    })
+                    .catch(err => {
+                      console.error('Error sending from window:', err);
+                    });
                 },
               };
 
-              done(wall, () => port.disconnect());
+              setTimeout(() => {
+                wall.send('backend:ping');
+              }, 1000);
+
+              done(wall, () => {
+                chrome.runtime.sendMessage({
+                  type: 'panel-disconnect',
+                  tabId: contentTabId,
+                });
+              });
             })
             .catch(err => {
               console.error('Failed to inject backend:', err);
@@ -77,16 +79,11 @@ const inject = (contentTabId, done) =>
       });
   });
 
-chrome.runtime.getBackgroundPage(({ contentTabId }) =>
+chrome.runtime.sendMessage({ type: 'get-content-tab-id' }, ({ contentTabId }) =>
   initFrontend({
     node: document.getElementById('container'),
     debugName: 'Window UI',
-    reloadSubscribe: reloadFn => {
-      onDisconnect = () => reloadFn();
-      return () => {
-        onDisconnect = undefined;
-      };
-    },
+    reloadSubscribe: () => () => {},
     inject: done => inject(contentTabId, done),
   }),
 );
