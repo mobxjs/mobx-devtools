@@ -21,6 +21,5 @@ describe('Components (observers) devtool', function test() {
   // This test used to check for the components tab which has been removed, but we will leave the test set up here for the future.
   it('should load components tree', async () => {
     assert.ok(true);
-    await new Promise(resolve => setTimeout(resolve, 10000));
   });
 });

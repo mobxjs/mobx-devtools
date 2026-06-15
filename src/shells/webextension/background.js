@@ -132,22 +132,23 @@ if (chrome.browserAction) {
   });
 }
 
-// Keep service worker alive
-chrome.runtime.onConnect.addListener(port => {
-  console.log('Service worker connected to port:', port.name);
-});
-
-// Create a long-lived connection for the content script
-let contentScriptPorts = new Map();
+const contentScriptPorts = new Map();
 
 chrome.runtime.onConnect.addListener(port => {
   if (port.name === 'content-script') {
     const tabId = port.sender.tab.id;
     contentScriptPorts.set(tabId, port);
-
     port.onDisconnect.addListener(() => {
       contentScriptPorts.delete(tabId);
     });
+  }
+});
+
+// Respond with contentTabId for the devtools window
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'get-content-tab-id') {
+    sendResponse({ contentTabId });
+    return;
   }
 });
 

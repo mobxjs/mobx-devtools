@@ -18,7 +18,7 @@ exports.makeConfig = ({
   ],
   plainDevtool = false,
 }) => ({
-  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+  mode: 'development',
   devtool: 'eval',
   entry: pages.reduce(
     (acc, entry) =>
