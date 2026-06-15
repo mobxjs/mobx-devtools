@@ -48,8 +48,6 @@ makeInspectable(myStore);
 
 **DevTools not connecting?** Make sure you are using [mobx](https://www.npmjs.com/package/mobx) 2.2.0 or higher and your app does not live inside an iframe. If that doesn't help, please [open an issue](https://github.com/mobxjs/mobx-devtools/issues/new) with details about your environment.
 
-**Performance & Components tabs** are deprecated. Use [React DevTools](https://react.dev/learn/react-developer-tools) for component tree inspection and performance profiling ([discussion](https://github.com/mobxjs/mobx-devtools/issues/56#issuecomment-541896923)).
-
 ## Contributing
 
 See [HACKING.md](HACKING.md) for development setup instructions.
