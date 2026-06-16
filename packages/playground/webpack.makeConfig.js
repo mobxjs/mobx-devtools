@@ -38,11 +38,11 @@ exports.makeConfig = ({
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      'mobx-state-tree': path.join(__dirname, 'node_modules/mobx-state-tree'),
+      'mobx-state-tree': path.dirname(require.resolve('mobx-state-tree/package.json')),
       'mobx-devtools-mst': path.join(rootPath, 'packages/mobx-devtools-mst/src'),
       'mobx-devtools': path.join(rootPath, 'packages/mobx-devtools'),
-      'mobx-react': path.join(__dirname, 'node_modules/mobx-react'),
-      mobx: path.join(__dirname, 'node_modules/mobx'),
+      'mobx-react': path.dirname(require.resolve('mobx-react/package.json')),
+      mobx: path.dirname(require.resolve('mobx/package.json')),
       aphrodite: 'aphrodite/no-important',
     },
     fallback: {
