@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createRoot } from 'react-dom/client';
+import { flushSync } from 'react-dom';
 import shallowequal from 'shallowequal';
 import { css, StyleSheet } from 'aphrodite';
 import ContextProvider from '../utils/ContextProvider';
@@ -345,28 +346,27 @@ export default class PopoverTrigger extends Component {
       activeHtmlPortals.push(this.htmlPortal);
 
       this.portalRoot = createRoot(this.htmlPortal);
-      this.portalRoot.render(
-        <ContextProvider stores={this.context.stores}>
-          <PopoverBubble
-            ref={el => {
-              this.popup = el;
-            }}
-            placement={placement}
-            withArrow={withArrow}
-            triggerHtmlElement={this.triggerEl}
-            onMouseEnter={this.handleBubbleMouseEnter}
-            onMouseLeave={this.handleBubbleMouseLeave}
-            onTouchStart={this.handleBubbleMouseEnter}
-          />
-        </ContextProvider>,
-      );
+      flushSync(() => {
+        this.portalRoot.render(
+          <ContextProvider stores={this.context.stores}>
+            <PopoverBubble
+              ref={el => {
+                this.popup = el;
+              }}
+              placement={placement}
+              withArrow={withArrow}
+              triggerHtmlElement={this.triggerEl}
+              onMouseEnter={this.handleBubbleMouseEnter}
+              onMouseLeave={this.handleBubbleMouseLeave}
+              onTouchStart={this.handleBubbleMouseEnter}
+            />
+          </ContextProvider>,
+        );
+      });
 
-      // Use setTimeout to ensure the ref callback has fired after createRoot render
-      setTimeout(() => {
-        if (this.popup) {
-          this.popup.setState({ content });
-        }
-      }, 0);
+      if (this.popup) {
+        this.popup.setState({ content });
+      }
 
       document.addEventListener('touchstart', this.handleFinishInteractionAnywhere, true);
       document.addEventListener('click', this.handleFinishInteractionAnywhere, true);
