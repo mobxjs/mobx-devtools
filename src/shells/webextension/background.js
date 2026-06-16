@@ -63,11 +63,6 @@ function handleInstallError(tabId, error) {
 }
 
 const waitTabLoad = (tabId, cb) => {
-  if (!chrome.tabs.get) {
-    // electron doesn't support this api
-    cb();
-    return;
-  }
   chrome.tabs.get(+tabId, tab => {
     if (chrome.runtime.lastError) {
       cb(chrome.runtime.lastError);
@@ -113,7 +108,6 @@ if (chrome.contextMenus) {
 }
 
 if (chrome.commands) {
-  // electron doesn't support this api
   chrome.commands.onCommand.addListener(shortcut => {
     if (shortcut === 'open-devtools-window') {
       getActiveContentWindow(contentWindow => {

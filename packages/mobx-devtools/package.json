@@ -10,15 +10,11 @@
     "scripts": {
         "build": "webpack"
     },
-    "bin": {
-        "mobx-devtools": "./bin.js"
-    },
     "bugs": {
         "url": "https://github.com/mobxjs/mobx/issues"
     },
     "homepage": "https://mobxjs.github.io/mobx",
     "dependencies": {
-        "electron": "^11.0.1",
         "ip": "^1.1.5",
         "ws": "^7.3.1"
     }

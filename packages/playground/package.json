@@ -2,7 +2,6 @@
     "private": true,
     "name": "mobx-devtools-playground",
     "version": "0.9.32",
-    "main": "dist/electronBackground.bundle.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/mobxjs/mobx-devtools.git"
@@ -10,13 +9,11 @@
     "author": "Andy Kogut",
     "license": "MIT",
     "scripts": {
-        "start": "cross-env NODE_ENV=development webpack-dev-server --hot",
-        "start-electron": "cross-env NODE_ENV=development cross-env node electron/start"
+        "start": "cross-env NODE_ENV=development webpack-dev-server --hot"
     },
     "devDependencies": {
         "chromedriver": "^147.0.2",
         "cross-env": "^7.0.2",
-        "electron": "^11.0.1",
         "mobx": "^6.3.2",
         "mobx-react": "^7.2.0",
         "mobx-state-tree": "^5.0.2",
