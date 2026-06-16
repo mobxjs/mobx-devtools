@@ -1,5 +1,3 @@
-import debugConnection from '../../utils/debugConnection';
-
 /*
  * background.js
  *
@@ -48,10 +46,6 @@ function openWindow(tabId) {
       chrome.tabs.onRemoved.addListener(closeListener);
     },
   );
-}
-
-function isNumeric(str) {
-  return `${+str}` === str;
 }
 
 function handleInstallError(tabId, error) {
@@ -138,7 +132,7 @@ chrome.runtime.onConnect.addListener(port => {
 });
 
 // Respond with contentTabId for the devtools window
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type === 'get-content-tab-id') {
     sendResponse({ contentTabId });
     return;
@@ -146,7 +140,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // Handle messages from panel
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
   if (message.type === 'panel-to-backend') {
     // Use the existing port to send to content script
     const port = contentScriptPorts.get(message.tabId);
