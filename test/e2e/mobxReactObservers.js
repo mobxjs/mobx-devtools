@@ -60,6 +60,27 @@ describe('Changes tab', function test() {
     );
   });
 
+  it('should open object popover', async () => {
+    // Expand a log item by clicking on it
+    await devtoolPage.locator('text=manuallyIncrease').first().click();
+
+    // Click the {…} object trigger to open the popover
+    const trigger = devtoolPage.locator('[data-hook="ChangeDataViewerPopover"]').first();
+    await trigger.waitFor();
+    await trigger.click();
+
+    // The popover should show a DataViewer with object properties
+    const popover = devtoolPage.locator('[data-hook="Popover"]');
+    await popover.waitFor();
+    assert.isTrue(await popover.isVisible(), 'Popover should be visible');
+    assert.isAtLeast((await popover.textContent()).length, 1, 'Popover should have content');
+
+    // Close the popover by clicking outside
+    await devtoolPage.locator('[data-hook="ButtonRecord"]').click();
+    // Re-enable recording for subsequent tests
+    await devtoolPage.locator('[data-hook="ButtonRecord"]').click();
+  });
+
   it('should filter log entries by text and regex search', async () => {
     const searchInput = devtoolPage.locator('input[placeholder="Search (string/regex)"]');
 

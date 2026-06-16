@@ -169,6 +169,7 @@ class PopoverBubble extends Component {
   }
 
   reposition = () => {
+    if (!this.el || !this.props.triggerHtmlElement) return;
     const { triggerHtmlElement, placement } = this.props;
     const selfRect = rectFromEl(this.el);
     const triggerRect = rectFromEl(triggerHtmlElement);
@@ -198,6 +199,7 @@ class PopoverBubble extends Component {
           />
         )}
         <div
+          data-hook="Popover"
           className={css(styles.popover, popoverStyleForPlacement(placement))}
           style={{
             top: bodyCoordinates.top,
