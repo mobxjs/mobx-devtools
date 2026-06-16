@@ -43,9 +43,7 @@ function wd(method, urlPath, body) {
 }
 
 function exec(sessionId, script) {
-  return wd('POST', `/session/${sessionId}/execute/sync`, { script, args: [] }).then(
-    r => r.value,
-  );
+  return wd('POST', `/session/${sessionId}/execute/sync`, { script, args: [] }).then(r => r.value);
 }
 
 function sleep(ms) {
