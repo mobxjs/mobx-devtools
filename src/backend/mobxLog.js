@@ -93,7 +93,7 @@ export default bridge => {
   ];
 
   return {
-    setup(mobxid, collection) {
+    setup(_mobxid, collection) {
       if (collection.mobx) {
         disposables.push(
           collection.mobx.spy(change => {

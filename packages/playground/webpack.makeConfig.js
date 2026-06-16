@@ -36,7 +36,7 @@ exports.makeConfig = ({
     publicPath: '/',
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.jsx'],
     alias: {
       'mobx-state-tree': path.join(__dirname, 'node_modules/mobx-state-tree'),
       'mobx-devtools-mst': path.join(rootPath, 'packages/mobx-devtools-mst/src'),
@@ -74,10 +74,6 @@ exports.makeConfig = ({
           },
         },
         exclude: /node_modules/,
-      },
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
       },
       {
         test: /\.svg$/,

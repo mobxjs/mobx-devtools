@@ -37,7 +37,7 @@ const inject = (contentTabId, done) =>
             .then(() => {
               const wall = {
                 listen(fn) {
-                  chrome.runtime.onMessage.addListener((message, sender) => {
+                  chrome.runtime.onMessage.addListener((message, _sender) => {
                     if (message.tabId === contentTabId) {
                       debugConnection('[background -> FRONTEND]', message);
                       fn(message.data);
