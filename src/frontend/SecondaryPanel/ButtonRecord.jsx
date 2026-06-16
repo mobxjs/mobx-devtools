@@ -11,7 +11,7 @@ ButtonRecord.propTypes = {
 
 export default function ButtonRecord({ active, onClick, showTipStartRecoding }) {
   return (
-    <div className={css(styles.button)} onClick={onClick}>
+    <div className={css(styles.button)} data-hook="ButtonRecord" onClick={onClick}>
       <span className={css(styles.record, active && styles.recordActive)} />
       {showTipStartRecoding && (
         <div className={css(styles.tipStartRecoding)}>

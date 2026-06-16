@@ -6,7 +6,7 @@ export default class ButtonClear extends React.PureComponent {
   render() {
     return (
       // eslint-disable-next-line react/jsx-props-no-spreading
-      <div className={css(styles.button)} {...this.props}>
+      <div className={css(styles.button)} data-hook="ButtonClear" {...this.props}>
         <ClearIcon />
       </div>
     );
