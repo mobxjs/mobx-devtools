@@ -15,7 +15,7 @@ jobs:
       - run: npm run build
       - run: node scripts/bump-version.js
       - run: |
-          VERSION=$(node -p "require('./lerna.json').version")
+          VERSION=$(node -p "require('./package.json').version")
           BRANCH="bump-version-$VERSION"
           gh auth setup-git
           git config --global user.name 'Release'

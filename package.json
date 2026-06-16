@@ -1,7 +1,13 @@
 {
+  "name": "mobx-devtools-root",
+  "version": "0.9.32",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "bootstrap": "npm install && lerna bootstrap",
-    "build": "cross-env lerna run build && cross-env npm run build:chrome && npm run build:firefox",
+    "bootstrap": "npm install --legacy-peer-deps",
+    "build": "npm run build --workspaces --if-present && cross-env npm run build:chrome && npm run build:firefox",
     "start-playground": "cross-env NODE_ENV=development webpack-dev-server --config packages/playground/webpack.config.js",
     "start-playground-plain": "cross-env NODE_ENV=development cross-env PLAIN_DEVTOOL=true cross-env webpack-dev-server --config packages/playground/webpack.config.js",
     "submodules": "git submodule update --init ; git submodule foreach npm i",
@@ -56,7 +62,6 @@
     "husky": "^0.14.3",
     "jsdom": "^11.0.0",
     "jsonwebtoken": "^8.0.1",
-    "lerna": "^2.4.0",
     "lint-staged": "^4.3.0",
     "mocha": "^10.2.0",
     "playwright": "^1.59.1",
