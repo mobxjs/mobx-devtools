@@ -75,11 +75,7 @@ describe('Changes tab', function test() {
     const popover = devtoolPage.locator('[data-hook="Popover"]');
     await popover.waitFor();
     assert.isTrue(await popover.isVisible(), 'Popover should be visible');
-    assert.isAtLeast(
-      (await popover.textContent()).length,
-      1,
-      'Popover should have content',
-    );
+    assert.isAtLeast((await popover.textContent()).length, 1, 'Popover should have content');
 
     // Close the popover by clicking outside
     await devtoolPage.locator('[data-hook="ButtonRecord"]').click();
