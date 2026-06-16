@@ -16,7 +16,7 @@
     "test:e2e:chrome": "cross-env NODE_ENV=test TARGET_BROWSER=chrome node scripts/webextension/build.js && npm run test:e2e:chrome:now",
     "test:e2e:chrome:now": "cross-env NODE_ENV=test TARGET_BROWSER=chrome mocha test/e2e",
     "test:e2e:firefox": "cross-env NODE_ENV=test TARGET_BROWSER=firefox node scripts/webextension/build.js && npm run test:e2e:firefox:now",
-    "test:e2e:firefox:now": "cross-env NODE_ENV=test TARGET_BROWSER=firefox mocha test/e2e",
+    "test:e2e:firefox:now": "cross-env NODE_ENV=test TARGET_BROWSER=firefox mocha test/e2e-firefox",
     "lint": "eslint '**/*.js' '**/*.jsx'",
     "lint-fix": "eslint --fix '**/*.js' '**/*.jsx'",
     "precommit": "lint-staged"
