@@ -44,10 +44,6 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-      },
-      {
         test: /\.(png|svg)$/,
         exclude: /icons\//,
         type: 'asset',
@@ -72,7 +68,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts'],
+    extensions: ['.js', '.jsx'],
     alias: {
       'mobx-react': `${rootDir}/mobx-react/src`,
       mobx: `${rootDir}/mobx/src/mobx.ts`,
