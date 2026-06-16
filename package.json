@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "bootstrap": "npm install && lerna bootstrap",
     "build": "cross-env lerna run build && cross-env npm run build:chrome && npm run build:firefox",
