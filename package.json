@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "bootstrap": "npm install && lerna bootstrap",
+    "bootstrap": "npm install --legacy-peer-deps",
     "build": "cross-env lerna run build && cross-env npm run build:chrome && npm run build:firefox",
     "start-playground": "cross-env NODE_ENV=development webpack-dev-server --config packages/playground/webpack.config.js",
     "start-playground-plain": "cross-env NODE_ENV=development cross-env PLAIN_DEVTOOL=true cross-env webpack-dev-server --config packages/playground/webpack.config.js",
@@ -66,7 +66,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
-    "react-tiny-virtual-list": "^2.1.2",
     "react-virtualized": "^9.10.1",
     "request": "^2.82.0",
     "selenium-webdriver": "^4.25.0",
