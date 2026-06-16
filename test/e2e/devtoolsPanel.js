@@ -79,13 +79,17 @@ describe('DevTools panel', function test() {
 
     mainPage = context.pages()[0] || (await context.newPage());
     await mainPage.goto('http://localhost:8082/baltimore.html');
-    await mainPage.waitForTimeout(8000);
 
     // The panel-loader polls for MobX then calls chrome.devtools.panels.create().
     // In automated runs the polling can miss, so we trigger creation explicitly.
     // panel-loader.html is in a separate process, so we must use raw CDP here.
-    const targets = await httpGetJson(`http://127.0.0.1:${DEBUG_PORT}/json`);
-    const loaderTarget = targets.find(t => t.url.includes('panel-loader.html'));
+    // Poll until the panel-loader target appears (extension needs time to initialize).
+    let loaderTarget;
+    for (let i = 0; i < 30 && !loaderTarget; i++) {
+      const targets = await httpGetJson(`http://127.0.0.1:${DEBUG_PORT}/json`);
+      loaderTarget = targets.find(t => t.url.includes('panel-loader.html'));
+      if (!loaderTarget) await mainPage.waitForTimeout(500);
+    }
     assert.ok(loaderTarget, 'panel-loader.html target should exist');
 
     await cdpEvaluate(
@@ -94,7 +98,6 @@ describe('DevTools panel', function test() {
         chrome.devtools.panels.create('MobX', '', 'panel.html', () => resolve());
       })`,
     );
-    await mainPage.waitForTimeout(2000);
 
     // Connect to the DevTools page via CDP (Playwright doesn't expose devtools:// pages directly)
     const { webSocketDebuggerUrl } = await httpGetJson(
@@ -137,18 +140,18 @@ describe('DevTools panel', function test() {
     const tabs = panelFrame.locator('[data-test^="MainMenu-Tab"]');
     assert.isAtLeast(await tabs.count(), 1, 'Should have at least one tab');
 
-    // Start recording
+    // Start recording and wait for the tip to disappear (confirms recording is active)
     await panelFrame.locator('[data-hook="ButtonRecord"]').click();
-    await mainPage.waitForTimeout(500);
+    await panelFrame.locator('text=Click to start recording').waitFor({ state: 'hidden' });
 
     // Trigger MobX actions on the main page
     await mainPage.locator('button', { hasText: '+' }).click();
     await mainPage.locator('button', { hasText: '+' }).click();
     await mainPage.locator('button', { hasText: '–' }).click();
-    await mainPage.waitForTimeout(2000);
 
     // Verify log entries appeared in the panel
-    await panelFrame.locator('text=manuallyIncrease').first().waitFor({ timeout: 5000 });
+    await panelFrame.locator('text=manuallyIncrease').first().waitFor();
+    await panelFrame.locator('text=manuallyDecrease').first().waitFor();
     assert.isAtLeast(
       await panelFrame.locator('text=manuallyIncrease').count(),
       1,
