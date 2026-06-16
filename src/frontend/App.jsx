@@ -31,7 +31,7 @@ export default class App extends React.PureComponent {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.reloadSubscribe) {
       this.$unsubscribeReload = this.props.reloadSubscribe(() => this.reload());
     }

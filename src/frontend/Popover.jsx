@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { render, unmountComponentAtNode, findDOMNode } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import shallowequal from 'shallowequal';
 import { css, StyleSheet } from 'aphrodite';
 import ContextProvider from '../utils/ContextProvider';
@@ -249,6 +249,8 @@ export default class PopoverTrigger extends Component {
     this.state = {
       shown: false,
     };
+
+    this.triggerRef = React.createRef();
   }
 
   componentDidMount() {
@@ -257,13 +259,13 @@ export default class PopoverTrigger extends Component {
     }
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  componentDidUpdate(prevProps, prevState) {
     if (
-      !nextState.shown &&
-      !nextProps.requireClick &&
-      (nextState.hovered || nextState.bubbleHovered || nextProps.shown)
+      !this.state.shown &&
+      !this.props.requireClick &&
+      (this.state.hovered || this.state.bubbleHovered || this.props.shown)
     ) {
-      this.show(nextState);
+      this.show();
     }
     setTimeout(() => {
       if (
@@ -276,9 +278,6 @@ export default class PopoverTrigger extends Component {
         this.hide();
       }
     }, 50);
-  }
-
-  componentDidUpdate() {
     const { content } = this.props;
     if (this.popup) {
       this.popup.reposition();
@@ -335,7 +334,7 @@ export default class PopoverTrigger extends Component {
   };
 
   show = (state = this.state) => {
-    this.triggerEl = findDOMNode(this); // eslint-disable-line react/no-find-dom-node
+    this.triggerEl = this.triggerRef.current;
     if (!(this.triggerEl instanceof window.HTMLElement)) return;
     if (!state.shown) {
       const { placement, content, withArrow } = this.props;
@@ -345,7 +344,8 @@ export default class PopoverTrigger extends Component {
       document.body.appendChild(this.htmlPortal);
       activeHtmlPortals.push(this.htmlPortal);
 
-      render(
+      this.portalRoot = createRoot(this.htmlPortal);
+      this.portalRoot.render(
         <ContextProvider stores={this.context.stores}>
           <PopoverBubble
             ref={el => {
@@ -359,10 +359,14 @@ export default class PopoverTrigger extends Component {
             onTouchStart={this.handleBubbleMouseEnter}
           />
         </ContextProvider>,
-        this.htmlPortal,
       );
 
-      this.popup.setState({ content });
+      // Use setTimeout to ensure the ref callback has fired after createRoot render
+      setTimeout(() => {
+        if (this.popup) {
+          this.popup.setState({ content });
+        }
+      }, 0);
 
       document.addEventListener('touchstart', this.handleFinishInteractionAnywhere, true);
       document.addEventListener('click', this.handleFinishInteractionAnywhere, true);
@@ -385,7 +389,10 @@ export default class PopoverTrigger extends Component {
       if (idx !== -1) activeHtmlPortals.splice(idx, 1);
       window.removeEventListener('resize', this.popup.reposition);
       document.removeEventListener('scroll', this.popup.reposition, true);
-      unmountComponentAtNode(this.htmlPortal);
+      if (this.portalRoot) {
+        this.portalRoot.unmount();
+        this.portalRoot = undefined;
+      }
       this.popup = undefined;
       this.setState({ shown: false });
     }
@@ -393,12 +400,16 @@ export default class PopoverTrigger extends Component {
 
   render() {
     const { children } = this.props;
-    return React.cloneElement(React.Children.only(children), {
-      onMouseEnter: this.handleMouseEnter,
-      onMouseLeave: this.handleMouseLeave,
-      onTouchStart: this.handleMouseEnter,
-      onClick: this.handleClick,
-    });
+    return (
+      <span ref={this.triggerRef} style={{ display: 'contents' }}>
+        {React.cloneElement(React.Children.only(children), {
+          onMouseEnter: this.handleMouseEnter,
+          onMouseLeave: this.handleMouseLeave,
+          onTouchStart: this.handleMouseEnter,
+          onClick: this.handleClick,
+        })}
+      </span>
+    );
   }
 }
 

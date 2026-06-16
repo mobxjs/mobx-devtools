@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import { makeObservable, observable, computed, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 const getId = (() => {
   let i = 1;
@@ -61,4 +61,4 @@ const TodoAppComponent = observer(() => {
   );
 });
 
-render(<TodoAppComponent />, document.querySelector('#root'));
+createRoot(document.querySelector('#root')).render(<TodoAppComponent />);

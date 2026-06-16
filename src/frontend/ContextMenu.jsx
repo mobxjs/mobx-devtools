@@ -25,7 +25,8 @@ export default class ContextMenu extends React.Component {
     }),
   };
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.portalHtmlEl = document.createElement('div');
     document.body.appendChild(this.portalHtmlEl);
   }
@@ -36,10 +37,10 @@ export default class ContextMenu extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.contextMenu && !nextProps.contextMenu) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.contextMenu && !this.props.contextMenu) {
       this.unsubscribeClickOutside();
-    } else if (!this.props.contextMenu && nextProps.contextMenu) {
+    } else if (!prevProps.contextMenu && this.props.contextMenu) {
       this.subscribeClickOutside();
     }
   }

@@ -26,8 +26,12 @@ export default class RichPanel extends React.Component {
     mstLogEnabled: PropTypes.bool,
   };
 
-  componentWillMount() {
-    this.setState({ activeTab: this.getAvailableTabs()[0] });
+  constructor(props) {
+    super(props);
+    this.state = { activeTab: this.getAvailableTabs()[0] };
+  }
+
+  componentDidMount() {
     preferences.get('lastTab').then(({ lastTab = 'changes' }) => {
       if (lastTab) {
         if (this.getAvailableTabs().includes(lastTab)) {
@@ -39,13 +43,12 @@ export default class RichPanel extends React.Component {
     });
   }
 
-  componentWillUpdate(nextProps) {
+  componentDidUpdate(prevProps) {
     if (
       this.state.preferredTab &&
       this.state.activeTab !== this.state.preferredTab &&
-      this.getAvailableTabs(nextProps).includes(this.state.preferredTab)
+      this.getAvailableTabs().includes(this.state.preferredTab)
     ) {
-      // eslint-disable-next-line react/no-will-update-set-state
       this.setState(state => ({ activeTab: state.preferredTab }));
     }
   }

@@ -11,7 +11,7 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) =>
         stores: PropTypes.object.isRequired,
       };
 
-      componentWillMount() {
+      componentDidMount() {
         const eventsByStore =
           typeof subscribe === 'function' ? subscribe(this.context.stores, this.props) : subscribe;
         for (const s in eventsByStore) {
@@ -23,9 +23,6 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) =>
         }
 
         this.eventsByStore = eventsByStore || {};
-      }
-
-      componentDidMount() {
         this.$isMounted = true;
       }
 
@@ -36,9 +33,9 @@ export default ({ subscribe, injectProps = () => {}, shouldUpdate }) =>
         return false;
       }
 
-      componentWillUpdate(nextProps) {
+      componentDidUpdate() {
         if (typeof subscribe !== 'function') return;
-        const nextEventsByStore = subscribe(this.context.stores, nextProps);
+        const nextEventsByStore = subscribe(this.context.stores, this.props);
         Object.keys(this.eventsByStore).forEach(s => {
           const diff = arrayDiff(nextEventsByStore[s], this.eventsByStore[s]);
           diff.missing.forEach(name => {

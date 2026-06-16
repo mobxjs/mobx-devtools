@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useLocalObservable, Observer } from 'mobx-react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 const TodoModel = {
   title: 'Test',
@@ -25,4 +25,4 @@ const Todo = () => {
   );
 };
 
-render(<Todo />, document.querySelector('#root'));
+createRoot(document.querySelector('#root')).render(<Todo />);
