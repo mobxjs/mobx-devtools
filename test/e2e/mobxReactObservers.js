@@ -23,13 +23,11 @@ describe('Changes tab', function test() {
   });
 
   const startRecording = async () => {
-    const toolbar = devtoolPage.locator('input[placeholder="Search (string/regex)"]').locator('..');
-    await toolbar.locator('> div').first().click();
+    await devtoolPage.locator('[data-hook="ButtonRecord"]').click();
   };
 
   const clickClearButton = async () => {
-    const toolbar = devtoolPage.locator('input[placeholder="Search (string/regex)"]').locator('..');
-    await toolbar.locator('> div').nth(1).click();
+    await devtoolPage.locator('[data-hook="ButtonClear"]').click();
   };
 
   it('should record and display MobX changes', async () => {
