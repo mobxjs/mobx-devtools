@@ -29,8 +29,7 @@ describe('MST tab', function test() {
   };
 
   const clickClearButton = async () => {
-    // Click the parent div of the ClearIcon SVG (which has a unique circle with r="5.75")
-    await devtoolPage.locator('svg:has(circle[r="5.75"])').locator('..').click();
+    await devtoolPage.locator('[data-hook="ButtonClear"]').click();
   };
 
   it('should detect MST and display log entries', async () => {
