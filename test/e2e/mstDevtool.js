@@ -10,8 +10,8 @@ describe('MST tab', function test() {
   this.timeout(100000);
 
   before(async () => {
-    closePlayground = await startDevServer({ port: 8082, pages: ['casablanca'] });
-    const result = await prepare({ initialUrl: 'http://localhost:8082/casablanca.html' });
+    closePlayground = await startDevServer({ port: 8082, pages: ['mst-todomvc'] });
+    const result = await prepare({ initialUrl: 'http://localhost:8082/mst-todomvc.html' });
     mainPage = result.mainWindowHandle;
     devtoolPage = result.devtoolWindowHandle;
     teardown = result.teardown;
@@ -33,7 +33,7 @@ describe('MST tab', function test() {
   };
 
   it('should detect MST and display log entries', async () => {
-    // The MST tab should appear since casablanca uses mobx-state-tree
+    // The MST tab should appear since mst-todomvc uses mobx-state-tree
     const mstTab = devtoolPage.locator('[data-test="MainMenu-Tab-mst"]');
     await mstTab.waitFor({ timeout: 15000 });
     await mstTab.click();
