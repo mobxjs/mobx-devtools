@@ -15,7 +15,6 @@
         "start": "cross-env NODE_ENV=development webpack-dev-server --hot"
     },
     "devDependencies": {
-        "chromedriver": "^147.0.2",
         "cross-env": "^7.0.2",
         "mobx": "^6.3.2",
         "mobx-react": "^7.2.0",
