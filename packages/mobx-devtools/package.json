@@ -1,6 +1,9 @@
 {
     "name": "mobx-devtools",
     "version": "0.9.32",
+    "engines": {
+        "node": ">=20"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/mobxjs/mobx-devtools.git"

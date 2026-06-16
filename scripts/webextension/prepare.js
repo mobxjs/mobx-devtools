@@ -3,7 +3,7 @@ const del = require('del');
 const fs = require('fs');
 const path = require('path');
 const manifest = require('../../src/shells/webextension/manifest.json');
-const lernaJson = require('../../lerna.json');
+const rootPkg = require('../../package.json');
 
 const { TARGET_BROWSER, NODE_ENV } = process.env;
 
@@ -26,8 +26,8 @@ if (!fs.existsSync(path.join(rootDir, `lib/${TARGET_BROWSER}`)))
 // Generate manifest.json
 
 manifest.description = 'Dev-tools for MobX and React';
-manifest.version = lernaJson.version;
-manifest.version_name = lernaJson.version + (NODE_ENV === 'development' ? '-dev' : '');
+manifest.version = rootPkg.version;
+manifest.version_name = rootPkg.version + (NODE_ENV === 'development' ? '-dev' : '');
 
 if (TARGET_BROWSER === 'chrome') {
   delete manifest.applications;

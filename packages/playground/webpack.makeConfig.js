@@ -36,13 +36,15 @@ exports.makeConfig = ({
     publicPath: '/',
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.jsx'],
     alias: {
-      'mobx-state-tree': path.join(__dirname, 'node_modules/mobx-state-tree'),
+      'mobx-state-tree': path.dirname(require.resolve('mobx-state-tree/package.json')),
       'mobx-devtools-mst': path.join(rootPath, 'packages/mobx-devtools-mst/src'),
       'mobx-devtools': path.join(rootPath, 'packages/mobx-devtools'),
-      'mobx-react': path.join(__dirname, 'node_modules/mobx-react'),
-      mobx: path.join(__dirname, 'node_modules/mobx'),
+      'mobx-react': path.dirname(require.resolve('mobx-react/package.json')),
+      mobx: path.dirname(require.resolve('mobx/package.json')),
+      react: path.join(__dirname, 'node_modules/react'),
+      'react-dom': path.join(__dirname, 'node_modules/react-dom'),
       aphrodite: 'aphrodite/no-important',
     },
     fallback: {
@@ -74,10 +76,6 @@ exports.makeConfig = ({
           },
         },
         exclude: /node_modules/,
-      },
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
       },
       {
         test: /\.svg$/,
