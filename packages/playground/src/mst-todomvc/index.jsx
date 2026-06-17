@@ -2,7 +2,7 @@
 import React from 'react';
 import { destroy, types } from 'mobx-state-tree';
 import { observer } from 'mobx-react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import inspectTree from 'mobx-devtools-mst'; // eslint-disable-line
 
 const getId = (() => {
@@ -77,4 +77,4 @@ class TodoAppComponent extends React.Component {
   }
 }
 
-render(<TodoAppComponent />, document.querySelector('#root'));
+createRoot(document.querySelector('#root')).render(<TodoAppComponent />);

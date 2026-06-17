@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { css, StyleSheet } from 'aphrodite';
 import { symbols } from '../Bridge';
@@ -55,6 +54,7 @@ class PreviewSimpleValue extends React.PureComponent {
       text: '',
       editing: false,
     };
+    this.rootRef = React.createRef();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -62,8 +62,9 @@ class PreviewSimpleValue extends React.PureComponent {
       this.selectAll();
     }
     if (!this.state.editing && this.props.data !== prevProps.data) {
-      // eslint-disable-next-line react/no-find-dom-node
-      flash(ReactDOM.findDOMNode(this), '#FFFF00', 'transparent', 1);
+      if (this.rootRef.current) {
+        flash(this.rootRef.current, '#FFFF00', 'transparent', 1);
+      }
     }
   }
 
@@ -140,6 +141,7 @@ class PreviewSimpleValue extends React.PureComponent {
           autoFocus
           ref={i => {
             this.input = i;
+            this.rootRef.current = i;
           }}
           className={css(styles.input)}
           onChange={this.handleChange}
@@ -158,6 +160,7 @@ class PreviewSimpleValue extends React.PureComponent {
 
     return (
       <div
+        ref={this.rootRef}
         onClick={this.handleStartEditing}
         className={css(
           styles.simple,

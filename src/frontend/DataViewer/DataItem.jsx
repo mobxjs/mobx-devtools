@@ -23,11 +23,11 @@ export default class DataItem extends React.Component {
 
   constructor(props) {
     super(props);
+    this.value = props.getValueByPath(props.path);
     this.state = { open: Boolean(this.props.startOpen) };
   }
 
-  componentWillMount() {
-    this.value = this.props.getValueByPath(this.props.path);
+  componentDidMount() {
     if (this.state.open && this.value && this.value[symbols.inspected] === false) {
       this.setState({ open: false });
     } else if (!this.state.open && this.value && this.value[symbols.inspected] === true) {
@@ -35,8 +35,8 @@ export default class DataItem extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.value = nextProps.getValueByPath(nextProps.path);
+  componentDidUpdate(prevProps) {
+    this.value = this.props.getValueByPath(this.props.path);
     if (this.state.open && this.value && this.value[symbols.inspected] === false) {
       this.setState({ open: false });
     } else if (!this.state.open && this.value && this.value[symbols.inspected] === true) {

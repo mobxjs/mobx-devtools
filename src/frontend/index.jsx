@@ -1,32 +1,33 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import App from './App';
 import RichPanel from './RichPanel';
 
 export default config => {
+  let root = createRoot(config.node);
+
   const reload = () => {
-    ReactDOM.unmountComponentAtNode(config.node);
+    root.unmount();
     setTimeout(() => {
-      // for some reason React 16 does unmountComponentAtNode asynchronously (?)
       config.node.innerHTML = '';
+      root = createRoot(config.node);
       render();
     }, 0);
   };
 
   const render = () => {
-    ReactDOM.render(
+    root.render(
       <App
         {...config} // eslint-disable-line react/jsx-props-no-spreading
         reload={reload} // eslint-disable-line react/jsx-no-bind
       >
         <RichPanel />
       </App>,
-      config.node,
     );
   };
 
   render();
 
-  return () => ReactDOM.unmountComponentAtNode(config.node);
+  return () => root.unmount();
 };

@@ -4,7 +4,7 @@ import React from 'react';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 const store = observable({ count: 0 });
 
@@ -50,9 +50,8 @@ const Counter = observer(() => {
   );
 });
 
-render(
+createRoot(document.querySelector('#root')).render(
   <App>
     <Counter />
   </App>,
-  document.querySelector('#root'),
 );

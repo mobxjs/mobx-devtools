@@ -3,7 +3,7 @@ import React from 'react';
 import { observable, action, computed, configure } from 'mobx';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 configure({
   enforceActions: 'never',
@@ -83,9 +83,8 @@ class Counter extends React.Component {
   }
 }
 
-render(
+createRoot(document.querySelector('#root')).render(
   <App>
     <Counter />
   </App>,
-  document.querySelector('#root'),
 );

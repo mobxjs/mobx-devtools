@@ -43,8 +43,8 @@ exports.makeConfig = ({
       'mobx-devtools': path.join(rootPath, 'packages/mobx-devtools'),
       'mobx-react': path.dirname(require.resolve('mobx-react/package.json')),
       mobx: path.dirname(require.resolve('mobx/package.json')),
-      react: path.join(__dirname, 'node_modules/react'),
-      'react-dom': path.join(__dirname, 'node_modules/react-dom'),
+      react: path.dirname(require.resolve('react/package.json')),
+      'react-dom': path.dirname(require.resolve('react-dom/package.json')),
       aphrodite: 'aphrodite/no-important',
     },
     fallback: {
