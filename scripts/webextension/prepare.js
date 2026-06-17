@@ -36,15 +36,16 @@ if (TARGET_BROWSER === 'chrome') {
 if (TARGET_BROWSER === 'firefox') {
   delete manifest.minimum_chrome_version;
 
+  // MV3 requires browser_specific_settings instead of applications
+  if (manifest.applications) {
+    manifest.browser_specific_settings = manifest.applications;
+    delete manifest.applications;
+  }
+
   // Firefox MV3 uses background.scripts, not service_worker
   if (manifest.background && manifest.background.service_worker) {
     manifest.background = { scripts: [manifest.background.service_worker] };
   }
-
-  // Firefox MV3 supports browser_specific_settings instead of applications
-  // (applications still works but browser_specific_settings is preferred)
-
-  // Firefox 128+ supports content_scripts world: "MAIN", so we keep it as-is
 }
 
 fs.writeFileSync(
