@@ -1,6 +1,6 @@
 {
   "name": "mobx-devtools-root",
-  "version": "0.9.32",
+  "version": "0.9.33",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -29,7 +29,8 @@
     "debug": "node scripts/launch-chromium-for-debugging.js",
     "lint": "eslint '**/*.js' '**/*.jsx'",
     "lint-fix": "eslint --fix '**/*.js' '**/*.jsx'",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "release": "bash scripts/release.sh"
   },
   "lint-staged": {
     "*.{js,jsx}": [
