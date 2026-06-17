@@ -11,7 +11,7 @@ DevTools for debugging [MobX](https://mobx.js.org/) applications. Track changes 
 ### Browser Extension
 
 - [Chrome](https://chrome.google.com/webstore/detail/mobx-developer-tools/pfgnfdagidkfgccljigdamigbcnndkod) (Manifest V3, Chrome 88+)
-- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/mobx-devtools/) (Firefox 54+)
+- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/mobx-devtools/) (Firefox 58+)
 
 ### Standalone App
 
