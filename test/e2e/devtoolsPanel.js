@@ -64,7 +64,7 @@ describe('DevTools panel', function test() {
   this.timeout(100000);
 
   before(async () => {
-    closePlayground = await startDevServer({ pages: ['baltimore'] });
+    closePlayground = await startDevServer({ pages: ['counter-class'] });
     userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mobx-devtools-panel-test-'));
 
     context = await chromium.launchPersistentContext(userDataDir, {
@@ -78,7 +78,7 @@ describe('DevTools panel', function test() {
     });
 
     mainPage = context.pages()[0] || (await context.newPage());
-    await mainPage.goto('http://localhost:8082/baltimore.html');
+    await mainPage.goto('http://localhost:8082/counter-class.html');
 
     // The panel-loader polls for MobX then calls chrome.devtools.panels.create().
     // In automated runs the polling can miss, so we trigger creation explicitly.

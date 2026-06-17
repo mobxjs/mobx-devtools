@@ -8,11 +8,11 @@ const rootPath = path.join(__dirname, '../..');
 
 exports.makeConfig = ({
   pages = [
-    'amsterdam',
-    'baltimore',
-    'baltimore-hooks',
-    'casablanca',
-    'denmark',
+    'counter-vanilla',
+    'counter-class',
+    'counter-hooks',
+    'mst-todomvc',
+    'counter-auto',
     'todo-6',
     'todo-local-6',
   ],

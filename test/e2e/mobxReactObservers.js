@@ -10,8 +10,8 @@ describe('Changes tab', function test() {
   this.timeout(100000);
 
   before(async () => {
-    closePlayground = await startDevServer({ port: 8082, pages: ['baltimore'] });
-    const result = await prepare({ initialUrl: 'http://localhost:8082/baltimore.html' });
+    closePlayground = await startDevServer({ port: 8082, pages: ['counter-class'] });
+    const result = await prepare({ initialUrl: 'http://localhost:8082/counter-class.html' });
     mainPage = result.mainWindowHandle;
     devtoolPage = result.devtoolWindowHandle;
     teardown = result.teardown;
@@ -78,6 +78,26 @@ describe('Changes tab', function test() {
     // Close the popover by clicking outside
     await devtoolPage.locator('[data-hook="ButtonRecord"]').click();
     // Re-enable recording for subsequent tests
+    await devtoolPage.locator('[data-hook="ButtonRecord"]').click();
+  });
+
+  it('should open diff preview popover', async () => {
+    // The action is already expanded from the previous test.
+    // Its child "update" entry has a diff preview badge (+1 / −1).
+    const diffBadge = devtoolPage.locator('[data-hook="LObjDiffPreview"]').first();
+    await diffBadge.waitFor({ timeout: 5000 });
+    await diffBadge.click();
+
+    // The diff popover should appear with property change details
+    const popover = devtoolPage.locator('[data-hook="Popover"]');
+    await popover.waitFor({ timeout: 5000 });
+    assert.isTrue(await popover.isVisible(), 'Diff popover should be visible');
+
+    const content = await popover.textContent();
+    assert.include(content, 'count', 'Diff popover should show the changed property name');
+
+    // Close the popover by clicking outside
+    await devtoolPage.locator('[data-hook="ButtonRecord"]').click();
     await devtoolPage.locator('[data-hook="ButtonRecord"]').click();
   });
 
