@@ -58,7 +58,9 @@ const skipBuild = process.argv.includes('--skip-build');
 
   const mainPage = context.pages()[0] || (await context.newPage());
   await mainPage.goto('http://localhost:8082');
-  console.log('Opened http://localhost:8082 — pick a playground page, then switch to the MobX tab in DevTools.');
+  console.log(
+    'Opened http://localhost:8082 — pick a playground page, then switch to the MobX tab in DevTools.',
+  );
 
   // Keep alive until the browser is closed or Ctrl+C
   context.on('close', () => {
