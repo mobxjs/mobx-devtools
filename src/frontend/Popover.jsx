@@ -1,502 +1,125 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { createRoot } from 'react-dom/client';
-import { flushSync } from 'react-dom';
-import shallowequal from 'shallowequal';
-import { css, StyleSheet } from 'aphrodite';
-import ContextProvider from '../utils/ContextProvider';
-import theme from './theme';
+import {
+  useFloating,
+  autoUpdate,
+  offset,
+  flip,
+  shift,
+  arrow as arrowMiddleware,
+  FloatingPortal,
+  FloatingArrow,
+  useClick,
+  useHover,
+  useDismiss,
+  useInteractions,
+} from '@floating-ui/react';
 
-export const availablePlacements = ['top', 'bottom' /* , 'right' */];
-const between = (v, min, max) => Math.max(Math.min(v, max), min);
-const rectFromEl = el => {
-  const rect = el.getBoundingClientRect();
-  return {
-    bottom: rect.bottom,
-    height: rect.height,
-    left: rect.left,
-    right: rect.right,
-    top: rect.top,
-    width: rect.width,
-  };
-};
-const ARROW_SIZE = 6;
-// const MIN_WIDTH = 250;
-const GUTTER = 20;
+export const availablePlacements = ['top', 'bottom'];
 
-const popoverStyleForPlacement = placement => {
-  switch (placement) {
-    case 'top':
-      return styles.popoverTop;
-    case 'bottom':
-      return styles.popoverBottom;
-    case 'right':
-      return styles.popoverRight;
-    default:
-      return undefined;
-  }
-};
+export default function PopoverTrigger({
+  content,
+  placement = 'bottom',
+  withArrow = true,
+  requireClick = false,
+  shown: controlledShown,
+  onShown,
+  children,
+}) {
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const isOpen = controlledShown != null ? controlledShown || uncontrolledOpen : uncontrolledOpen;
+  const arrowRef = useRef(null);
+  const prevOpenRef = useRef(false);
 
-const arrowStyleForPlacement = placement => {
-  switch (placement) {
-    case 'top':
-      return styles.arrowTop;
-    case 'bottom':
-      return styles.arrowBottom;
-    case 'right':
-      return styles.arrowRight;
-    default:
-      return undefined;
-  }
-};
+  const { refs, floatingStyles, context } = useFloating({
+    open: isOpen,
+    onOpenChange: setUncontrolledOpen,
+    placement,
+    middleware: [
+      offset(8),
+      flip({ fallbackPlacements: availablePlacements.filter(p => p !== placement) }),
+      shift({ padding: 20 }),
+      ...(withArrow ? [arrowMiddleware({ element: arrowRef, padding: 8 })] : []),
+    ],
+    whileElementsMounted: autoUpdate,
+  });
 
-const activeHtmlPortals = [];
-
-class PopoverBubble extends Component {
-  static propTypes = {
-    placement: PropTypes.oneOf(availablePlacements),
-    withArrow: PropTypes.bool.isRequired,
-    triggerHtmlElement: PropTypes.instanceOf(window.HTMLElement).isRequired,
-    onMouseEnter: PropTypes.func,
-    onMouseLeave: PropTypes.func,
-    onTouchStart: PropTypes.func,
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      content: '',
-      arrowCoordinates: { left: 0, top: 0 },
-      bodyCoordinates: { left: 0, top: 0 },
-    };
-  }
-
-  componentDidMount() {
-    this.reposition();
-
-    // required as some deep children may update after popover shown (DataViewer received data)
-    this.$repositionInterval = setInterval(() => this.reposition(), 100);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.$repositionInterval);
-  }
-
-  calculate([placement, ...nextPlacementsToTry], selfRect, triggerRect) {
-    const htmlWidth = window.innerWidth;
-    const htmlHeight = window.innerHeight;
-    const notLast = nextPlacementsToTry.length > 0;
-    const maxHeight = htmlHeight - 2 * GUTTER;
-    const maxWidth = htmlWidth - 2 * GUTTER;
-    const assumedHeight = Math.min(maxHeight, selfRect.height);
-    // const assumedWidth = between(selfRect.width, MIN_WIDTH, maxWidth);
-
-    switch (placement) {
-      // case 'right': {
-      //   if (notLast && triggerRect.right + assumedWidth + ARROW_SIZE > htmlWidth) {
-      //     return this.calculate(nextPlacementsToTry, selfRect, triggerRect);
-      //   }
-      //   return {
-      //     arrowCoordinates: {
-      //       left: triggerRect.right + ARROW_SIZE,
-      //       top: triggerRect.top + triggerRect.height / 2,
-      //     },
-      //     bodyCoordinates: {
-      //       left: triggerRect.right + ARROW_SIZE,
-      //       top: between(
-      //         triggerRect.top + (triggerRect.height / 2 - selfRect.height / 2),
-      //         htmlWidth - assumedWidth - GUTTER,
-      //         htmlWidth - selfRect.width - GUTTER
-      //       ),
-      //     },
-      //     maxWidth: Math.min(maxWidth, htmlWidth - triggerRect.right - ARROW_SIZE - 2 * GUTTER),
-      //     maxHeight,
-      //     placement,
-      //   };
-      // }
-      case 'top': {
-        const hOverlap = triggerRect.top - selfRect.height - ARROW_SIZE < 0;
-        if (notLast && hOverlap) {
-          return this.calculate(nextPlacementsToTry, selfRect, triggerRect);
-        }
-        return {
-          arrowCoordinates: !hOverlap && {
-            left: triggerRect.left + triggerRect.width / 2,
-            top: triggerRect.top - ARROW_SIZE,
-          },
-          bodyCoordinates: {
-            left: between(
-              triggerRect.left + (triggerRect.width / 2 - selfRect.width / 2),
-              GUTTER,
-              htmlWidth - GUTTER - selfRect.width,
-            ),
-            top: hOverlap
-              ? htmlHeight - assumedHeight - GUTTER
-              : triggerRect.top - selfRect.height - ARROW_SIZE,
-          },
-          maxWidth,
-          maxHeight,
-          placement,
-        };
-      }
-      case 'bottom': {
-        const hOverlap = triggerRect.bottom + selfRect.height + ARROW_SIZE > htmlHeight;
-        if (notLast && hOverlap) {
-          return this.calculate(nextPlacementsToTry, selfRect, triggerRect);
-        }
-        return {
-          arrowCoordinates: !hOverlap && {
-            left: triggerRect.left + triggerRect.width / 2,
-            top: triggerRect.bottom + ARROW_SIZE,
-          },
-          bodyCoordinates: {
-            left: between(
-              triggerRect.left + (triggerRect.width / 2 - selfRect.width / 2),
-              GUTTER,
-              htmlWidth - GUTTER - selfRect.width,
-            ),
-            top: hOverlap ? htmlHeight - assumedHeight - GUTTER : triggerRect.bottom + ARROW_SIZE,
-          },
-          maxWidth,
-          maxHeight,
-          placement,
-        };
-      }
-      default: {
-        throw new Error(`Unexpected placement: ${placement}`);
-      }
+  useEffect(() => {
+    if (isOpen && !prevOpenRef.current && onShown) {
+      onShown();
     }
-  }
+    prevOpenRef.current = isOpen;
+  }, [isOpen, onShown]);
 
-  reposition = () => {
-    if (!this.el || !this.props.triggerHtmlElement) return;
-    const { triggerHtmlElement, placement } = this.props;
-    const selfRect = rectFromEl(this.el);
-    const triggerRect = rectFromEl(triggerHtmlElement);
-    if (
-      shallowequal(triggerRect, this.$previousTriggerRect) &&
-      shallowequal(selfRect, this.$previousSelfRect)
-    ) {
-      return;
-    }
-    this.$previousTriggerRect = triggerRect;
-    this.$previousSelfRect = selfRect;
-    const placements = [placement, ...availablePlacements.filter(p => p !== placement)];
-    this.setState(this.calculate(placements, selfRect, triggerRect));
-  };
+  const hover = useHover(context, { enabled: !requireClick, delay: { open: 0, close: 50 } });
+  const click = useClick(context, { enabled: requireClick });
+  const dismiss = useDismiss(context);
 
-  render() {
-    const { withArrow, onMouseEnter, onMouseLeave, onTouchStart } = this.props;
-    const { content } = this.state;
-    const { arrowCoordinates, bodyCoordinates, maxWidth, maxHeight, placement } = this.state;
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover, click, dismiss]);
 
-    return (
-      <div className={css(theme.default)}>
-        {withArrow && arrowCoordinates && (
+  const child = React.Children.only(children);
+
+  const setRef = useCallback(
+    node => {
+      refs.setReference(node);
+      const childRef = child.ref;
+      if (typeof childRef === 'function') childRef(node);
+      else if (childRef) childRef.current = node;
+    },
+    [refs, child.ref],
+  );
+
+  return (
+    <>
+      {React.cloneElement(child, getReferenceProps({ ref: setRef }))}
+      {isOpen && content && (
+        <FloatingPortal>
           <div
-            className={css(styles.arrow, arrowStyleForPlacement(placement))}
-            style={{ top: arrowCoordinates.top, left: arrowCoordinates.left }}
-          />
-        )}
-        <div
-          data-hook="Popover"
-          className={css(styles.popover, popoverStyleForPlacement(placement))}
-          style={{
-            top: bodyCoordinates.top,
-            left: bodyCoordinates.left,
-            maxWidth,
-            maxHeight,
-          }}
-          ref={el => {
-            this.el = el;
-          }}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          onTouchStart={onTouchStart}
-        >
-          {content}
-        </div>
-      </div>
-    );
-  }
+            ref={refs.setFloating}
+            data-hook="Popover"
+            style={{
+              ...floatingStyles,
+              zIndex: 100000,
+              boxSizing: 'border-box',
+              border: '1px solid #bbb',
+              borderRadius: 3,
+              fontSize: 13,
+              lineHeight: '16px',
+              fontWeight: 'normal',
+              background: '#fff',
+              color: 'var(--default-text-color)',
+              maxHeight: 'calc(100vh - 40px)',
+              maxWidth: 'calc(100vw - 40px)',
+            }}
+            {...getFloatingProps()}
+          >
+            {withArrow && (
+              <FloatingArrow
+                ref={arrowRef}
+                context={context}
+                fill="#fff"
+                stroke="#bbb"
+                strokeWidth={1}
+                width={12}
+                height={6}
+              />
+            )}
+            <div style={{ padding: '6px 10px', overflow: 'auto', maxHeight: 'inherit' }}>
+              {content}
+            </div>
+          </div>
+        </FloatingPortal>
+      )}
+    </>
+  );
 }
 
-// eslint-disable-next-line react/no-multi-comp
-export default class PopoverTrigger extends Component {
-  static propTypes = {
-    onShown: PropTypes.func,
-    children: PropTypes.node,
-    placement: PropTypes.oneOf(availablePlacements),
-    content: PropTypes.node,
-    withArrow: PropTypes.bool,
-    requireClick: PropTypes.bool,
-    shown: PropTypes.bool,
-  };
-
-  static defaultProps = {
-    placement: 'bottom',
-    requireClick: false,
-    withArrow: true,
-  };
-
-  static contextTypes = {
-    stores: PropTypes.object.isRequired,
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      shown: false,
-    };
-
-    this.triggerRef = React.createRef();
-  }
-
-  componentDidMount() {
-    if (this.props.shown) {
-      this.show();
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      !this.state.shown &&
-      !this.props.requireClick &&
-      (this.state.hovered || this.state.bubbleHovered || this.props.shown)
-    ) {
-      this.show();
-    }
-    setTimeout(() => {
-      if (
-        this.state.shown &&
-        !this.props.requireClick &&
-        !this.state.hovered &&
-        !this.state.bubbleHovered &&
-        !this.props.shown
-      ) {
-        this.hide();
-      }
-    }, 50);
-    const { content } = this.props;
-    if (this.popup) {
-      this.popup.reposition();
-      this.popup.setState({ content });
-    }
-  }
-
-  componentWillUnmount() {
-    this.hide();
-  }
-
-  htmlPortal = document.createElement('div');
-
-  popup = undefined;
-
-  handleMouseEnter = e => {
-    if (this.props.children.props.onMouseEnter) this.props.children.props.onMouseEnter(e);
-    this.setState({ hovered: true });
-  };
-
-  handleMouseLeave = e => {
-    if (this.props.children.props.onMouseLeave) this.props.children.props.onMouseLeave(e);
-    this.setState({ hovered: false });
-  };
-
-  handleBubbleMouseEnter = () => {
-    this.setState({ bubbleHovered: true });
-  };
-
-  handleBubbleMouseLeave = () => {
-    this.setState({ bubbleHovered: false });
-  };
-
-  handleClick = e => {
-    if (this.props.children.props.onClick) this.props.children.props.onClick(e);
-    if (this.props.requireClick) {
-      e.stopPropagation();
-      if (this.state.shown) {
-        this.hide();
-      } else {
-        this.show();
-      }
-    }
-  };
-
-  handleFinishInteractionAnywhere = e => {
-    const clickInsideTrigger = this.triggerEl && this.triggerEl.contains(e.target);
-    const clickInsideHtmlPortal = activeHtmlPortals.find(p => p.contains(e.target)) !== undefined;
-    if (clickInsideTrigger === false && clickInsideHtmlPortal === false) {
-      document.removeEventListener('touchstart', this.handleFinishInteractionAnywhere, true);
-      document.removeEventListener('click', this.handleFinishInteractionAnywhere, true);
-      this.hide();
-    }
-  };
-
-  show = (state = this.state) => {
-    this.triggerEl = this.triggerRef.current;
-    if (!(this.triggerEl instanceof window.HTMLElement)) return;
-    if (!state.shown) {
-      const { placement, content, withArrow } = this.props;
-      if (!content) {
-        return;
-      }
-      document.body.appendChild(this.htmlPortal);
-      activeHtmlPortals.push(this.htmlPortal);
-
-      this.portalRoot = createRoot(this.htmlPortal);
-      flushSync(() => {
-        this.portalRoot.render(
-          <ContextProvider stores={this.context.stores}>
-            <PopoverBubble
-              ref={el => {
-                this.popup = el;
-              }}
-              placement={placement}
-              withArrow={withArrow}
-              triggerHtmlElement={this.triggerEl}
-              onMouseEnter={this.handleBubbleMouseEnter}
-              onMouseLeave={this.handleBubbleMouseLeave}
-              onTouchStart={this.handleBubbleMouseEnter}
-            />
-          </ContextProvider>,
-        );
-      });
-
-      if (this.popup) {
-        this.popup.setState({ content });
-      }
-
-      document.addEventListener('touchstart', this.handleFinishInteractionAnywhere, true);
-      document.addEventListener('click', this.handleFinishInteractionAnywhere, true);
-
-      window.addEventListener('resize', this.popup.reposition);
-      document.addEventListener('scroll', this.popup.reposition, true);
-
-      this.setState({ shown: true }, this.props.onShown);
-    }
-  };
-
-  hide = (state = this.state) => {
-    if (state.shown) {
-      if (this.triggerEl) {
-        this.triggerEl.removeEventListener('mouseleave', this.handleMouseLeave, true);
-        this.triggerEl = undefined;
-      }
-      document.body.removeChild(this.htmlPortal);
-      const idx = activeHtmlPortals.indexOf(this.htmlPortal);
-      if (idx !== -1) activeHtmlPortals.splice(idx, 1);
-      window.removeEventListener('resize', this.popup.reposition);
-      document.removeEventListener('scroll', this.popup.reposition, true);
-      if (this.portalRoot) {
-        this.portalRoot.unmount();
-        this.portalRoot = undefined;
-      }
-      this.popup = undefined;
-      this.setState({ shown: false });
-    }
-  };
-
-  render() {
-    const { children } = this.props;
-    return (
-      <span ref={this.triggerRef} style={{ display: 'contents' }}>
-        {React.cloneElement(React.Children.only(children), {
-          onMouseEnter: this.handleMouseEnter,
-          onMouseLeave: this.handleMouseLeave,
-          onTouchStart: this.handleMouseEnter,
-          onClick: this.handleClick,
-        })}
-      </span>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  popover: {
-    position: 'fixed',
-    boxSizing: 'border-box',
-    zIndex: 100000,
-    border: '1px solid',
-    padding: '6px 10px',
-    borderRadius: 3,
-    fontSize: 13,
-    lineHeight: '16px',
-    fontWeight: 'normal',
-    background: '#fff',
-    borderColor: '#bbb',
-    color: 'var(--default-text-color)',
-    overflow: 'auto',
-  },
-
-  arrow: {
-    position: 'fixed',
-    width: 0,
-    height: 0,
-    zIndex: 100001,
-
-    background: '#fff',
-    borderColor: '#fff',
-    color: 'white',
-    opacity: 0.9,
-
-    ':before': {
-      content: '""',
-      position: 'absolute',
-      width: 0,
-      height: 0,
-      borderStyle: 'solid',
-      borderColor: 'transparent',
-    },
-    ':after': {
-      content: '""',
-      position: 'absolute',
-      width: 0,
-      height: 0,
-      borderStyle: 'solid',
-      borderColor: 'transparent',
-    },
-  },
-
-  arrowTop: {
-    ':before': {
-      borderWidth: '7px 6px 0',
-      transform: 'translateX(-50%)',
-      borderTopColor: '#ddd',
-    },
-
-    ':after': {
-      borderWidth: '6px 5px 0',
-      transform: 'translate(-50%, -1px)',
-      borderTopColor: '#fff',
-    },
-  },
-
-  arrowBottom: {
-    ':before': {
-      borderWidth: '0 6px 7px',
-      transform: 'translate(-50%, -7px)',
-      borderBottomColor: '#ddd',
-    },
-    ':after': {
-      borderWidth: '0 5px 6px',
-      transform: 'translate(-50%, -5px)',
-      borderBottomColor: '#fff',
-    },
-  },
-
-  arrowRight: {
-    ':before': {
-      borderWidth: '6px 7px 6px 0',
-      transform: 'translate(-7px, -50%)',
-      borderRightColor: '#ddd',
-    },
-
-    ':after': {
-      borderWidth: '5px 6px 5px 0',
-      transform: 'translate(-5px, -50%)',
-      borderRightColor: '#fff',
-    },
-  },
-});
+PopoverTrigger.propTypes = {
+  onShown: PropTypes.func,
+  children: PropTypes.node,
+  placement: PropTypes.oneOf(availablePlacements),
+  content: PropTypes.node,
+  withArrow: PropTypes.bool,
+  requireClick: PropTypes.bool,
+  shown: PropTypes.bool,
+};

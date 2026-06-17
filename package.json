@@ -45,6 +45,7 @@
     "@babel/preset-env": "^7.25.9",
     "@babel/preset-react": "^7.25.9",
     "@babel/register": "7.25.9",
+    "@floating-ui/react": "^0.27.19",
     "aphrodite": "^1.2.4",
     "archiver": "^2.0.3",
     "babel-loader": "^9.2.1",
