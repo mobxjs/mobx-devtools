@@ -30,10 +30,13 @@ export default onResult => {
   const getPathsForObject = object => (nodesByObject.get(object) || []).map(node => node[PATH]);
 
   const getObjectForPath = path =>
-    path.reduce(
-      (acc, next) => acc && acc[next === symbols.proto ? '__proto__' : next],
-      inspectedObject,
-    );
+    path.reduce((acc, next) => {
+      if (!acc) return acc;
+      if (next === symbols.entries && typeof acc.entries === 'function') {
+        return [...acc.entries()];
+      }
+      return acc[next === symbols.proto ? '__proto__' : next];
+    }, inspectedObject);
 
   const rememberPath = (path, object) => {
     const node = getNodeForPath(path);

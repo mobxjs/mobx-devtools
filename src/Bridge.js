@@ -63,30 +63,21 @@ function serialize(data, path = [], seen = new Map(), propToExtract) {
     const prototype = Object.getPrototypeOf(data);
     const inspecting = allowedComplexObjects.has(data);
 
-    if (data instanceof Map || (prototype && prototype.isMobXObservableMap)) {
+    const isMap = data instanceof Map || (prototype && prototype.isMobXObservableMap);
+    const isSet = !isMap && (data instanceof Set || (prototype && prototype.isMobXObservableSet));
+    if (isMap || isSet) {
       const result = {
-        [symbols.type]: 'map',
+        [symbols.type]: isMap ? 'map' : 'set',
         [symbols.name]: data.constructor && data.constructor.name,
         [symbols.inspected]: inspecting,
-        [symbols.editable]: false, // TODO: figure out the way to edit maps
+        [symbols.editable]: false, // TODO: figure out the way to edit maps and sets
         [symbols.mobxObject]: '$mobx' in data,
       };
       if (inspecting) {
-        result[symbols.entries] = [...data.entries()];
-      }
-      return result;
-    }
-
-    if (data instanceof Set || (prototype && prototype.isMobXObservableSet)) {
-      const result = {
-        [symbols.type]: 'set',
-        [symbols.name]: data.constructor && data.constructor.name,
-        [symbols.inspected]: inspecting,
-        [symbols.editable]: false, // TODO: figure out the way to edit sets
-        [symbols.mobxObject]: '$mobx' in data,
-      };
-      if (inspecting) {
-        result[symbols.entries] = [...data.entries()];
+        result[symbols.entries] = [...data.entries()].map(([key, value], i) => [
+          serialize(key, path.concat(symbols.entries, i, 0), seen),
+          serialize(value, path.concat(symbols.entries, i, 1), seen),
+        ]);
       }
       return result;
     }
